@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title -123Tirbe</title>
+    @Styles.Render("~/bundles/zuiCSS")
+    @Scripts.Render("~/bundles/zuiJS")
+    @RenderSection("scripts", required: false)
+    <script type="text/javascript">
+        $(function () {
+            $('#mainMenu').on('click', 'a', function () {
+                $('#mainMenu li.active').removeClass('active');
+                $(this).closest('li').addClass('active');
+                var mainID = $(this).attr('href').split('#')[1];
+                document.cookie = "mainID=" + mainID;
+                getSecDir(mainID);
+            });
+
+            // 手动通过点击模拟高亮菜单项
+            $('#treeMenu').on('click', 'a', function () {
+                $('#treeMenu li.active').removeClass('active');
+                $(this).closest('li').addClass('active');
+                if ($(this).parent().parent().parent('li').attr("id") != undefined) {
+                    document.cookie = "openli=" + $(this).parent().parent().parent('li').attr("id")
+                }
+            });
+            activeMianDir();
+            activeSecDir();
+        })
+
+
+
+
+        function activeSecDir() {
+            if (getcookie('openli') != "") {
+                $('#' + getcookie('openli')).attr('class', 'open')
+            }
+        }
+        function activeMianDir() {
+            if (getcookie('mainID') != "") {
+                $('#mainMenu').children('li').each(function (index, e) {
+                    if (parseInt(getcookie('mainID')) == (index + 1)) {
+                        $('#mainMenu li.active').removeClass('active');
+                        $(this).addClass('active');
+                    }
+                })
+                getSecDir(getcookie('mainID'));
+            }
+            else {
+                getSecDir(1);
+            }
+        }
+
+
+
+
+        //通过mainID获取二级菜单
+        function getSecDir(mainID) {
+            $.post("/Home/getSecondDirs", { ID: mainID }, function (data) {
+                data = $.parseJSON(data);
+                if (data.success == "true") {
+                    var secondMenu = $.parseJSON(data.menu)[0];
+                    if ($('#treeMenu').find("li").length == 0) {
+                        $('#treeMenu').tree({ data: secondMenu });
+                    }
+                    else {
+                        var secondTree = $('#treeMenu').data('zui.tree')
+                        secondTree.reload(secondMenu);
+                    }
+
+                }
+            })
+        }
+        //从cookie获取name
+        function getcookie(Name) {
+            var search = Name + "="
+            var returnvalue = "";
+            if (document.cookie.length > 0) {
+                offset = document.cookie.indexOf(search)
+                if (offset != -1) {
+                    offset += search.length
+                    end = document.cookie.indexOf(";", offset);
+                    if (end == -1)
+                        end = document.cookie.length;
+                    returnvalue = unescape(document.cookie.substring(offset, end))
+                }
+            }
+            return returnvalue;
+        }
+    </script>
+</head>
+<body>
+    <div id="firstLevel">
+        @Html.Action("getMainDirs", "Home")
+    </div>
+    <div class="panel">
+        <nav class="menu" data-ride="menu" style="width: 15%;float:left">
+            <ul id="treeMenu" class="tree tree-menu"></ul>
+        </nav>
+        <div style="width: 85%;float:right" class="panel" id="tabsContent">
+            @RenderBody()
+        </div>
+    </div>
+</body>
+</html>

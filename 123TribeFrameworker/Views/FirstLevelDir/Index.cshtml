@@ -1,0 +1,114 @@
+﻿@using _123TribeFrameworker.Models
+@model List<FirstLevelDirModel>
+@{
+    ViewBag.Title = "菜单设置";
+}
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            //$("#menuDatagrid").datagrid({
+            //    dataSource: {
+            //        cols: [
+            //            { name: "content", label: "模块", width: 123 },
+            //            { name: "createdDate", label: "创建时间", width: 123 },
+            //            { name: "createdBy", label: "创建人", width: 123 },
+            //            { name: "lastUpdatedDate", label: "最后修改时间", width: 123 },
+            //            { name: "lastUpdatedBy", label: "最后修改人", width: 123 }
+            //        ],
+            //        remote: function (params) {
+            //            return {
+            //                url: "/FirstLevelDir/searchFirstLevelDir",
+            //                type: "POST",
+            //                dataTYpe: "json"
+            //            };
+            //        }
+            //    },
+            //    states: {
+            //        pager: { page: 1, recPerPage: 20 }
+            //    }
+
+            //})
+        })
+    </script>
+}
+<div>
+    <div id="searchDir" style="margin-top:10px">
+        @Html.ValidationMessage("ErrMessageOfSearch", new { style = "color:red" })
+        <form action="/FirstLevelDir/searchFirstLevelDir" method="post" class="form-horizontal container">
+            <div class="form-group required container">
+                <label for="firstLevelID" class="col-md-1" >顺序</label>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" id="firstLevelID" placeholder="数字 1，2，3..." />
+                </div>
+                <label for="firstLevelContent" class="col-md-1">内容</label>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" id="firstLevelContent" placeholder="链接,例如： /Home/Index" />
+                </div>
+                <div class="col-md-1">
+                    <input type="submit" class="btn btn-block btn-primary" value="查询" />
+                </div>
+                <div class="col-md-1">
+                    <input type="button" class="btn btn-block btn-primary" value="删除" />
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="dispalyDir" style="margin-top:10px">
+        <table class="table table-hover" style="margin-bottom:10px">
+            <thead>
+                <tr>
+                    <th>序号</th>    
+                    <th>模块</th>
+                    <th>创建时间</th>
+                    <th>创建人</th>
+                    <th>最后修改时间</th>
+                    <th>最后修改人</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Count > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.id</td>
+                            <td>@item.content</td>
+                            <td>@item.createdDate</td>
+                            <td>@item.createdBy</td>
+                            <td>@item.lastUpdatedDate</td>
+                            <td>@item.lastUpdatedBy</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <ul class="pager" style="margin-top:0px">
+            <li class="previous"><a href="your/nice/url">«</a></li>
+            <li><a href="your/nice/url">1</a></li>
+            <li class="active"><a href="your/nice/url">2</a></li>
+            <li><a href="your/nice/url">3</a></li>
+            <li><a href="your/nice/url">4</a></li>
+            <li><a href="your/nice/url">5</a></li>
+            <li class="next"><a href="your/nice/url">»</a></li>
+        </ul>
+    </div>
+    <div id="changeDir" style="margin-bottom:10px" class="panel">
+        @Html.ValidationMessage("ErrMessageOfChange", new { style = "color:red" })
+        <form action="/FirstLevelDir/changeFirstLevelDir" method="post" class="form-horizontal container">
+            <div class="form-group required container">
+                <label for="firstLevelID" class="col-md-1">顺序</label>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" id="firstLevelID" placeholder="数字 1，2，3..." />
+                </div>
+                <label for="firstLevelContent" class="col-md-1">内容</label>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" id="firstLevelContent" placeholder="链接,例如： /Home/Index" />
+                </div>
+                <div class="col-md-1">
+                    <input type="submit" class="btn btn-block btn-primary" value="提交" />
+                </div>
+            </div>
+        </form>
+    </div>
+    
+</div>
