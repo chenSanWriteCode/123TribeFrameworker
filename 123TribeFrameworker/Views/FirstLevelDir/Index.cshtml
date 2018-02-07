@@ -6,29 +6,23 @@
 @section scripts{
     <script type="text/javascript">
         $(function () {
-            //$("#menuDatagrid").datagrid({
-            //    dataSource: {
-            //        cols: [
-            //            { name: "content", label: "模块", width: 123 },
-            //            { name: "createdDate", label: "创建时间", width: 123 },
-            //            { name: "createdBy", label: "创建人", width: 123 },
-            //            { name: "lastUpdatedDate", label: "最后修改时间", width: 123 },
-            //            { name: "lastUpdatedBy", label: "最后修改人", width: 123 }
-            //        ],
-            //        remote: function (params) {
-            //            return {
-            //                url: "/FirstLevelDir/searchFirstLevelDir",
-            //                type: "POST",
-            //                dataTYpe: "json"
-            //            };
-            //        }
-            //    },
-            //    states: {
-            //        pager: { page: 1, recPerPage: 20 }
-            //    }
-
-            //})
+            $('#myPager').pager({
+                page: 1,
+                recTotal: 100
+            });
+            $('table.datatable').datatable({
+                checkable: true,
+                sortable: true,
+                storage: true,
+                fixedHeader: true
+            });
         })
+        function deleteRow() {
+            var myDatatable = $('table.datatable').data('zui.datatable');
+            var myData = myDatatable.data.rows;
+            console.log(myData)
+            
+        }
     </script>
 }
 <div>
@@ -36,7 +30,7 @@
         @Html.ValidationMessage("ErrMessageOfSearch", new { style = "color:red" })
         <form action="/FirstLevelDir/searchFirstLevelDir" method="post" class="form-horizontal container">
             <div class="form-group required container">
-                <label for="firstLevelID" class="col-md-1" >顺序</label>
+                <label for="firstLevelID" class="col-md-1">顺序</label>
                 <div class="col-md-3">
                     <input type="text" class="form-control" id="firstLevelID" placeholder="数字 1，2，3..." />
                 </div>
@@ -48,16 +42,17 @@
                     <input type="submit" class="btn btn-block btn-primary" value="查询" />
                 </div>
                 <div class="col-md-1">
-                    <input type="button" class="btn btn-block btn-primary" value="删除" />
+                    <input type="button" class="btn btn-block btn-primary" value="删除" onclick="deleteRow()" />
                 </div>
             </div>
         </form>
     </div>
     <div id="dispalyDir" style="margin-top:10px">
-        <table class="table table-hover" style="margin-bottom:10px">
+        <table class="table datatable" style="margin-bottom:10px">
             <thead>
                 <tr>
-                    <th>序号</th>    
+                    <th>#</th>
+                    <th ignore="true">id</th>
                     <th>模块</th>
                     <th>创建时间</th>
                     <th>创建人</th>
@@ -71,6 +66,7 @@
                     foreach (var item in Model)
                     {
                         <tr>
+                            <td>id</td>
                             <td>@item.id</td>
                             <td>@item.content</td>
                             <td>@item.createdDate</td>
@@ -82,7 +78,8 @@
                 }
             </tbody>
         </table>
-        <ul class="pager" style="margin-top:0px">
+        <ul id="myPager" class="pager" data-ride="pager" style="margin-top:0px"></ul>
+        @*<ul class="pager" style="margin-top:0px">
             <li class="previous"><a href="your/nice/url">«</a></li>
             <li><a href="your/nice/url">1</a></li>
             <li class="active"><a href="your/nice/url">2</a></li>
@@ -90,7 +87,7 @@
             <li><a href="your/nice/url">4</a></li>
             <li><a href="your/nice/url">5</a></li>
             <li class="next"><a href="your/nice/url">»</a></li>
-        </ul>
+        </ul>*@
     </div>
     <div id="changeDir" style="margin-bottom:10px" class="panel">
         @Html.ValidationMessage("ErrMessageOfChange", new { style = "color:red" })
@@ -110,5 +107,5 @@
             </div>
         </form>
     </div>
-    
+
 </div>

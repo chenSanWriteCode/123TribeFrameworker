@@ -18,7 +18,7 @@ namespace _123TribeFrameworker.Controllers
     public class FirstLevelDirController : Controller
     {
 
-        private IFirstLevelDir firstLeveldir;
+        private FirstLevelDir firstLeveldir;
 
         //public FirstLevelDirController(IFirstLevelDir firstLevel)
         //{
