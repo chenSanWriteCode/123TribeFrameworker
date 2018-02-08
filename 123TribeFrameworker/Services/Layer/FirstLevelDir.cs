@@ -13,22 +13,72 @@ namespace _123TribeFrameworker.Services.Layer
         /// <summary>
         /// 通过条件进行查询
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="pager"></param>
         /// <returns></returns>
-        public List<FirstLevelDirModel> getFirstLevelDir(FirstLevelDirModel model)
+        public Pager<List<FirstLevelDirModel>> getFirstLevelDir(Pager<FirstLevelDirModel> pager)
         {
-            FirstLevelDIrDAO dao = new FirstLevelDIrDAO();
-            List<FirstLevelDirModel> returnList = new List<FirstLevelDirModel>();
+            FirstLevelDirDAO dao = new FirstLevelDirDAO();
+
+            Pager<List<FirstLevelDirModel>> resultPager = new Pager<List<FirstLevelDirModel>>();
+            List<FirstLevelDirModel> resultList = new List<FirstLevelDirModel>();
             List<firstLevel> firstLevelList = new List<firstLevel>();
-            firstLevelList = dao.getFirstLevelDir(model);
+            firstLevelList = dao.getFirstLevelDir(pager);
             foreach (var item in firstLevelList)
             {
                 FirstLevelDirModel demo = entityToModel(item);
-                returnList.Add(demo);
+                resultList.Add(demo);
             }
-            return returnList;
+            resultPager.data = resultList;
+            resultPager.page = pager.page;
+            resultPager.recTotal = 89;
+            //resultPager.recTotal = dao.getFirstLevelDirCount(pager.data);
+            return resultPager;
         }
-
+        /// <summary>
+        /// 增加
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public Result<FirstLevelDirModel> addFirstLevelDir(FirstLevelDirModel model)
+        {
+            FirstLevelDirDAO dao = new FirstLevelDirDAO();
+            Result<FirstLevelDirModel> result = new Result<FirstLevelDirModel>();
+            if (dao.addFirstLevelDir(model)!=1)
+            {
+                result.result = false;
+            }
+            return result;
+        }
+        /// <summary>
+        /// 修改
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public Result<FirstLevelDirModel> updateFirstLevelDir(FirstLevelDirModel model)
+        {
+            FirstLevelDirDAO dao = new FirstLevelDirDAO();
+            Result<FirstLevelDirModel> result = new Result<FirstLevelDirModel>();
+            if (dao.updateFirstLevelDir(model)!=1)
+            {
+                result.result = false;
+            }
+            return result;
+        }
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public Result<FirstLevelDirModel> deleteFirstLevelDir(FirstLevelDirModel model)
+        {
+            FirstLevelDirDAO dao = new FirstLevelDirDAO();
+            Result<FirstLevelDirModel> result = new Result<FirstLevelDirModel>();
+            if (dao.deleteFirstlevelDir(model) != 1)
+            {
+                result.result = false;
+            }
+            return result;
+        }
         #region  工具
         /// <summary>
         /// 后端entity转前端model
@@ -41,6 +91,7 @@ namespace _123TribeFrameworker.Services.Layer
             if (model != null)
             {
                 entity.id = model.id;
+                entity.orderId = model.orderId;
                 entity.createdBy = model.createdBy;
                 entity.createdDate = model.createdDate;
                 entity.lastUpdatedBy = model.lastUpdatedBy;

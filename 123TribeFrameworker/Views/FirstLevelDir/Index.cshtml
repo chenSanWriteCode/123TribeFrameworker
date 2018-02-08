@@ -1,48 +1,85 @@
 ﻿@using _123TribeFrameworker.Models
-@model List<FirstLevelDirModel>
+@using _123TribeFrameworker.Entity
+@model Pager<List<FirstLevelDirModel>>
 @{
     ViewBag.Title = "菜单设置";
 }
 @section scripts{
     <script type="text/javascript">
         $(function () {
-            $('#myPager').pager({
-                page: 1,
-                recTotal: 100
-            });
             $('table.datatable').datatable({
                 checkable: true,
+                checkByClickRow: true,
                 sortable: true,
-                storage: true,
                 fixedHeader: true
+            });
+            $('#myPager').on('onPageChange', function (e, state, oldState) {
+                if (state.page !== oldState.page) {
+                    var href = $('#searchCondition').attr("action");
+                    href = href + "?page=" + state.page;
+                    $('#searchCondition').attr("action", href);
+                    $('#searchCondition').submit();
+                }
+            });
+            $('table.datatable').datatable().on("checksChanged.zui.datatable", function (event) {
+                var myDatatable = $('table.datatable').data('zui.datatable');
+                var checkStatus = myDatatable.checks;
+                if (checkStatus.checks.length != 1) {
+
+                }
+                // console.log("表格已重新排序！");
+                // 处理 sort 事件
+                // ...
             });
         })
         function deleteRow() {
             var myDatatable = $('table.datatable').data('zui.datatable');
             var myData = myDatatable.data.rows;
             console.log(myData)
-            
+
+        }
+        function changeDirFormShow() {
+            var myDatatable = $('table.datatable').data('zui.datatable');
+            var checkStatus = myDatatable.checks;
+            if (checkStatus.checks.length > 1) {
+
+            }
+            else if (typeof(checkStatus)=='undefined') {
+
+            }
+            else {
+                if ($('#changeDir').attr('hidden') == 'hidden') {
+                    $('#changeDir').attr('hidden', false);
+                    var myData = myDatatable.data.rows;
+                    $('#firstLevelID_change').val(myData[0]["顺序"]);
+                    $('#firstLevelContent_change').val(myData[0]["模块"])
+                }
+                else {
+                    $('#changeDir').attr('hidden', true);
+                }
+            }
+
         }
     </script>
 }
 <div>
     <div id="searchDir" style="margin-top:10px">
         @Html.ValidationMessage("ErrMessageOfSearch", new { style = "color:red" })
-        <form action="/FirstLevelDir/searchFirstLevelDir" method="post" class="form-horizontal container">
+        <form id="searchCondition" action="/FirstLevelDir/searchFirstLevelDir" method="post" class="form-horizontal container">
             <div class="form-group required container">
                 <label for="firstLevelID" class="col-md-1">顺序</label>
                 <div class="col-md-3">
-                    <input type="text" class="form-control" id="firstLevelID" placeholder="数字 1，2，3..." />
+                    <input type="text" class="form-control" value="@ViewBag.condition.orderId" id="firstLevelID" name="orderId" placeholder="数字 1，2，3..." />
                 </div>
                 <label for="firstLevelContent" class="col-md-1">内容</label>
                 <div class="col-md-3">
-                    <input type="text" class="form-control" id="firstLevelContent" placeholder="链接,例如： /Home/Index" />
+                    <input type="text" class="form-control" value="@ViewBag.condition.content" id="firstLevelContent" name="content" placeholder="链接,例如： /Home/Index" />
                 </div>
                 <div class="col-md-1">
                     <input type="submit" class="btn btn-block btn-primary" value="查询" />
                 </div>
                 <div class="col-md-1">
-                    <input type="button" class="btn btn-block btn-primary" value="删除" onclick="deleteRow()" />
+                    <input type="button" class="btn btn-block btn-primary" value="修改" onclick="changeDirFormShow()" />
                 </div>
             </div>
         </form>
@@ -51,8 +88,8 @@
         <table class="table datatable" style="margin-bottom:10px">
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th ignore="true">id</th>
+                    <th data-ignore="true">id</th>
+                    <th>顺序</th>
                     <th>模块</th>
                     <th>创建时间</th>
                     <th>创建人</th>
@@ -61,13 +98,13 @@
                 </tr>
             </thead>
             <tbody>
-                @if (Model != null && Model.Count > 0)
+                @if (Model != null && Model.data.Count > 0)
                 {
-                    foreach (var item in Model)
+                    foreach (var item in Model.data)
                     {
                         <tr>
-                            <td>id</td>
                             <td>@item.id</td>
+                            <td>@item.orderId</td>
                             <td>@item.content</td>
                             <td>@item.createdDate</td>
                             <td>@item.createdBy</td>
@@ -78,31 +115,25 @@
                 }
             </tbody>
         </table>
-        <ul id="myPager" class="pager" data-ride="pager" style="margin-top:0px"></ul>
-        @*<ul class="pager" style="margin-top:0px">
-            <li class="previous"><a href="your/nice/url">«</a></li>
-            <li><a href="your/nice/url">1</a></li>
-            <li class="active"><a href="your/nice/url">2</a></li>
-            <li><a href="your/nice/url">3</a></li>
-            <li><a href="your/nice/url">4</a></li>
-            <li><a href="your/nice/url">5</a></li>
-            <li class="next"><a href="your/nice/url">»</a></li>
-        </ul>*@
+        <ul id="myPager" class="pager" data-ride="pager" data-page="@Model.page" data-rec-total="@Model.recTotal" data-rec-per-page="@Model.recPerPage" style="margin-top:0px"></ul>
     </div>
-    <div id="changeDir" style="margin-bottom:10px" class="panel">
+    <div id="changeDir" style="margin-bottom:10px" class="panel" hidden="hidden">
         @Html.ValidationMessage("ErrMessageOfChange", new { style = "color:red" })
         <form action="/FirstLevelDir/changeFirstLevelDir" method="post" class="form-horizontal container">
             <div class="form-group required container">
-                <label for="firstLevelID" class="col-md-1">顺序</label>
+                <label for="firstLevelID_change" class="col-md-1">顺序</label>
                 <div class="col-md-3">
-                    <input type="text" class="form-control" id="firstLevelID" placeholder="数字 1，2，3..." />
+                    <input type="text" class="form-control" id="firstLevelID_change" name="orderId" placeholder="数字 1，2，3..." />
                 </div>
-                <label for="firstLevelContent" class="col-md-1">内容</label>
+                <label for="firstLevelContent_change" class="col-md-1">内容</label>
                 <div class="col-md-3">
-                    <input type="text" class="form-control" id="firstLevelContent" placeholder="链接,例如： /Home/Index" />
+                    <input type="text" class="form-control" id="firstLevelContent_change" name="content" placeholder="链接,例如： /Home/Index" />
                 </div>
                 <div class="col-md-1">
                     <input type="submit" class="btn btn-block btn-primary" value="提交" />
+                </div>
+                <div class="col-md-1">
+                    <input type="button" class="btn btn-block btn-primary" value="删除" onclick="deleteRow()" />
                 </div>
             </div>
         </form>

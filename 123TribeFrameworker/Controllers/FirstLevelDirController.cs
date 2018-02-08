@@ -25,21 +25,28 @@ namespace _123TribeFrameworker.Controllers
         //    this.firstLevel = firstLevel;
         //}
         // GET: FirstLevelDir
-        public ActionResult Index()
+        public ActionResult Index(FirstLevelDirModel model)
         {
-            return View();
+            Pager<List<FirstLevelDirModel>> pager = new Pager<List<FirstLevelDirModel>>();
+            ViewBag.condition = model;
+            return View(pager);
         }
-        public ActionResult searchFirstLevelDir(FirstLevelDirModel model,Pager page)
+        /// <summary>
+        /// search
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="pager"></param>
+        /// <returns></returns>
+        public ActionResult searchFirstLevelDir(FirstLevelDirModel model, Pager<FirstLevelDirModel> pager)
         {
             firstLeveldir = new FirstLevelDir();
-            //var result = firstLeveldir.getFirstLevelDir(model);
-            Result<List<FirstLevelDirModel>> result1 = new Result<List<FirstLevelDirModel>>();
-            result1.data= firstLeveldir.getFirstLevelDir(model);
-            //result1.pager = new Pager();
-            //result1.pager.page = 1;
-            //result1.pager.recPerPage = 20;
-            //var jsonResult = Json(result1,JsonRequestBehavior.AllowGet);
-            return View("Index",result1.data);
+            if (model != null)
+            {
+                pager.data = model;
+            }
+            Pager<List<FirstLevelDirModel>> result = firstLeveldir.getFirstLevelDir(pager);
+            ViewBag.condition = model;
+            return View("Index", result);
         }
 
         public ActionResult changeFirstLevelDir()

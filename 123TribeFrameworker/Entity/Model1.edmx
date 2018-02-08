@@ -10,6 +10,7 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="orderId" Type="int" Nullable="false" />
           <Property Name="beforContent" Type="nvarchar" MaxLength="50" />
           <Property Name="midContent" Type="nvarchar" MaxLength="50" />
           <Property Name="afterContent" Type="nvarchar" MaxLength="50" />
@@ -111,6 +112,7 @@
           <Property Name="lastUpdatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="SecondLevel" Relationship="Self.FK_SecondLevel_firstLevel" FromRole="firstLevel" ToRole="SecondLevel" />
           <Property Name="activityFlag" Type="Int32" />
+          <Property Name="orderId" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="SecondLevel">
           <Key>
@@ -208,6 +210,7 @@
           <EntitySetMapping Name="firstLevel">
             <EntityTypeMapping TypeName="practiceModel.firstLevel">
               <MappingFragment StoreEntitySet="firstLevel">
+                <ScalarProperty Name="orderId" ColumnName="orderId" />
                 <ScalarProperty Name="activityFlag" ColumnName="activityFlag" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="beforContent" ColumnName="beforContent" />

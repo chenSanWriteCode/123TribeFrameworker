@@ -29,6 +29,7 @@ namespace _123TribeFrameworker.Entity
         public Nullable<System.DateTime> lastUpdatedDate { get; set; }
         public string lastUpdatedBy { get; set; }
         public Nullable<int> activityFlag { get; set; }
+        public int orderId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SecondLevel> SecondLevel { get; set; }

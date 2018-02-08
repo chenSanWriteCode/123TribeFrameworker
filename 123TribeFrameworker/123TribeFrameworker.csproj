@@ -220,7 +220,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MyControllerFactory.cs" />
-    <Compile Include="DAO\DirDAO\FirstLevelDIrDAO.cs" />
+    <Compile Include="DAO\DirDAO\FirstLevelDirDAO.cs" />
     <Compile Include="Entity\firstLevel.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

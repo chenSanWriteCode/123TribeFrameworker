@@ -8,6 +8,7 @@ namespace _123TribeFrameworker.Models
     public class FirstLevelDirModel
     {
         public int? id { get; set; }
+        public int? orderId { get; set; }
         public string content { get; set; }
         public DateTime? createdDate { get; set; }
         public string createdBy { get; set; }
