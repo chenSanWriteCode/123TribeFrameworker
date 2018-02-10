@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using _123TribeFrameworker.DAO.DirDAO;
 using _123TribeFrameworker.Entity;
-using _123TribeFrameworker.Models;
+using _123TribeFrameworker.Models.DirModels;
 
 namespace _123TribeFrameworker.Services.Layer
 {
@@ -30,8 +30,8 @@ namespace _123TribeFrameworker.Services.Layer
             }
             resultPager.data = resultList;
             resultPager.page = pager.page;
-            resultPager.recTotal = 89;
-            //resultPager.recTotal = dao.getFirstLevelDirCount(pager.data);
+            //resultPager.recTotal = 89;
+            resultPager.recTotal = dao.getFirstLevelDirCount(pager.data);
             return resultPager;
         }
         /// <summary>

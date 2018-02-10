@@ -1,4 +1,4 @@
-﻿@using _123TribeFrameworker.Models
+﻿@using _123TribeFrameworker.Models.DirModels
 @using _123TribeFrameworker.Entity
 @model Pager<List<FirstLevelDirModel>>
 @{
@@ -21,16 +21,16 @@
                     $('#searchCondition').submit();
                 }
             });
-            $('table.datatable').datatable().on("checksChanged.zui.datatable", function (event) {
-                var myDatatable = $('table.datatable').data('zui.datatable');
-                var checkStatus = myDatatable.checks;
-                if (checkStatus.checks.length != 1) {
+            //$('table.datatable').datatable().on("checksChanged.zui.datatable", function (event) {
+            //    var myDatatable = $('table.datatable').data('zui.datatable');
+            //    var checkStatus = myDatatable.checks;
+            //    if (checkStatus.checks.length != 1) {
 
-                }
-                // console.log("表格已重新排序！");
-                // 处理 sort 事件
-                // ...
-            });
+            //    }
+            //     console.log("表格已重新排序！");
+            //     处理 sort 事件
+            //     ...
+            //});
         })
         function deleteRow() {
             var myDatatable = $('table.datatable').data('zui.datatable');
@@ -39,32 +39,54 @@
 
         }
         function changeDirFormShow() {
-            var myDatatable = $('table.datatable').data('zui.datatable');
-            var checkStatus = myDatatable.checks;
-            if (checkStatus.checks.length > 1) {
-
-            }
-            else if (typeof(checkStatus)=='undefined') {
-
-            }
-            else {
-                if ($('#changeDir').attr('hidden') == 'hidden') {
+            if ($('#changeDir').attr('hidden') != 'hidden') {
+                $('#changeDir').attr('hidden', true);
+            } else {
+                var myDatatable = $('table.datatable').data('zui.datatable');
+                var checkStatus = myDatatable.checks;
+                if (typeof (checkStatus) == 'undefined' || checkStatus.checks.length == 0){
+                    $('#changeDir').attr('hidden', false);
+                }else if (checkStatus.checks.length > 1){
+                    $('#jsAlertContext').html('同一时间只能修改一条记录，请重新选择');
+                    $('#jsAlert').attr('hidden', false);
+                }else{
                     $('#changeDir').attr('hidden', false);
                     var myData = myDatatable.data.rows;
-                    $('#firstLevelID_change').val(myData[0]["顺序"]);
-                    $('#firstLevelContent_change').val(myData[0]["模块"])
-                }
-                else {
-                    $('#changeDir').attr('hidden', true);
+                    for (var i = 0; i < myData.length; i++) {
+                        if (myData[i]["id"] === checkStatus.checks[0]) {
+                            var checkedData = myData[i]["data"];
+                            $("input[name='id_upd']").val(checkedData[0]["text"]);
+                            $("input[name='orderId_upd']").val(checkedData[1]["text"]);
+                            $("input[name='content_upd']").val(checkedData[2]["text"])
+
+                        }
+                    }
                 }
             }
-
         }
     </script>
 }
 <div>
     <div id="searchDir" style="margin-top:10px">
-        @Html.ValidationMessage("ErrMessageOfSearch", new { style = "color:red" })
+        @if (TempData["Msg"] != null)
+        {
+            var msgData = TempData["Msg"] as Message;
+            if (msgData.success == "success")
+            {
+                <div class="alert alert-success alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    @msgData.msg
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    @msgData.msg
+                </div>
+            }
+
+        }
         <form id="searchCondition" action="/FirstLevelDir/searchFirstLevelDir" method="post" class="form-horizontal container">
             <div class="form-group required container">
                 <label for="firstLevelID" class="col-md-1">顺序</label>
@@ -73,7 +95,7 @@
                 </div>
                 <label for="firstLevelContent" class="col-md-1">内容</label>
                 <div class="col-md-3">
-                    <input type="text" class="form-control" value="@ViewBag.condition.content" id="firstLevelContent" name="content" placeholder="链接,例如： /Home/Index" />
+                    <input type="text" class="form-control" value="@ViewBag.condition.content" id="firstLevelContent" name="content" placeholder="模块名称" />
                 </div>
                 <div class="col-md-1">
                     <input type="submit" class="btn btn-block btn-primary" value="查询" />
@@ -83,6 +105,10 @@
                 </div>
             </div>
         </form>
+    </div>
+    <div id="jsAlert" class="alert alert-warning alert-dismissable" hidden="hidden">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <label id="jsAlertContext"></label>
     </div>
     <div id="dispalyDir" style="margin-top:10px">
         <table class="table datatable" style="margin-bottom:10px">
@@ -120,14 +146,19 @@
     <div id="changeDir" style="margin-bottom:10px" class="panel" hidden="hidden">
         @Html.ValidationMessage("ErrMessageOfChange", new { style = "color:red" })
         <form action="/FirstLevelDir/changeFirstLevelDir" method="post" class="form-horizontal container">
+            <div hidden="hidden">
+                <input value="@ViewBag.condition.orderId" name="orderId" />
+                <input value="@ViewBag.condition.content" name="content" />
+                <input name="id_upd" />
+            </div>
             <div class="form-group required container">
                 <label for="firstLevelID_change" class="col-md-1">顺序</label>
                 <div class="col-md-3">
-                    <input type="text" class="form-control" id="firstLevelID_change" name="orderId" placeholder="数字 1，2，3..." />
+                    <input type="text" class="form-control required" id="orderId_upd" name="orderId_upd" placeholder="数字 1，2，3..." />
                 </div>
                 <label for="firstLevelContent_change" class="col-md-1">内容</label>
                 <div class="col-md-3">
-                    <input type="text" class="form-control" id="firstLevelContent_change" name="content" placeholder="链接,例如： /Home/Index" />
+                    <input type="text" class="form-control required" id="content_upd" name="content_upd" placeholder="模块名称" />
                 </div>
                 <div class="col-md-1">
                     <input type="submit" class="btn btn-block btn-primary" value="提交" />

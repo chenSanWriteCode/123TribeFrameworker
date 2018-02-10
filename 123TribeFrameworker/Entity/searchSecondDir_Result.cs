@@ -17,7 +17,6 @@ namespace _123TribeFrameworker.Entity
         public string title { get; set; }
         public string url { get; set; }
         public string open { get; set; }
-
         public virtual List<searchThirdDir_Result> children { get; set; }
     }
 }

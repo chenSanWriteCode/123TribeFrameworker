@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using _123TribeFrameworker.CommonTools;
 using _123TribeFrameworker.Entity;
-using _123TribeFrameworker.Models;
+using _123TribeFrameworker.Models.DirModels;
 
 namespace _123TribeFrameworker.DAO.DirDAO
 {
@@ -32,7 +33,7 @@ namespace _123TribeFrameworker.DAO.DirDAO
                 result = !pager.data.createdDate.HasValue ? result : result.Where(x => x.createdDate == pager.data.createdDate);
                 result = !pager.data.lastUpdatedDate.HasValue ? result : result.Where(x => x.lastUpdatedDate == pager.data.lastUpdatedDate);
             }
-            result = result.OrderBy(x => x.orderId).Skip(start).Take(pager.recPerPage);
+            result = result.OrderBy(x => x.orderId).ThenBy(x=> x.id).Skip(start).Take(pager.recPerPage);
             return result.ToList();
         }
         /// <summary>
@@ -89,7 +90,7 @@ namespace _123TribeFrameworker.DAO.DirDAO
             if (result != null)
             {
                 firstLevel entity = result.First();
-                entity = modelToEntity(model);
+                modelToEntity(model, ref entity);
             }
             return entities.SaveChanges();
         }
@@ -103,8 +104,13 @@ namespace _123TribeFrameworker.DAO.DirDAO
             practiceEntities entities = new practiceEntities();
             if (model != null)
             {
-                firstLevel entity = modelToEntity(model);
-                entities.firstLevel.Add(entity);
+                firstLevel entity = new firstLevel();
+                modelToEntity(model, ref entity);
+                DirTools tools = new DirTools();
+                entity.afterContent = tools.afterContent;
+                entity.beforContent = tools.beforContent;
+                entity.activityFlag = 1;
+                var result =entities.firstLevel.Add(entity);
             }
             return entities.SaveChanges();
         }
@@ -115,20 +121,39 @@ namespace _123TribeFrameworker.DAO.DirDAO
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public firstLevel modelToEntity(FirstLevelDirModel model)
+        public void modelToEntity(FirstLevelDirModel model, ref firstLevel entity)
         {
-            firstLevel entity = new firstLevel();
             if (model != null)
             {
-                entity.id = model.id.Value;
-                entity.orderId = model.orderId.Value;
-                entity.createdBy = model.createdBy?.ToString();
-                entity.createdDate = model.createdDate.Value;
-                entity.lastUpdatedBy = model.lastUpdatedBy?.ToString();
-                entity.lastUpdatedDate = model.lastUpdatedDate.Value;
-                entity.midContent = model.content?.ToString();
+                if (model.id.HasValue)
+                {
+                    entity.id = model.id.Value;
+                }
+                if (model.orderId.HasValue)
+                {
+                    entity.orderId = model.orderId.Value;
+                }
+                if (model.createdDate.HasValue)
+                {
+                    entity.createdDate = model.createdDate.Value;
+                }
+                if (model.lastUpdatedDate.HasValue)
+                {
+                    entity.lastUpdatedDate = model.lastUpdatedDate ?? null;
+                }
+                if (!string.IsNullOrEmpty(model.createdBy))
+                {
+                    entity.createdBy = model.createdBy?.ToString();
+                }
+                if (!string.IsNullOrEmpty(model.lastUpdatedBy))
+                {
+                    entity.lastUpdatedBy = model.lastUpdatedBy?.ToString();
+                }
+                if (!string.IsNullOrEmpty(model.content))
+                {
+                    entity.midContent = model.content?.ToString();
+                }
             }
-            return entity;
         }
         #endregion
     }
