@@ -24,6 +24,7 @@ namespace _123TribeFrameworker.Entity
         public string createdBy { get; set; }
         public Nullable<System.DateTime> lastUpdatedDate { get; set; }
         public string lastUpdateBy { get; set; }
+        public Nullable<int> orderId { get; set; }
     
         public virtual SecondLevel SecondLevel { get; set; }
     }

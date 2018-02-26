@@ -10,13 +10,11 @@
 namespace _123TribeFrameworker.Entity
 {
     using System;
-    using System.Collections.Generic;
-
+    
     public partial class searchSecondDir_Result
     {
         public string title { get; set; }
         public string url { get; set; }
         public string open { get; set; }
-        public virtual List<searchThirdDir_Result> children { get; set; }
     }
 }

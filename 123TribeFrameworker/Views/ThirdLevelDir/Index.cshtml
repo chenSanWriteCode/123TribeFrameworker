@@ -1,8 +1,8 @@
 ﻿@using _123TribeFrameworker.Models.DirModels
 @using _123TribeFrameworker.Entity
-@model Pager<List<FirstLevelDirModel>>
+@model Pager<List<ThirdLevelDirModel>>
 @{
-    ViewBag.Title = "菜单设置-一级菜单";
+    ViewBag.Title = "菜单设置-三级菜单";
 }
 @section scripts{
     <script type="text/javascript">
@@ -87,7 +87,7 @@
             }
 
         }
-        <form id="searchCondition" action="/FirstLevelDir/searchFirstLevelDir" method="post" class="form-horizontal container">
+        <form id="searchCondition" action="/ThirdLevelDir/searchThirdLevelDir" method="post" class="form-horizontal container">
             <div class="form-group required container">
                 <label for="firstLevelID" class="col-md-1">顺序</label>
                 <div class="col-md-3">
@@ -95,7 +95,7 @@
                 </div>
                 <label for="firstLevelContent" class="col-md-1">内容</label>
                 <div class="col-md-3">
-                    <input type="text" class="form-control" value="@ViewBag.condition.content" id="firstLevelContent" name="content" placeholder="模块名称" />
+                    <input type="text" class="form-control" value="@ViewBag.condition.title" id="firstLevelContent" name="title" placeholder="模块名称" />
                 </div>
                 <div class="col-md-1">
                     <input type="submit" class="btn btn-block btn-primary" value="查询" />
@@ -131,7 +131,7 @@
                         <tr>
                             <td>@item.id</td>
                             <td>@item.orderId</td>
-                            <td>@item.content</td>
+                            <td>@item.title</td>
                             <td>@item.createdDate</td>
                             <td>@item.createdBy</td>
                             <td>@item.lastUpdatedDate</td>
@@ -145,18 +145,18 @@
     </div>
     <div id="changeDir" style="margin-bottom:10px" class="panel" hidden="hidden">
         @Html.ValidationMessage("ErrMessageOfChange", new { style = "color:red" })
-        <form action="/FirstLevelDir/changeFirstLevelDir" method="post" class="form-horizontal container">
+        <form action="/ThirdLevelDir/changeThirdLevelDir" method="post" class="form-horizontal container">
             <div hidden="hidden">
                 <input value="@ViewBag.condition.orderId" name="orderId" />
-                <input value="@ViewBag.condition.content" name="content" />
+                <input value="@ViewBag.condition.title" name="title" />
                 <input name="id_upd" />
             </div>
             <div class="form-group required container">
-                <label for="firstLevelID_change" class="col-md-1">顺序</label>
+                <label for="orderId_upd" class="col-md-1">顺序</label>
                 <div class="col-md-3">
                     <input type="text" class="form-control required" id="orderId_upd" name="orderId_upd" placeholder="数字 1，2，3..." />
                 </div>
-                <label for="firstLevelContent_change" class="col-md-1">内容</label>
+                <label for="content_upd" class="col-md-1">内容</label>
                 <div class="col-md-3">
                     <input type="text" class="form-control required" id="content_upd" name="content_upd" placeholder="模块名称" />
                 </div>

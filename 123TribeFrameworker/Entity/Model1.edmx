@@ -5,7 +5,7 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="practiceModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="firstLevel">
+        <EntityType Name="FirstLevel">
           <Key>
             <PropertyRef Name="id" />
           </Key>
@@ -25,6 +25,7 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="orderId" Type="int" />
           <Property Name="title" Type="nvarchar" MaxLength="50" />
           <Property Name="url" Type="nvarchar" MaxLength="50" />
           <Property Name="open" Type="nvarchar" MaxLength="50" />
@@ -40,6 +41,7 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="orderId" Type="int" />
           <Property Name="title" Type="nvarchar" MaxLength="50" />
           <Property Name="url" Type="nvarchar" MaxLength="50" />
           <Property Name="open" Type="nvarchar" MaxLength="50" />
@@ -51,10 +53,10 @@
           <Property Name="lastUpdateBy" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <Association Name="FK_SecondLevel_firstLevel">
-          <End Role="firstLevel" Type="Self.firstLevel" Multiplicity="0..1" />
+          <End Role="FirstLevel" Type="Self.FirstLevel" Multiplicity="0..1" />
           <End Role="SecondLevel" Type="Self.SecondLevel" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="firstLevel">
+            <Principal Role="FirstLevel">
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="SecondLevel">
@@ -82,11 +84,11 @@
           <Parameter Name="secondLevelID" Type="int" Mode="In" />
         </Function>
         <EntityContainer Name="practiceModelStoreContainer">
-          <EntitySet Name="firstLevel" EntityType="Self.firstLevel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FirstLevel" EntityType="Self.FirstLevel" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SecondLevel" EntityType="Self.SecondLevel" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ThirdLevel" EntityType="Self.ThirdLevel" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_SecondLevel_firstLevel" Association="Self.FK_SecondLevel_firstLevel">
-            <End Role="firstLevel" EntitySet="firstLevel" />
+            <End Role="FirstLevel" EntitySet="FirstLevel" />
             <End Role="SecondLevel" EntitySet="SecondLevel" />
           </AssociationSet>
           <AssociationSet Name="FK_ThirdLevel_SecondLevel" Association="Self.FK_ThirdLevel_SecondLevel">
@@ -98,22 +100,6 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="practiceModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="firstLevel">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="beforContent" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="midContent" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="afterContent" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="createdDate" Type="DateTime" Precision="3" />
-          <Property Name="createdBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="lastUpdatedDate" Type="DateTime" Precision="3" />
-          <Property Name="lastUpdatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="SecondLevel" Relationship="Self.FK_SecondLevel_firstLevel" FromRole="firstLevel" ToRole="SecondLevel" />
-          <Property Name="activityFlag" Type="Int32" />
-          <Property Name="orderId" Type="Int32" Nullable="false" />
-        </EntityType>
         <EntityType Name="SecondLevel">
           <Key>
             <PropertyRef Name="id" />
@@ -128,8 +114,8 @@
           <Property Name="createdBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="lastUpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="lastUpdateBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="firstLevel" Relationship="Self.FK_SecondLevel_firstLevel" FromRole="SecondLevel" ToRole="firstLevel" />
-          <NavigationProperty Name="ThirdLevel" Relationship="Self.FK_ThirdLevel_SecondLevel" FromRole="SecondLevel" ToRole="ThirdLevel" />
+          <Property Name="orderId" Type="Int32" />
+          <NavigationProperty Name="FirstLevel" Relationship="practiceModel.FK_SecondLevel_firstLevel1" FromRole="SecondLevel" ToRole="FirstLevel1" />
         </EntityType>
         <EntityType Name="ThirdLevel">
           <Key>
@@ -146,19 +132,8 @@
           <Property Name="lastUpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="lastUpdateBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="SecondLevel" Relationship="Self.FK_ThirdLevel_SecondLevel" FromRole="ThirdLevel" ToRole="SecondLevel" />
+          <Property Name="orderId" Type="Int32" />
         </EntityType>
-        <Association Name="FK_SecondLevel_firstLevel">
-          <End Role="firstLevel" Type="Self.firstLevel" Multiplicity="0..1" />
-          <End Role="SecondLevel" Type="Self.SecondLevel" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="firstLevel">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="SecondLevel">
-              <PropertyRef Name="firstLevelID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ThirdLevel_SecondLevel">
           <End Role="SecondLevel" Type="Self.SecondLevel" Multiplicity="0..1" />
           <End Role="ThirdLevel" Type="Self.ThirdLevel" Multiplicity="*" />
@@ -172,13 +147,8 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="practiceEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="firstLevel" EntityType="Self.firstLevel" />
           <EntitySet Name="SecondLevel" EntityType="Self.SecondLevel" />
           <EntitySet Name="ThirdLevel" EntityType="Self.ThirdLevel" />
-          <AssociationSet Name="FK_SecondLevel_firstLevel" Association="Self.FK_SecondLevel_firstLevel">
-            <End Role="firstLevel" EntitySet="firstLevel" />
-            <End Role="SecondLevel" EntitySet="SecondLevel" />
-          </AssociationSet>
           <AssociationSet Name="FK_ThirdLevel_SecondLevel" Association="Self.FK_ThirdLevel_SecondLevel">
             <End Role="SecondLevel" EntitySet="SecondLevel" />
             <End Role="ThirdLevel" EntitySet="ThirdLevel" />
@@ -190,6 +160,11 @@
           <FunctionImport Name="searchThirdDir" ReturnType="Collection(practiceModel.searchThirdDir_Result)">
           <Parameter Name="secondLevelID" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="FirstLevelSet" EntityType="practiceModel.FirstLevel" />
+          <AssociationSet Name="FK_SecondLevel_firstLevel1" Association="practiceModel.FK_SecondLevel_firstLevel1">
+            <End Role="FirstLevel1" EntitySet="FirstLevelSet" />
+            <End Role="SecondLevel" EntitySet="SecondLevel" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="searchSecondDir_Result">
           <Property Type="String" Name="title" Nullable="true" MaxLength="50" />
@@ -201,31 +176,43 @@
           <Property Type="String" Name="url" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="open" Nullable="true" MaxLength="50" />
         </ComplexType>
+        <EntityType Name="FirstLevel">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="orderId" Type="Int32" Nullable="false" />
+          <Property Name="beforContent" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="midContent" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="afterContent" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="activityFlag" Type="Int32" />
+          <Property Name="createdDate" Type="DateTime" Precision="3" />
+          <Property Name="createdBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="lastUpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="lastUpdatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_SecondLevel_firstLevel1">
+          <End Type="practiceModel.FirstLevel" Role="FirstLevel1" Multiplicity="0..1" />
+          <End Type="practiceModel.SecondLevel" Role="SecondLevel" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FirstLevel1">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="SecondLevel">
+              <PropertyRef Name="firstLevelID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="practiceModelStoreContainer" CdmEntityContainer="practiceEntities">
-          <EntitySetMapping Name="firstLevel">
-            <EntityTypeMapping TypeName="practiceModel.firstLevel">
-              <MappingFragment StoreEntitySet="firstLevel">
-                <ScalarProperty Name="orderId" ColumnName="orderId" />
-                <ScalarProperty Name="activityFlag" ColumnName="activityFlag" />
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="beforContent" ColumnName="beforContent" />
-                <ScalarProperty Name="midContent" ColumnName="midContent" />
-                <ScalarProperty Name="afterContent" ColumnName="afterContent" />
-                <ScalarProperty Name="createdDate" ColumnName="createdDate" />
-                <ScalarProperty Name="createdBy" ColumnName="createdBy" />
-                <ScalarProperty Name="lastUpdatedDate" ColumnName="lastUpdatedDate" />
-                <ScalarProperty Name="lastUpdatedBy" ColumnName="lastUpdatedBy" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="SecondLevel">
             <EntityTypeMapping TypeName="practiceModel.SecondLevel">
               <MappingFragment StoreEntitySet="SecondLevel">
+                <ScalarProperty Name="orderId" ColumnName="orderId" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="title" ColumnName="title" />
                 <ScalarProperty Name="url" ColumnName="url" />
@@ -242,6 +229,7 @@
           <EntitySetMapping Name="ThirdLevel">
             <EntityTypeMapping TypeName="practiceModel.ThirdLevel">
               <MappingFragment StoreEntitySet="ThirdLevel">
+                <ScalarProperty Name="orderId" ColumnName="orderId" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="title" ColumnName="title" />
                 <ScalarProperty Name="url" ColumnName="url" />
@@ -274,6 +262,22 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="FirstLevelSet">
+            <EntityTypeMapping TypeName="practiceModel.FirstLevel">
+              <MappingFragment StoreEntitySet="FirstLevel">
+                <ScalarProperty Name="lastUpdatedBy" ColumnName="lastUpdatedBy" />
+                <ScalarProperty Name="lastUpdatedDate" ColumnName="lastUpdatedDate" />
+                <ScalarProperty Name="createdBy" ColumnName="createdBy" />
+                <ScalarProperty Name="createdDate" ColumnName="createdDate" />
+                <ScalarProperty Name="activityFlag" ColumnName="activityFlag" />
+                <ScalarProperty Name="afterContent" ColumnName="afterContent" />
+                <ScalarProperty Name="midContent" ColumnName="midContent" />
+                <ScalarProperty Name="beforContent" ColumnName="beforContent" />
+                <ScalarProperty Name="orderId" ColumnName="orderId" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

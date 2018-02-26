@@ -14,12 +14,6 @@ namespace _123TribeFrameworker.Entity
     
     public partial class SecondLevel
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public SecondLevel()
-        {
-            this.ThirdLevel = new HashSet<ThirdLevel>();
-        }
-    
         public int id { get; set; }
         public string title { get; set; }
         public string url { get; set; }
@@ -30,9 +24,8 @@ namespace _123TribeFrameworker.Entity
         public string createdBy { get; set; }
         public Nullable<System.DateTime> lastUpdatedDate { get; set; }
         public string lastUpdateBy { get; set; }
+        public Nullable<int> orderId { get; set; }
     
-        public virtual firstLevel firstLevel { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ThirdLevel> ThirdLevel { get; set; }
+        public virtual FirstLevel FirstLevel { get; set; }
     }
 }

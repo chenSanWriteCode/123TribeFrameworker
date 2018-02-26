@@ -27,9 +27,9 @@ namespace _123TribeFrameworker.Entity
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<firstLevel> firstLevel { get; set; }
         public virtual DbSet<SecondLevel> SecondLevel { get; set; }
         public virtual DbSet<ThirdLevel> ThirdLevel { get; set; }
+        public virtual DbSet<FirstLevel> FirstLevelSet { get; set; }
     
         public virtual ObjectResult<string> searchMainDir()
         {

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Web;
 using System.Web.Mvc;
 using _123TribeFrameworker.Entity;
 using _123TribeFrameworker.Models.DirModels;
@@ -8,23 +10,11 @@ using _123TribeFrameworker.Services.Layer;
 
 namespace _123TribeFrameworker.Controllers
 {
-    /// <summary>
-    /// 一级菜单
-    /// 具备：增删改查
-    /// </summary>
-    public class FirstLevelDirController : Controller
+    public class ThirdLevelDirController : Controller
     {
-
-        //private FirstLevelDir firstLeveldir;
-
-        //public FirstLevelDirController(IFirstLevelDir firstLevel)
-        //{
-        //    this.firstLevel = firstLevel;
-        //}
-        // GET: FirstLevelDir
-        public ActionResult Index(FirstLevelDirModel model)
+        public ActionResult Index(ThirdLevelDirModel model)
         {
-            Pager<List<FirstLevelDirModel>> pager = new Pager<List<FirstLevelDirModel>>();
+            Pager<List<ThirdLevelDirModel>> pager = new Pager<List<ThirdLevelDirModel>>();
             ViewBag.condition = model;
             return View(pager);
         }
@@ -34,14 +24,14 @@ namespace _123TribeFrameworker.Controllers
         /// <param name="model"></param>
         /// <param name="pager"></param>
         /// <returns></returns>
-        public ActionResult searchFirstLevelDir(FirstLevelDirModel model, Pager<FirstLevelDirModel> pager)
+        public ActionResult searchThirdLevelDir(ThirdLevelDirModel model, Pager<ThirdLevelDirModel> pager)
         {
-            FirstLevelDir firstLeveldir = new FirstLevelDir();
+            ThirdLevelDir firstLeveldir = new ThirdLevelDir();
             if (model != null)
             {
                 pager.data = model;
             }
-            Pager<List<FirstLevelDirModel>> result = firstLeveldir.getFirstLevelDir(pager);
+            Pager<List<ThirdLevelDirModel>> result = firstLeveldir.getThirdLevelDir(pager);
             ViewBag.condition = model;
             return View("Index", result);
         }
@@ -50,24 +40,24 @@ namespace _123TribeFrameworker.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public ActionResult changeFirstLevelDir(FirstLevelDirModel condition,FirstLevelDirModel_update model_upd)
+        public ActionResult changeThirdLevelDir(ThirdLevelDirModel condition, ThirdLevelDirModel_update model_upd)
         {
-            FirstLevelDir firstLeveldir = new FirstLevelDir();
-            FirstLevelDirModel model = new FirstLevelDirModel(model_upd);
-            Result<FirstLevelDirModel> result;
+            ThirdLevelDir firstLeveldir = new ThirdLevelDir();
+            ThirdLevelDirModel model = new ThirdLevelDirModel(model_upd);
+            Result<ThirdLevelDirModel> result;
             StringBuilder sb = new StringBuilder("");
             if (model.id.HasValue)
             {
                 model.lastUpdatedBy = User.Identity.Name;
                 model.lastUpdatedDate = DateTime.Now;
-                result = firstLeveldir.updateFirstLevelDir(model);
+                result = firstLeveldir.updateThirdLevelDir(model);
                 sb.Append("修改");
             }
             else
             {
                 model.createdBy = User.Identity.Name;
                 model.createdDate = DateTime.Now;
-                result = firstLeveldir.addFirstLevelDir(model);
+                result = firstLeveldir.addThirdLevelDir(model);
                 sb.Append("增加");
             }
 
@@ -79,7 +69,7 @@ namespace _123TribeFrameworker.Controllers
             {
                 TempData["Msg"] = new Message(sb.Append("失败").ToString());
             }
-            return RedirectToAction("searchFirstLevelDir", condition);
+            return RedirectToAction("searchThirdLevelDir", condition);
         }
     }
 }

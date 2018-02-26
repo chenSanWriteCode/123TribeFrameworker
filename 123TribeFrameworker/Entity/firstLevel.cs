@@ -12,26 +12,17 @@ namespace _123TribeFrameworker.Entity
     using System;
     using System.Collections.Generic;
     
-    public partial class firstLevel
+    public partial class FirstLevel
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public firstLevel()
-        {
-            this.SecondLevel = new HashSet<SecondLevel>();
-        }
-    
         public int id { get; set; }
+        public int orderId { get; set; }
         public string beforContent { get; set; }
         public string midContent { get; set; }
         public string afterContent { get; set; }
+        public Nullable<int> activityFlag { get; set; }
         public Nullable<System.DateTime> createdDate { get; set; }
         public string createdBy { get; set; }
         public Nullable<System.DateTime> lastUpdatedDate { get; set; }
         public string lastUpdatedBy { get; set; }
-        public Nullable<int> activityFlag { get; set; }
-        public int orderId { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SecondLevel> SecondLevel { get; set; }
     }
 }

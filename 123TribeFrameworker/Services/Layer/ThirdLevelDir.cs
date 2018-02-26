@@ -8,30 +8,30 @@ using _123TribeFrameworker.Models.DirModels;
 
 namespace _123TribeFrameworker.Services.Layer
 {
-    public class FirstLevelDir 
+    public class ThirdLevelDir
     {
         /// <summary>
         /// 通过条件进行查询
         /// </summary>
         /// <param name="pager"></param>
         /// <returns></returns>
-        public Pager<List<FirstLevelDirModel>> getFirstLevelDir(Pager<FirstLevelDirModel> pager)
+        public Pager<List<ThirdLevelDirModel>> getThirdLevelDir(Pager<ThirdLevelDirModel> pager)
         {
-            FirstLevelDirDAO dao = new FirstLevelDirDAO();
+            ThirdLevelDirDAO dao = new ThirdLevelDirDAO();
 
-            Pager<List<FirstLevelDirModel>> resultPager = new Pager<List<FirstLevelDirModel>>();
-            List<FirstLevelDirModel> resultList = new List<FirstLevelDirModel>();
-            List<FirstLevel> firstLevelList = new List<FirstLevel>();
-            firstLevelList = dao.getFirstLevelDir(pager);
-            foreach (var item in firstLevelList)
+            Pager<List<ThirdLevelDirModel>> resultPager = new Pager<List<ThirdLevelDirModel>>();
+            List<ThirdLevelDirModel> resultList = new List<ThirdLevelDirModel>();
+            List<ThirdLevel> ThirdLevelList = new List<ThirdLevel>();
+            ThirdLevelList = dao.getThirdLevelDir(pager);
+            foreach (var item in ThirdLevelList)
             {
-                FirstLevelDirModel demo = entityToModel(item);
+                ThirdLevelDirModel demo = entityToModel(item);
                 resultList.Add(demo);
             }
             resultPager.data = resultList;
             resultPager.page = pager.page;
             //resultPager.recTotal = 89;
-            resultPager.recTotal = dao.getFirstLevelDirCount(pager.data);
+            resultPager.recTotal = dao.getThirdLevelDirCount(pager.data);
             return resultPager;
         }
         /// <summary>
@@ -39,11 +39,11 @@ namespace _123TribeFrameworker.Services.Layer
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public Result<FirstLevelDirModel> addFirstLevelDir(FirstLevelDirModel model)
+        public Result<ThirdLevelDirModel> addThirdLevelDir(ThirdLevelDirModel model)
         {
-            FirstLevelDirDAO dao = new FirstLevelDirDAO();
-            Result<FirstLevelDirModel> result = new Result<FirstLevelDirModel>();
-            if (dao.addFirstLevelDir(model)!=1)
+            ThirdLevelDirDAO dao = new ThirdLevelDirDAO();
+            Result<ThirdLevelDirModel> result = new Result<ThirdLevelDirModel>();
+            if (dao.addThirdLevelDir(model) != 1)
             {
                 result.result = false;
             }
@@ -54,11 +54,11 @@ namespace _123TribeFrameworker.Services.Layer
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public Result<FirstLevelDirModel> updateFirstLevelDir(FirstLevelDirModel model)
+        public Result<ThirdLevelDirModel> updateThirdLevelDir(ThirdLevelDirModel model)
         {
-            FirstLevelDirDAO dao = new FirstLevelDirDAO();
-            Result<FirstLevelDirModel> result = new Result<FirstLevelDirModel>();
-            if (dao.updateFirstLevelDir(model)!=1)
+            ThirdLevelDirDAO dao = new ThirdLevelDirDAO();
+            Result<ThirdLevelDirModel> result = new Result<ThirdLevelDirModel>();
+            if (dao.updateThirdLevelDir(model) != 1)
             {
                 result.result = false;
             }
@@ -69,11 +69,11 @@ namespace _123TribeFrameworker.Services.Layer
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public Result<FirstLevelDirModel> deleteFirstLevelDir(FirstLevelDirModel model)
+        public Result<ThirdLevelDirModel> deleteThirdLevelDir(ThirdLevelDirModel model)
         {
-            FirstLevelDirDAO dao = new FirstLevelDirDAO();
-            Result<FirstLevelDirModel> result = new Result<FirstLevelDirModel>();
-            if (dao.deleteFirstlevelDir(model) != 1)
+            ThirdLevelDirDAO dao = new ThirdLevelDirDAO();
+            Result<ThirdLevelDirModel> result = new Result<ThirdLevelDirModel>();
+            if (dao.deleteThirdlevelDir(model) != 1)
             {
                 result.result = false;
             }
@@ -85,18 +85,20 @@ namespace _123TribeFrameworker.Services.Layer
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public FirstLevelDirModel entityToModel(FirstLevel model)
+        public ThirdLevelDirModel entityToModel(ThirdLevel model)
         {
-            FirstLevelDirModel entity = new FirstLevelDirModel();
+            ThirdLevelDirModel entity = new ThirdLevelDirModel();
             if (model != null)
             {
                 entity.id = model.id;
                 entity.orderId = model.orderId;
                 entity.createdBy = model.createdBy;
                 entity.createdDate = model.createdDate;
-                entity.lastUpdatedBy = model.lastUpdatedBy;
+                entity.lastUpdatedBy = model.lastUpdateBy;
                 entity.lastUpdatedDate = model.lastUpdatedDate;
-                entity.content = model.midContent;
+                entity.title = model.title;
+                entity.secondLevelID = model.secondLevelID.Value;
+                entity.url = model.url;
             }
             return entity;
         }
