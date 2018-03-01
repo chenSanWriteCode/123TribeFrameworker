@@ -24,18 +24,22 @@
                 $(this).closest('li').addClass('active');
                 if ($(this).parent().parent().parent('li').attr("id") != undefined) {
                     document.cookie = "openli=" + $(this).parent().parent().parent('li').attr("id")
+                    document.cookie = "activeli=" + $(this)
                 }
             });
             activeMianDir();
             activeSecDir();
+            activeThirdDir()
         })
-
-
-
 
         function activeSecDir() {
             if (getcookie('openli') != "") {
                 $('#' + getcookie('openli')).attr('class', 'open')
+            }
+        }
+        function activeThirdDir() {
+            if (getcookie('activeli') != "") {
+                getcookie('activeli').attr('class', 'active')
             }
         }
         function activeMianDir() {
@@ -61,7 +65,7 @@
             $.post("/Home/getSecondDirs", { ID: mainID }, function (data) {
                 data = $.parseJSON(data);
                 if (data.success == "true") {
-                    var secondMenu = $.parseJSON(data.menu)[0];
+                    var secondMenu = $.parseJSON(data.menu);
                     if ($('#treeMenu').find("li").length == 0) {
                         $('#treeMenu').tree({ data: secondMenu });
                     }

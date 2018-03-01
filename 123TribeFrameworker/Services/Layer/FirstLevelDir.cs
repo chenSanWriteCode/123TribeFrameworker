@@ -35,6 +35,21 @@ namespace _123TribeFrameworker.Services.Layer
             return resultPager;
         }
         /// <summary>
+        /// 获取主菜单字典 id,content
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<int,string> getFirstLevelDirDict()
+        {
+            FirstLevelDirDAO dao = new FirstLevelDirDAO();
+            List<FirstLevel> list = dao.getFirstLevelDirList();
+            Dictionary<int, string> firstDict = new Dictionary<int, string>();
+            foreach (var item in list)
+            {
+                firstDict.Add(item.id, item.midContent);
+            }
+            return firstDict;
+        }
+        /// <summary>
         /// 增加
         /// </summary>
         /// <param name="model"></param>
@@ -67,13 +82,13 @@ namespace _123TribeFrameworker.Services.Layer
         /// <summary>
         /// 删除
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public Result<FirstLevelDirModel> deleteFirstLevelDir(FirstLevelDirModel model)
+        public Result<FirstLevelDirModel> deleteFirstLevelDir(int id)
         {
             FirstLevelDirDAO dao = new FirstLevelDirDAO();
             Result<FirstLevelDirModel> result = new Result<FirstLevelDirModel>();
-            if (dao.deleteFirstlevelDir(model) != 1)
+            if (dao.deleteFirstlevelDir(id) != 1)
             {
                 result.result = false;
             }

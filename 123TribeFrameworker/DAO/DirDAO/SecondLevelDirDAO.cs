@@ -37,6 +37,27 @@ namespace _123TribeFrameworker.DAO.DirDAO
             return result.ToList();
         }
         /// <summary>
+        /// 获取所有主菜单list
+        /// </summary>
+        /// <returns></returns>
+        public List<SecondLevel> getSecondLevelDirList()
+        {
+            practiceEntities entities = new practiceEntities();
+            var result = entities.SecondLevel.Where(x => x.activityFlag == 1);
+            result = result.OrderBy(x => x.orderId).ThenBy(x => x.id);
+            return result.ToList();
+        }
+        /// <summary>
+        /// 根据id获取一条二级菜单
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public SecondLevel getSingleSecondDir(int id)
+        {
+            practiceEntities entities = new practiceEntities();
+            return entities.SecondLevel.FirstOrDefault(x => x.activityFlag == 1 && x.id == id);
+        }
+        /// <summary>
         /// 获取总条数
         /// </summary>
         /// <param name="model"></param>
@@ -65,14 +86,13 @@ namespace _123TribeFrameworker.DAO.DirDAO
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public int deleteSecondlevelDir(SecondLevelDirModel model)
+        public int deleteSecondlevelDir(int id)
         {
             practiceEntities entities = new practiceEntities();
-            var result = entities.SecondLevel.Where(x => x.id > 0);
-            result = model.id.HasValue ? result.Where(x => x.id == model.id.Value) : null;
-            if (result != null)
+            var result = entities.SecondLevel.Where(x => x.id ==id);
+            SecondLevel entity = result.First();
+            if (entity != null)
             {
-                SecondLevel entity = result.First();
                 entity.activityFlag = 0;
             }
             return entities.SaveChanges();

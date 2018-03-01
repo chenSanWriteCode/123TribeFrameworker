@@ -7,11 +7,24 @@
 @section scripts{
     <script type="text/javascript">
         $(function () {
-            $('table.datatable').datatable({
-                checkable: true,
-                checkByClickRow: true,
+            $('#table1').datatable({
+                //checkable: true,
+                //checkByClickRow: true,
                 sortable: true,
-                fixedHeader: true
+                fixedHeader: true,
+                scrollPos: "out",
+                fixCellHeight: false
+            });
+            
+            $('#table2').datagrid({
+                states: {
+                    //pager: { page: 1, recPerPage: 100 },
+                    fixedLeftUntil: 0,
+                    // 固定左侧第一列
+                    //fixedRightFrom: 12,   // 从第12列开始固定到右侧
+                    fixedTopUntil: 0,     // 固定顶部第一行（标题行）
+                    fixedBottomFrom: 100, // 从第100行（在此例中是最后一行）开始固定到底部
+                }
             });
             $('#myPager').on('onPageChange', function (e, state, oldState) {
                 if (state.page !== oldState.page) {
@@ -21,35 +34,49 @@
                     $('#searchCondition').submit();
                 }
             });
-            //$('table.datatable').datatable().on("checksChanged.zui.datatable", function (event) {
-            //    var myDatatable = $('table.datatable').data('zui.datatable');
-            //    var checkStatus = myDatatable.checks;
-            //    if (checkStatus.checks.length != 1) {
-
-            //    }
-            //     console.log("表格已重新排序！");
-            //     处理 sort 事件
-            //     ...
-            //});
+            $.post('/FirstLevelDir/getFirstLevelDirList', function (data) {
+                data = $.parseJSON(data);
+                if (data != null) {
+                    $.each(data, function (key, value) {
+                        $('<option value="' + key + '">' + value + '</option>').appendTo(".chosen-select");
+                        $('#firstLevelID').trigger('chosen:updated');
+                    })
+                }
+            })
         })
-        function deleteRow() {
-            var myDatatable = $('table.datatable').data('zui.datatable');
-            var myData = myDatatable.data.rows;
-            console.log(myData)
 
+        function deleteRow() {
+            $('#updateForm').attr('action', '/SecondLevelDir/deleteSecondLevelDir');
+            $('#updateForm').submit();
         }
+        //function clickRow(id) {
+        //    alert(111);
+        //    if (id != null) {
+        //        console.log(id);
+        //        $('#id_upd').val(id);
+        //        $.post('/SecondLevelDir/getSingleSecondDir', {id:id}, function (data) {
+        //            data = $.parseJSON(data);
+        //            $('#orderId_upd').val(data.orderId);
+        //            $('#content_upd').val(data.title);
+        //            $('#firstLevelID').val(data.firstLevelID);
+        //        });
+        //    }
+        //}
+
         function changeDirFormShow() {
             if ($('#changeDir').attr('hidden') != 'hidden') {
                 $('#changeDir').attr('hidden', true);
             } else {
-                var myDatatable = $('table.datatable').data('zui.datatable');
-                var checkStatus = myDatatable.checks;
-                if (typeof (checkStatus) == 'undefined' || checkStatus.checks.length == 0){
+                var myDatatable = $('#table2').data('zui.datagrid');
+                console.log(myDatatable);
+                var checkStatus = myDatatable.getCheckItems();
+                console.log(checkStatus);
+                if (typeof (checkStatus) == 'undefined' || checkStatus.checks.length == 0) {
                     $('#changeDir').attr('hidden', false);
-                }else if (checkStatus.checks.length > 1){
+                } else if (checkStatus.checks.length > 1) {
                     $('#jsAlertContext').html('同一时间只能修改一条记录，请重新选择');
                     $('#jsAlert').attr('hidden', false);
-                }else{
+                } else {
                     $('#changeDir').attr('hidden', false);
                     var myData = myDatatable.data.rows;
                     for (var i = 0; i < myData.length; i++) {
@@ -64,6 +91,7 @@
                 }
             }
         }
+
     </script>
 }
 <div>
@@ -111,10 +139,12 @@
         <label id="jsAlertContext"></label>
     </div>
     <div id="dispalyDir" style="margin-top:10px">
-        <table class="table datatable" style="margin-bottom:10px">
+
+        <table id="table3" class="datagrid"></table>
+        <table class="table" id="table2">
             <thead>
                 <tr>
-                    <th data-ignore="true">id</th>
+                    <th>sss</th>
                     <th>顺序</th>
                     <th>模块</th>
                     <th>上级菜单</th>
@@ -130,14 +160,14 @@
                     foreach (var item in Model.data)
                     {
                         <tr>
-                            <td>@item.id</td>
-                            <td>@item.orderId</td>
-                            <td>@item.title</td>
-                            <td>@item.firstLevelID</td>
-                            <td>@item.createdDate</td>
-                            <td>@item.createdBy</td>
-                            <td>@item.lastUpdatedDate</td>
-                            <td>@item.lastUpdatedBy</td>
+                            <td><input data-html="true" type="radio" value="@item.id" /></td>
+                            <td onclick="clickRow('@item.id')">@item.orderId</td>
+                            <td onclick="clickRow(@item.id)">@item.title</td>
+                            <td onclick="clickRow(@item.id)">@item.firstLevelName</td>
+                            <td onclick="clickRow(@item.id)">@item.createdDate</td>
+                            <td onclick="clickRow(@item.id)">@item.createdBy</td>
+                            <td onclick="clickRow(@item.id)">@item.lastUpdatedDate</td>
+                            <td onclick="clickRow(@item.id)">@item.lastUpdatedBy</td>
                         </tr>
                     }
                 }
@@ -145,23 +175,31 @@
         </table>
         <ul id="myPager" class="pager" data-ride="pager" data-page="@Model.page" data-rec-total="@Model.recTotal" data-rec-per-page="@Model.recPerPage" style="margin-top:0px"></ul>
     </div>
+
     <div id="changeDir" style="margin-bottom:10px" class="panel" hidden="hidden">
+
         @Html.ValidationMessage("ErrMessageOfChange", new { style = "color:red" })
-        <form action="/SecondLevelDir/changeSecondLevelDir" method="post" class="form-horizontal container">
+        <form action="/SecondLevelDir/changeSecondLevelDir" method="post" class="form-horizontal" id="updateForm">
             <div hidden="hidden">
                 <input value="@ViewBag.condition.orderId" name="orderId" />
                 <input value="@ViewBag.condition.title" name="title" />
                 <input name="id_upd" />
             </div>
-            <div class="form-group required container">
-                <label for="firstLevelID_change" class="col-md-1">顺序</label>
+            <div class="form-group">
+                <label for="orderId_upd" class="col-md-1">顺序</label>
                 <div class="col-md-3">
                     <input type="text" class="form-control required" id="orderId_upd" name="orderId_upd" placeholder="数字 1，2，3..." />
                 </div>
-                <label for="firstLevelContent_change" class="col-md-1">内容</label>
+                <label for="content_upd" class="col-md-1">内容</label>
                 <div class="col-md-3">
                     <input type="text" class="form-control required" id="content_upd" name="content_upd" placeholder="模块名称" />
                 </div>
+                <label class="col-md-1">上级菜单</label>
+                <div class="col-md-3">
+                    <select data-placeholder="上级菜单..." id="firstLevelID" name="firstLevelID" class="chosen-select form-control"></select>
+                </div>
+            </div>
+            <div class="form-group">
                 <div class="col-md-1">
                     <input type="submit" class="btn btn-block btn-primary" value="提交" />
                 </div>

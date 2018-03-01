@@ -34,6 +34,33 @@ namespace _123TribeFrameworker.Services.Layer
             resultPager.recTotal = dao.getSecondLevelDirCount(pager.data);
             return resultPager;
         }
+
+        /// <summary>
+        /// 获取二级菜单字典 id,content
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<int, string> getSecondLevelDirDict()
+        {
+            SecondLevelDirDAO dao = new SecondLevelDirDAO();
+            List<SecondLevel> list = dao.getSecondLevelDirList();
+            Dictionary<int, string> secondDict = new Dictionary<int, string>();
+            foreach (var item in list)
+            {
+                secondDict.Add(item.id, item.title);
+            }
+            return secondDict;
+        }
+        /// <summary>
+        /// 根据id获取一条二级菜单
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public SecondLevelDirModel getSingleSecondDir(int id)
+        {
+            SecondLevelDirDAO dao = new SecondLevelDirDAO();
+            SecondLevel entity = dao.getSingleSecondDir(id);
+            return entityToModel(entity);
+        }
         /// <summary>
         /// 增加
         /// </summary>
@@ -69,11 +96,11 @@ namespace _123TribeFrameworker.Services.Layer
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public Result<SecondLevelDirModel> deleteSecondLevelDir(SecondLevelDirModel model)
+        public Result<SecondLevelDirModel> deleteSecondLevelDir(int id)
         {
             SecondLevelDirDAO dao = new SecondLevelDirDAO();
             Result<SecondLevelDirModel> result = new Result<SecondLevelDirModel>();
-            if (dao.deleteSecondlevelDir(model) != 1)
+            if (dao.deleteSecondlevelDir(id) != 1)
             {
                 result.result = false;
             }
@@ -90,8 +117,7 @@ namespace _123TribeFrameworker.Services.Layer
             SecondLevelDirModel entity = new SecondLevelDirModel();
             if (model != null)
             {
-                //FirstLevel ff = new FirstLevel();
-                //ff = model.FirstLevel;
+                entity.firstLevelName = model.FirstLevel.midContent;
                 entity.id = model.id;
                 entity.orderId = model.orderId;
                 entity.createdBy = model.createdBy;
@@ -103,6 +129,8 @@ namespace _123TribeFrameworker.Services.Layer
             }
             return entity;
         }
+
+
         #endregion
     }
 }

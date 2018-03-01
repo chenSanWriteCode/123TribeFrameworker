@@ -17,7 +17,7 @@ namespace _123TribeFrameworker.Services.Layer
             {
                 string title = secondDirs[i].title;
                 int secondID = entities.SecondLevel.First(a => a.title == title).id;
-                var thirdDirs = entities.searchThirdDir(secondID).ToList(); ;
+                var thirdDirs = entities.searchThirdDir(secondID).ToList(); 
                 if (thirdDirs != null)
                 {
                     secondDirs[i].children = thirdDirs;

@@ -64,14 +64,13 @@ namespace _123TribeFrameworker.DAO.DirDAO
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public int deleteThirdlevelDir(ThirdLevelDirModel model)
+        public int deleteThirdlevelDir(int id)
         {
             practiceEntities entities = new practiceEntities();
-            var result = entities.ThirdLevel.Where(x => x.id > 0);
-            result = model.id.HasValue ? result.Where(x => x.id == model.id.Value) : null;
-            if (result != null)
+            var result = entities.ThirdLevel.Where(x => x.id == id);
+            ThirdLevel entity = result.First();
+            if (entity != null)
             {
-                ThirdLevel entity = result.First();
                 entity.activityFlag = 0;
             }
             return entities.SaveChanges();

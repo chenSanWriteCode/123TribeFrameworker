@@ -26,10 +26,10 @@ namespace _123TribeFrameworker
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
-
-            bundles.Add(new StyleBundle("~/bundles/zuiCSS").Include("~/Scripts/dist/css/zui.css", "~/Scripts/dist/lib/datagrid/zui.datagrid.css", "~/Scripts/dist/lib/datatable/zui.datatable.css"));
+            //"~/Scripts/dist/lib/datatable/zui.datatable.css"
+            bundles.Add(new StyleBundle("~/bundles/zuiCSS").Include("~/Scripts/dist/css/zui.css", "~/Scripts/dist/lib/datagrid/zui.datagrid.css", "~/Scripts/dist/lib/datatable/zui.datatable.css", "~/Scripts/dist/lib/chosen/zui.chosen.css"));
             bundles.Add(new ScriptBundle("~/bundles/zuiJS").Include("~/Scripts/dist/lib/jquery/jquery.js",
-                "~/Scripts/dist/js/zui.js", "~/Scripts/dist/lib/datagrid/zui.datagrid.js", "~/Scripts/dist/lib/datatable/zui.datatable.js"));
+                "~/Scripts/dist/js/zui.js", "~/Scripts/dist/lib/datagrid/zui.datagrid.js", "~/Scripts/dist/lib/datatable/zui.datatable.js", "~/Scripts/dist/lib/chosen/zui.chosen.js"));
             
         }
     }

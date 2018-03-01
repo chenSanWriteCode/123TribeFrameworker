@@ -26,12 +26,12 @@ namespace _123TribeFrameworker.Controllers
         /// <returns></returns>
         public ActionResult searchThirdLevelDir(ThirdLevelDirModel model, Pager<ThirdLevelDirModel> pager)
         {
-            ThirdLevelDir firstLeveldir = new ThirdLevelDir();
+            ThirdLevelDir ThirdLeveldir = new ThirdLevelDir();
             if (model != null)
             {
                 pager.data = model;
             }
-            Pager<List<ThirdLevelDirModel>> result = firstLeveldir.getThirdLevelDir(pager);
+            Pager<List<ThirdLevelDirModel>> result = ThirdLeveldir.getThirdLevelDir(pager);
             ViewBag.condition = model;
             return View("Index", result);
         }
@@ -42,7 +42,7 @@ namespace _123TribeFrameworker.Controllers
         /// <returns></returns>
         public ActionResult changeThirdLevelDir(ThirdLevelDirModel condition, ThirdLevelDirModel_update model_upd)
         {
-            ThirdLevelDir firstLeveldir = new ThirdLevelDir();
+            ThirdLevelDir ThirdLeveldir = new ThirdLevelDir();
             ThirdLevelDirModel model = new ThirdLevelDirModel(model_upd);
             Result<ThirdLevelDirModel> result;
             StringBuilder sb = new StringBuilder("");
@@ -50,14 +50,14 @@ namespace _123TribeFrameworker.Controllers
             {
                 model.lastUpdatedBy = User.Identity.Name;
                 model.lastUpdatedDate = DateTime.Now;
-                result = firstLeveldir.updateThirdLevelDir(model);
+                result = ThirdLeveldir.updateThirdLevelDir(model);
                 sb.Append("修改");
             }
             else
             {
                 model.createdBy = User.Identity.Name;
                 model.createdDate = DateTime.Now;
-                result = firstLeveldir.addThirdLevelDir(model);
+                result = ThirdLeveldir.addThirdLevelDir(model);
                 sb.Append("增加");
             }
 
@@ -68,6 +68,30 @@ namespace _123TribeFrameworker.Controllers
             else
             {
                 TempData["Msg"] = new Message(sb.Append("失败").ToString());
+            }
+            return RedirectToAction("searchThirdLevelDir", condition);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <param name="model_upd"></param>
+        /// <returns></returns>
+        public ActionResult deleteThirdLevelDir(ThirdLevelDirModel condition, ThirdLevelDirModel_update model_upd)
+        {
+            if (model_upd.id_upd.HasValue)
+            {
+                ThirdLevelDir layer = new ThirdLevelDir();
+                StringBuilder sb = new StringBuilder("删除");
+                Result<ThirdLevelDirModel> result = layer.deleteThirdLevelDir(model_upd.id_upd.Value);
+                if (result.result)
+                {
+                    TempData["Msg"] = new Message(sb.Append("成功").ToString());
+                }
+                else
+                {
+                    TempData["Msg"] = new Message(sb.Append("失败").ToString());
+                }
             }
             return RedirectToAction("searchThirdLevelDir", condition);
         }

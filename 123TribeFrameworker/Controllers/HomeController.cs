@@ -63,8 +63,8 @@ namespace _123TribeFrameworker.Controllers
                 result.Add("success", "false");
                 
             }
-            string strResult = result.ToString();
-            return strResult;
+            //string strResult = result.ToString();
+            return result.ToString();
         }
         [ChildActionOnly]
         public ActionResult getMainDirs()

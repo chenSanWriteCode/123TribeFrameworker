@@ -21,21 +21,10 @@
                     $('#searchCondition').submit();
                 }
             });
-            //$('table.datatable').datatable().on("checksChanged.zui.datatable", function (event) {
-            //    var myDatatable = $('table.datatable').data('zui.datatable');
-            //    var checkStatus = myDatatable.checks;
-            //    if (checkStatus.checks.length != 1) {
-
-            //    }
-            //     console.log("表格已重新排序！");
-            //     处理 sort 事件
-            //     ...
-            //});
         })
         function deleteRow() {
-            var myDatatable = $('table.datatable').data('zui.datatable');
-            var myData = myDatatable.data.rows;
-            console.log(myData)
+            $('#updateForm').attr('action', '/FirstLevelDir/deleteFirstLevelDir');
+            $('#updateForm').submit();
 
         }
         function changeDirFormShow() {
@@ -145,7 +134,7 @@
     </div>
     <div id="changeDir" style="margin-bottom:10px" class="panel" hidden="hidden">
         @Html.ValidationMessage("ErrMessageOfChange", new { style = "color:red" })
-        <form action="/FirstLevelDir/changeFirstLevelDir" method="post" class="form-horizontal container">
+        <form action="/FirstLevelDir/changeFirstLevelDir" method="post" class="form-horizontal container" id="updateForm">
             <div hidden="hidden">
                 <input value="@ViewBag.condition.orderId" name="orderId" />
                 <input value="@ViewBag.condition.content" name="content" />

@@ -37,6 +37,17 @@ namespace _123TribeFrameworker.DAO.DirDAO
             return result.ToList();
         }
         /// <summary>
+        /// 获取所有主菜单list
+        /// </summary>
+        /// <returns></returns>
+        public List<FirstLevel> getFirstLevelDirList()
+        {
+            practiceEntities entities = new practiceEntities();
+            var result = entities.FirstLevel.Where(x => x.id > 0 && x.activityFlag == 1);
+            result = result.OrderBy(x => x.orderId).ThenBy(x => x.id);
+            return result.ToList();
+        }
+        /// <summary>
         /// 获取总条数
         /// </summary>
         /// <param name="model"></param>
@@ -65,14 +76,13 @@ namespace _123TribeFrameworker.DAO.DirDAO
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public int deleteFirstlevelDir(FirstLevelDirModel model)
+        public int deleteFirstlevelDir(int id)
         {
             practiceEntities entities = new practiceEntities();
-            var result = entities.FirstLevel.Where(x => x.id > 0);
-            result = model.id.HasValue ? result.Where(x => x.id == model.id.Value) : null;
-            if (result != null)
+            var result = entities.FirstLevel.Where(x => x.id > 0 && x.id == id);
+            FirstLevel entity = result.First();
+            if (entity!=null)
             {
-                FirstLevel entity = result.First();
                 entity.activityFlag = 0;
             }
             return entities.SaveChanges();

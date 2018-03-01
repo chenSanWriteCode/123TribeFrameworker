@@ -21,22 +21,19 @@
                     $('#searchCondition').submit();
                 }
             });
-            //$('table.datatable').datatable().on("checksChanged.zui.datatable", function (event) {
-            //    var myDatatable = $('table.datatable').data('zui.datatable');
-            //    var checkStatus = myDatatable.checks;
-            //    if (checkStatus.checks.length != 1) {
-
-            //    }
-            //     console.log("表格已重新排序！");
-            //     处理 sort 事件
-            //     ...
-            //});
+            $.post('/SecondLevelDir/getSecondLevelDirList', function (data) {
+                data = $.parseJSON(data);
+                if (data != null) {
+                    $.each(data, function (key, value) {
+                        $('<option value="' + key + '">' + value + '</option>').appendTo("#secondLevelID");
+                        $('#secondLevelID').trigger('chosen:updated');
+                    })
+                }
+            });
         })
         function deleteRow() {
-            var myDatatable = $('table.datatable').data('zui.datatable');
-            var myData = myDatatable.data.rows;
-            console.log(myData)
-
+            $('#updateForm').attr('action', '/ThirdLevelDir/deleteThirdLevelDir');
+            $('#updateForm').submit();
         }
         function changeDirFormShow() {
             if ($('#changeDir').attr('hidden') != 'hidden') {
@@ -44,12 +41,12 @@
             } else {
                 var myDatatable = $('table.datatable').data('zui.datatable');
                 var checkStatus = myDatatable.checks;
-                if (typeof (checkStatus) == 'undefined' || checkStatus.checks.length == 0){
+                if (typeof (checkStatus) == 'undefined' || checkStatus.checks.length == 0) {
                     $('#changeDir').attr('hidden', false);
-                }else if (checkStatus.checks.length > 1){
+                } else if (checkStatus.checks.length > 1) {
                     $('#jsAlertContext').html('同一时间只能修改一条记录，请重新选择');
                     $('#jsAlert').attr('hidden', false);
-                }else{
+                } else {
                     $('#changeDir').attr('hidden', false);
                     var myData = myDatatable.data.rows;
                     for (var i = 0; i < myData.length; i++) {
@@ -117,6 +114,8 @@
                     <th data-ignore="true">id</th>
                     <th>顺序</th>
                     <th>模块</th>
+                    <th>上级菜单</th>
+                    <th>url</th>
                     <th>创建时间</th>
                     <th>创建人</th>
                     <th>最后修改时间</th>
@@ -132,6 +131,8 @@
                             <td>@item.id</td>
                             <td>@item.orderId</td>
                             <td>@item.title</td>
+                            <td>@item.secondLevelName</td>
+                            <td>@item.url</td>
                             <td>@item.createdDate</td>
                             <td>@item.createdBy</td>
                             <td>@item.lastUpdatedDate</td>
@@ -145,13 +146,13 @@
     </div>
     <div id="changeDir" style="margin-bottom:10px" class="panel" hidden="hidden">
         @Html.ValidationMessage("ErrMessageOfChange", new { style = "color:red" })
-        <form action="/ThirdLevelDir/changeThirdLevelDir" method="post" class="form-horizontal container">
+        <form action="/ThirdLevelDir/changeThirdLevelDir" method="post" class="form-horizontal" id="updateForm">
             <div hidden="hidden">
                 <input value="@ViewBag.condition.orderId" name="orderId" />
                 <input value="@ViewBag.condition.title" name="title" />
                 <input name="id_upd" />
             </div>
-            <div class="form-group required container">
+            <div class="form-group">
                 <label for="orderId_upd" class="col-md-1">顺序</label>
                 <div class="col-md-3">
                     <input type="text" class="form-control required" id="orderId_upd" name="orderId_upd" placeholder="数字 1，2，3..." />
@@ -159,6 +160,16 @@
                 <label for="content_upd" class="col-md-1">内容</label>
                 <div class="col-md-3">
                     <input type="text" class="form-control required" id="content_upd" name="content_upd" placeholder="模块名称" />
+                </div>
+                <label class="col-md-1">上级菜单</label>
+                <div class="col-md-3">
+                    <select data-placeholder="上级菜单..." id="secondLevelID" name="secondLevelID" class="chosen-select form-control"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="url" class="col-md-1">URL</label>
+                <div class="col-md-3">
+                    <input type="text" class="form-control required" id="url" name="url" placeholder="链接，如/home/index" />
                 </div>
                 <div class="col-md-1">
                     <input type="submit" class="btn btn-block btn-primary" value="提交" />

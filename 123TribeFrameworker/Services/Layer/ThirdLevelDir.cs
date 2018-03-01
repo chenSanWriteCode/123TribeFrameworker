@@ -69,11 +69,11 @@ namespace _123TribeFrameworker.Services.Layer
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public Result<ThirdLevelDirModel> deleteThirdLevelDir(ThirdLevelDirModel model)
+        public Result<ThirdLevelDirModel> deleteThirdLevelDir(int id)
         {
             ThirdLevelDirDAO dao = new ThirdLevelDirDAO();
             Result<ThirdLevelDirModel> result = new Result<ThirdLevelDirModel>();
-            if (dao.deleteThirdlevelDir(model) != 1)
+            if (dao.deleteThirdlevelDir(id) != 1)
             {
                 result.result = false;
             }
@@ -90,6 +90,7 @@ namespace _123TribeFrameworker.Services.Layer
             ThirdLevelDirModel entity = new ThirdLevelDirModel();
             if (model != null)
             {
+                entity.secondLevelName = model.SecondLevel.title;
                 entity.id = model.id;
                 entity.orderId = model.orderId;
                 entity.createdBy = model.createdBy;

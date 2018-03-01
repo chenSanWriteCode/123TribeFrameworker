@@ -24,6 +24,7 @@ namespace _123TribeFrameworker.Models.DirModels
         public int? orderId { get; set; }
         public string title { get; set; }
         public int secondLevelID { get; set; }
+        public string  secondLevelName { get; set; }
         public string url { get; set; }
         public DateTime? createdDate { get; set; }
         public string createdBy { get; set; }

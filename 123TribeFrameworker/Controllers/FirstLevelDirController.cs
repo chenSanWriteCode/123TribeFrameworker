@@ -5,6 +5,8 @@ using System.Web.Mvc;
 using _123TribeFrameworker.Entity;
 using _123TribeFrameworker.Models.DirModels;
 using _123TribeFrameworker.Services.Layer;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace _123TribeFrameworker.Controllers
 {
@@ -81,5 +83,53 @@ namespace _123TribeFrameworker.Controllers
             }
             return RedirectToAction("searchFirstLevelDir", condition);
         }
+        /// <summary>
+        /// 返回一级菜单列表
+        /// </summary>
+        /// <returns></returns>
+        public string getFirstLevelDirList()
+        {
+            FirstLevelDir layer = new FirstLevelDir();
+            //JObject json = new JObject();
+            Dictionary<int, string> firstDirDict = layer.getFirstLevelDirDict();
+            //json.Add(firstDirDict);
+            string jsonStr = JsonConvert.SerializeObject(firstDirDict);
+            return jsonStr;
+        }
+        /// <summary>
+        /// delete
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <param name="model_upd"></param>
+        /// <returns></returns>
+        public ActionResult deleteFirstLevelDir(FirstLevelDirModel condition, FirstLevelDirModel_update model_upd)
+        {
+            if (model_upd.id_upd.HasValue)
+            {
+                FirstLevelDir layer = new FirstLevelDir();
+                StringBuilder sb = new StringBuilder("删除");
+                Result<FirstLevelDirModel> result = layer.deleteFirstLevelDir(model_upd.id_upd.Value);
+                if (result.result)
+                {
+                    TempData["Msg"] = new Message(sb.Append("成功").ToString());
+                }
+                else
+                {
+                    TempData["Msg"] = new Message(sb.Append("失败").ToString());
+                }
+            }
+            return RedirectToAction("searchFirstLevelDir", condition);
+        }
+        /// <summary>
+        /// 根据id获取一条主菜单
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        //public string getSingleFirstDir(int id)
+        //{
+        //    FirstLevelDir layer = new FirstLevelDir();
+        //    FirstLevelDirModel model = layer.getSingleSecondDir(id);
+        //    return JsonConvert.SerializeObject(model);
+        //}
     }
 }

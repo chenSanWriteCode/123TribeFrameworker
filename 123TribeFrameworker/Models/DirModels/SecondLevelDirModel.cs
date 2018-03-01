@@ -25,6 +25,8 @@ namespace _123TribeFrameworker.Models.DirModels
         public string title { get; set; }
 
         public int firstLevelID { get; set; }
+
+        public string firstLevelName { get; set; }
         public DateTime? createdDate { get; set; }
         public string createdBy { get; set; }
         public DateTime? lastUpdatedDate { get; set; }
