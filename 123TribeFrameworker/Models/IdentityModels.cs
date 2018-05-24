@@ -1,6 +1,10 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using _123TribeFrameworker.Entity;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -14,6 +18,7 @@ namespace _123TribeFrameworker.Models
         /// </summary>
         public string password { get; set; }
 
+        public string trueName { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
@@ -23,17 +28,43 @@ namespace _123TribeFrameworker.Models
             return userIdentity;
         }
     }
+    public class AplicationRole : IdentityRole
+    {
+        public AplicationRole() : base()
+        {
 
+        }
+        public AplicationRole(string name) : base(name)
+        {
+
+        }
+    }
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext()
-            : base("practice", throwIfV1Schema: false)
+        public ApplicationDbContext(): base("practice", throwIfV1Schema: false)
         {
         }
-
+        static ApplicationDbContext()
+        {
+            Database.SetInitializer<ApplicationDbContext>(new IdentityDbInit());
+        }
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<IdentityUser>().ToTable("USER");
+            modelBuilder.Entity<ApplicationUser>().ToTable("USER");
+            modelBuilder.Entity<IdentityRole>().ToTable("ROLE");
+            modelBuilder.Entity<AplicationRole>().ToTable("ROLE");
+        }
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
         }
     }
+    public class IdentityDbInit : NullDatabaseInitializer<ApplicationDbContext>
+    {
+        
+    }
+    
+
 }

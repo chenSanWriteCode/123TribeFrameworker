@@ -16,14 +16,14 @@ namespace _123TribeFrameworker.Models.DirModels
                 this.id = model_upd.id_upd.Value;
             }
             this.orderId = model_upd.orderId_upd.Value;
-            this.title = model_upd.content_upd?.ToString();
-            this.secondLevelID = model_upd.secondLevelID;
-            this.url = model_upd.url;
+            this.title = model_upd.content_upd;
+            this.secondLevelID = model_upd.secondLevelID_upd;
+            this.url = model_upd.url_upd;
         }
         public int? id { get; set; }
         public int? orderId { get; set; }
-        public string title { get; set; }
-        public int secondLevelID { get; set; }
+        public string title { get; set; } 
+        public int? secondLevelID { get; set; }
         public string  secondLevelName { get; set; }
         public string url { get; set; }
         public DateTime? createdDate { get; set; }

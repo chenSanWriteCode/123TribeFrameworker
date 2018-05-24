@@ -10,14 +10,12 @@
     @RenderSection("scripts", required: false)
     <script type="text/javascript">
         $(function () {
-            alert(document.cookie+'  a')
             $('#mainMenu').on('click', 'a', function () {
                 $('#mainMenu li.active').removeClass('active');
                 $(this).closest('li').addClass('active');
                 var mainID = $(this).attr('href').split('#')[1];
-                document.cookie = "mainID=" + mainID;
+                $.cookie("mainID", mainID);
                 getSecDir(mainID);
-                alert(document.cookie + '  d')
             });
             // 手动通过点击模拟高亮菜单项
             $('#treeMenu').on('click', 'a', function () {
@@ -25,28 +23,23 @@
                 $(this).closest('li').addClass('active');
                 var id = $(this).parent().parent().parent('li').attr("data-id");
                 if (id != undefined) {
-                    //delCookie("openli");
-                    $.cookie('current', null);
-                    $.cookie('openli', null);
-                    $.cookie('openli', 'id');
-                    //setcookie("openli", id);
-                    //delCookie("activeli");
-                    $.cookie('activeli', null);
-                    $.cookie('activeli', $(this).parent('li').attr("data-id"));
-                    //setcookie("activeli", $(this).parent('li').attr("data-id"));
+                    $.cookie('openli', null, { path: '/' });
+                    $.cookie('openli', id, {path:'/'});
+                    $.cookie('activeli', null, { path: '/' });
+                    $.cookie('activeli', $(this).parent('li').attr("data-id"), { path: '/' });
                 }
             });
             activeMianDir();
         })
         function activeMianDir() {
-            if (getcookie('mainID') != "") {
+            if (typeof ($.cookie('mainID')) != "undefined") {
                 $('#mainMenu').children('li').each(function (index, e) {
-                    if (parseInt(getcookie('mainID')) == (index + 1)) {
+                    if (parseInt($.cookie('mainID')) == (index + 1)) {
                         $('#mainMenu li.active').removeClass('active');
                         $(this).addClass('active');
                     }
                 })
-                getSecDir(getcookie('mainID'));
+                getSecDir($.cookie('mainID'));
             }
             else {
                 getSecDir(1);
@@ -65,10 +58,8 @@
                         var secondTree = $('#treeMenu').data('zui.tree')
                         secondTree.reload(secondMenu);
                     }
-                    alert(document.cookie + '  b')
                     activeSecDir();
                     activeThirdDir();
-                    alert(document.cookie + '  c')
                 }
             })
         }
@@ -83,33 +74,6 @@
             if (dataId != "") {
                 $('li[data-id=' + dataId + ']').attr('class', 'active');
             }
-        }
-        function setcookie(name, value) {
-            document.cookie = name + "=" + value + "; path=/";
-            console.log(document.cookie);
-        }
-        //从cookie获取name
-        function getcookie(Name) {
-            var search = Name + "="
-            var returnvalue = "";
-            if (document.cookie.length > 0) {
-                offset = document.cookie.indexOf(search)
-                if (offset != -1) {
-                    offset += search.length
-                    end = document.cookie.indexOf(";", offset);
-                    if (end == -1)
-                        end = document.cookie.length;
-                    returnvalue = unescape(document.cookie.substring(offset, end))
-                }
-            }
-            return returnvalue;
-        }
-        function delCookie(name) {
-            var exp = new Date();
-            exp.setTime(exp.getTime() - 1);
-            var cval = getcookie(name);
-            if (cval != null)
-                document.cookie = name + "=" + cval + "; path=/;expires=" + exp.toGMTString();
         }
     </script>
 </head>

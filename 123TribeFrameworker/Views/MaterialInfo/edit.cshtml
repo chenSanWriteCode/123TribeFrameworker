@@ -1,0 +1,34 @@
+﻿
+@using _123TribeFrameworker.Entity
+@model MaterialInfo
+@{
+    ViewBag.Title = "物料维护";
+}
+<div style="color:red">@Html.ValidationSummary(false)</div>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4 style="text-align:center">@Model.materialName</h4>
+    </div>
+    @using (Html.BeginForm())
+    {
+        @Html.HiddenFor(x => x.id)
+        <div class="panel-body">
+            <label for="material">别名：</label>
+            @Html.TextBoxFor(x => x.alias, new { @class = "form-control" });
+            <label for="material">单位：</label>
+            @Html.TextBoxFor(x => x.unit, new { @class = "form-control" });
+            <label for="material">规格：</label>
+            @Html.TextBoxFor(x => x.mat_size, new { @class = "form-control" });
+            <label for="material" class="required">采购价：</label>
+            @Html.TextBoxFor(x => x.referencePriceIn, new { @class = "form-control" });
+            <label for="material">建议零售价：</label>
+            @Html.TextBoxFor(x => x.referencePriceOut, new { @class = "form-control" });
+            <label for="material">备注：</label>
+            @Html.TextBoxFor(x => x.remark, new { @class = "form-control" });
+            <div>
+                <button type="submit" class="btn btn-primary">保存</button>
+                @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-primary" })
+            </div>
+        </div>
+    }
+</div>

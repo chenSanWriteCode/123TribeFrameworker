@@ -19,12 +19,12 @@ namespace _123TribeFrameworker.Entity
         public string title { get; set; }
         public string url { get; set; }
         public string open { get; set; }
-        public Nullable<int> firstLevelID { get; set; }
-        public Nullable<int> activityFlag { get; set; }
-        public Nullable<System.DateTime> createdDate { get; set; }
+        public Nullable<int> firstLevelId { get; set; }
         public string createdBy { get; set; }
+        public Nullable<System.DateTime> createdDate { get; set; }
+        public string lastUpdatedBy { get; set; }
         public Nullable<System.DateTime> lastUpdatedDate { get; set; }
-        public string lastUpdateBy { get; set; }
+        public Nullable<int> activityFlag { get; set; }
     
         public virtual FirstLevel FirstLevel { get; set; }
     }

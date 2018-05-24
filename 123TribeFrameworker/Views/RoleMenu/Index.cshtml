@@ -1,0 +1,60 @@
+﻿@using _123TribeFrameworker.Entity
+@using _123TribeFrameworker.Infrastructrue
+@model List<RoleMenu>
+@{
+    ViewBag.title = "角色权限";
+}
+<script type="text/javascript">
+    $(function () {
+        // 初始化搜索框，并在选项中指定搜索文本变更事件回调函数，这样当搜索框文本发送变化时获得通知。
+        $('#inputSearchExample3').searchBox({
+            escToClear: true, // 设置点击 ESC 键清空搜索框
+            changeDelay: 3000,
+            onSearchChange: function (searchKey, isEmpty) {
+                var storeId = document.getElementById('menu');//获取table的id标识
+                var rowsLength = storeId.rows.length;//表格总共有多少行
+                var key = searchKey;//获取输入框的值
+                var searchCol = 3;//要搜索的哪一列，这里是第一列，从0开始数起
+                for (var i = 1; i < rowsLength; i++) {//按表的行数进行循环，本例第一行是标题，所以i=1，从第二行开始筛选（从0数起）
+                    for (var j = 0; j < searchCol; j++) {
+                        var searchText = storeId.rows[i].cells[j].innerHTML;//取得table行，列的值
+                        if (searchText.match(key)) {//用match函数进行筛选，如果input的值，即变量 key的值为空，返回的是ture，
+                            storeId.rows[i].style.display = '';//显示行操作，
+                            break;
+                        } else {
+                            storeId.rows[i].style.display = 'none';//隐藏行操作
+                        }
+                    }
+                }
+            }
+        });
+        
+    })
+    
+</script>
+@*@Html.ValidationSummary(false, "ERROR",new { color="red"})*@
+<div class="input-control search-box search-box-circle has-icon-left has-icon-right" id="searchboxExample">
+    <input id="inputSearchExample3" autofocus="autofocus" type="search" class="form-control search-input" placeholder="搜索">
+    <label for="inputSearchExample3" class="input-control-icon-left search-icon"><i class="icon icon-search"></i></label>
+</div>
+<table id="menu" class="table table-striped">
+    <tr>
+        <th>角色</th><th>目录级别</th><th>菜单名称</th><th>操作</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@Html.getRole(item.roleId).Name</td>
+            <td>@item.menuLevel</td>
+            <td>@Html.getMenuName(item.menuId,item.menuLevel)</td>
+            <td>
+                @using (Html.BeginForm("deleteMenu", "RoleMenu",new { id = item.id }))
+                {
+                    <button type="submit" class="btn btn-danger">删除</button>
+                }
+            </td>
+        </tr>
+    }
+</table>
+@Html.ActionLink("增加", "addMenu", null, new { @class="btn btn-primary"})
+

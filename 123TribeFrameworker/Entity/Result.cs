@@ -11,5 +11,10 @@ namespace _123TribeFrameworker.Entity
         public T data { get; set; }
         public string message { get; set; } = "";
 
+        public  void addError(string message)
+        {
+            this.result = false;
+            this.message = message;
+        }
     }
 }

@@ -1,0 +1,51 @@
+﻿@{
+    ViewBag.Title = "物料查询";
+}
+
+<script type="text/javascript">
+    var cols = [
+            { name: 'material', label: '物料号' },
+            { name: 'materialName', label: '物料名称' },
+            { name: 'mat_type', label: '型号' },
+            { name: 'mat_size', label: '规格' },
+            { name: 'mat_color', label: '颜色' }
+           // ,{ name: 'deal', label: '操作', sort: false, html: true, width: 287 }
+    ]
+    var content1 = [{ material: '00:11:12', materialName: '幻影刺客', mat_type: '击杀', mat_size: '斧王', mat_color: '幻影刺斧王。' },
+    { material: 'aaa', materialName: '幻影刺客', mat_type: '击杀', mat_size: '斧王', mat_color: '幻影刺斧王。' },
+    { material: 'aaa', materialName: '幻影刺客', mat_type: '击杀', mat_size: '斧王', mat_color: '幻影刺斧王。' },
+    { material: 'aaa', materialName: '幻影刺客', mat_type: '击杀', mat_size: '斧王', mat_color: '幻影刺斧王。' },
+    { material: 'aaa', materialName: '幻影刺客', mat_type: '击杀', mat_size: '斧王', mat_color: '幻影刺斧王。' },
+    { material: 'aaa', materialName: '幻影刺客', mat_type: '击杀', mat_size: '斧王', mat_color: '幻影刺斧王。' }]
+    $(function () {
+        $("#dataGrid").datagrid({
+            dataSource: {
+                cols: cols
+            },
+            states: {
+                pager: { page: 1, recPerPage: 5 }
+            },
+            sortable: true,
+            checkable: true,
+            responsive: true,
+            height: 'page',
+        })
+    })
+    function searchByCondition() {
+        var myDataGrid = $('#dataGrid').data('zui.datagrid');
+        myDataGrid.setDataSource(content1)
+        myDataGrid.render()
+    }
+
+</script>
+<div>
+
+    <div>
+        <button class="btn btn-primary" type="button" onclick="searchByCondition()">查询</button>
+    </div>
+    <div id="dataGrid" class="datagrid datagrid-striped">
+        <div class="datagrid-container"></div>
+        <div class="pager"></div>
+
+    </div>
+</div>

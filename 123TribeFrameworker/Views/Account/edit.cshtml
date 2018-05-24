@@ -1,0 +1,44 @@
+﻿@using _123TribeFrameworker.Models
+@model UserEdit
+@{
+    ViewBag.title = "用户编辑";
+}
+<div style="color:red">
+    @Html.ValidationSummary(false)
+</div>
+<div class="panel panel-primary">
+    <div class="panel-heading" style="text-align:center">
+        <h4>@Model.id</h4>
+    </div>
+    @using (Html.BeginForm(new { @class = "form-horizontal" }))
+    {
+        @Html.HiddenFor(x => x.id)
+        <div class="panel-body">
+            <div class="form-group">
+                <label for="userName" class="col-md-1">登录名:</label>
+                @Html.TextBoxFor(x => x.userName, new { @class = "from-control col-md-3" })
+                <br />
+            </div>
+            <div class="form-group">
+                <label for="trueName" class="col-md-1">真实姓名:</label>
+                @Html.TextBoxFor(x => x.trueName, new { @class = "from-control col-md-3" })
+                <br />
+            </div>
+            <div class="form-group">
+                <label for="email" class="col-md-1">邮箱:</label>
+                @Html.TextBoxFor(x => x.email, new { @class = "from-control col-md-3" })
+                <br />
+            </div>
+            <div class="form-group">
+                <label for="phoneNumber" class="col-md-1">电话:</label>
+                @Html.TextBoxFor(x => x.phoneNumber, new { @class = "from-control col-md-3" })
+                <br />
+            </div>
+            <div class="col-md-1">
+                <button style="margin-left:10px" class="btn btn-primary btn-block" type="submit">提交</button>
+            </div>
+            @Html.ActionLink("修改我的密码", "updatePassword", "Account", new { id = Model.id }, new { @class = "btn btn-primary  col-md-1" })
+            @Html.ActionLink("返回", "Index", "Account", new { @class = "btn btn-primary" })
+        </div>
+    }
+</div>

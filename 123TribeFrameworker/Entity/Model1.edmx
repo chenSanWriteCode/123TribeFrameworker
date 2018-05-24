@@ -4,21 +4,21 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="practiceModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="practiceModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="FirstLevel">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="orderId" Type="int" Nullable="false" />
+          <Property Name="orderId" Type="int" />
           <Property Name="beforContent" Type="nvarchar" MaxLength="50" />
           <Property Name="midContent" Type="nvarchar" MaxLength="50" />
           <Property Name="afterContent" Type="nvarchar" MaxLength="50" />
           <Property Name="activityFlag" Type="int" />
-          <Property Name="createdDate" Type="datetime" />
           <Property Name="createdBy" Type="nvarchar" MaxLength="50" />
-          <Property Name="lastUpdatedDate" Type="datetime" />
+          <Property Name="createdDate" Type="datetime" />
           <Property Name="lastUpdatedBy" Type="nvarchar" MaxLength="50" />
+          <Property Name="lastUpdatedDate" Type="datetime" />
         </EntityType>
         <EntityType Name="SecondLevel">
           <Key>
@@ -29,12 +29,12 @@
           <Property Name="title" Type="nvarchar" MaxLength="50" />
           <Property Name="url" Type="nvarchar" MaxLength="50" />
           <Property Name="open" Type="nvarchar" MaxLength="50" />
-          <Property Name="firstLevelID" Type="int" />
+          <Property Name="firstLevelId" Type="int" />
           <Property Name="activityFlag" Type="int" />
-          <Property Name="createdDate" Type="datetime" />
           <Property Name="createdBy" Type="nvarchar" MaxLength="50" />
+          <Property Name="createdDate" Type="datetime" />
+          <Property Name="lastUpdatedBy" Type="nvarchar" MaxLength="50" />
           <Property Name="lastUpdatedDate" Type="datetime" />
-          <Property Name="lastUpdateBy" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="ThirdLevel">
           <Key>
@@ -44,15 +44,15 @@
           <Property Name="orderId" Type="int" />
           <Property Name="title" Type="nvarchar" MaxLength="50" />
           <Property Name="url" Type="nvarchar" MaxLength="50" />
+          <Property Name="secondLevelId" Type="int" />
           <Property Name="open" Type="nvarchar" MaxLength="50" />
-          <Property Name="secondLevelID" Type="int" />
           <Property Name="activityFlag" Type="int" />
-          <Property Name="createdDate" Type="datetime" />
           <Property Name="createdBy" Type="nvarchar" MaxLength="50" />
+          <Property Name="createdDate" Type="datetime" />
+          <Property Name="lastUpdatedBy" Type="nvarchar" MaxLength="50" />
           <Property Name="lastUpdatedDate" Type="datetime" />
-          <Property Name="lastUpdateBy" Type="nvarchar" MaxLength="50" />
         </EntityType>
-        <Association Name="FK_SecondLevel_firstLevel">
+        <Association Name="FK_SecondLevel_FirstLevel">
           <End Role="FirstLevel" Type="Self.FirstLevel" Multiplicity="0..1" />
           <End Role="SecondLevel" Type="Self.SecondLevel" Multiplicity="*" />
           <ReferentialConstraint>
@@ -60,7 +60,7 @@
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="SecondLevel">
-              <PropertyRef Name="firstLevelID" />
+              <PropertyRef Name="firstLevelId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -72,22 +72,26 @@
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="ThirdLevel">
-              <PropertyRef Name="secondLevelID" />
+              <PropertyRef Name="secondLevelId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Function Name="searchMainDir" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="searchMainDir" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="roleId" Type="nvarchar" Mode="In" />
+        </Function>
         <Function Name="searchSecondDir" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="firstLevelID" Type="int" Mode="In" />
+          <Parameter Name="roleId" Type="nvarchar" Mode="In" />
+          <Parameter Name="firstLevelId" Type="int" Mode="In" />
         </Function>
         <Function Name="searchThirdDir" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="secondLevelID" Type="int" Mode="In" />
+          <Parameter Name="roleId" Type="nvarchar" Mode="In" />
+          <Parameter Name="secondLevelId" Type="int" Mode="In" />
         </Function>
         <EntityContainer Name="practiceModelStoreContainer">
           <EntitySet Name="FirstLevel" EntityType="Self.FirstLevel" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SecondLevel" EntityType="Self.SecondLevel" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ThirdLevel" EntityType="Self.ThirdLevel" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_SecondLevel_firstLevel" Association="Self.FK_SecondLevel_firstLevel">
+          <AssociationSet Name="FK_SecondLevel_FirstLevel" Association="Self.FK_SecondLevel_FirstLevel">
             <End Role="FirstLevel" EntitySet="FirstLevel" />
             <End Role="SecondLevel" EntitySet="SecondLevel" />
           </AssociationSet>
@@ -96,8 +100,7 @@
             <End Role="ThirdLevel" EntitySet="ThirdLevel" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="practiceModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -106,15 +109,15 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="orderId" Type="Int32" Nullable="false" />
+          <Property Name="orderId" Type="Int32" />
           <Property Name="beforContent" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="midContent" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="afterContent" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="activityFlag" Type="Int32" />
-          <Property Name="createdDate" Type="DateTime" Precision="3" />
           <Property Name="createdBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="lastUpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="createdDate" Type="DateTime" Precision="3" />
           <Property Name="lastUpdatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="lastUpdatedDate" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="SecondLevel">
           <Key>
@@ -125,13 +128,13 @@
           <Property Name="title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="url" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="open" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="firstLevelID" Type="Int32" />
-          <Property Name="activityFlag" Type="Int32" />
-          <Property Name="createdDate" Type="DateTime" Precision="3" />
+          <Property Name="firstLevelId" Type="Int32" />
           <Property Name="createdBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="createdDate" Type="DateTime" Precision="3" />
+          <Property Name="lastUpdatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="lastUpdatedDate" Type="DateTime" Precision="3" />
-          <Property Name="lastUpdateBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="FirstLevel" Relationship="Self.FK_SecondLevel_firstLevel" FromRole="SecondLevel" ToRole="FirstLevel" />
+          <NavigationProperty Name="FirstLevel" Relationship="Self.FK_SecondLevel_FirstLevel" FromRole="SecondLevel" ToRole="FirstLevel" />
+          <Property Name="activityFlag" Type="Int32" />
         </EntityType>
         <EntityType Name="ThirdLevel">
           <Key>
@@ -141,16 +144,16 @@
           <Property Name="orderId" Type="Int32" />
           <Property Name="title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="url" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="secondLevelId" Type="Int32" />
           <Property Name="open" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="secondLevelID" Type="Int32" />
           <Property Name="activityFlag" Type="Int32" />
-          <Property Name="createdDate" Type="DateTime" Precision="3" />
           <Property Name="createdBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="createdDate" Type="DateTime" Precision="3" />
+          <Property Name="lastUpdatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="lastUpdatedDate" Type="DateTime" Precision="3" />
-          <Property Name="lastUpdateBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="SecondLevel" Relationship="Self.FK_ThirdLevel_SecondLevel" FromRole="ThirdLevel" ToRole="SecondLevel" />
         </EntityType>
-        <Association Name="FK_SecondLevel_firstLevel">
+        <Association Name="FK_SecondLevel_FirstLevel">
           <End Role="FirstLevel" Type="Self.FirstLevel" Multiplicity="0..1" />
           <End Role="SecondLevel" Type="Self.SecondLevel" Multiplicity="*" />
           <ReferentialConstraint>
@@ -158,7 +161,7 @@
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="SecondLevel">
-              <PropertyRef Name="firstLevelID" />
+              <PropertyRef Name="firstLevelId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -170,7 +173,7 @@
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="ThirdLevel">
-              <PropertyRef Name="secondLevelID" />
+              <PropertyRef Name="secondLevelId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -178,7 +181,7 @@
           <EntitySet Name="FirstLevel" EntityType="Self.FirstLevel" />
           <EntitySet Name="SecondLevel" EntityType="Self.SecondLevel" />
           <EntitySet Name="ThirdLevel" EntityType="Self.ThirdLevel" />
-          <AssociationSet Name="FK_SecondLevel_firstLevel" Association="Self.FK_SecondLevel_firstLevel">
+          <AssociationSet Name="FK_SecondLevel_FirstLevel" Association="Self.FK_SecondLevel_FirstLevel">
             <End Role="FirstLevel" EntitySet="FirstLevel" />
             <End Role="SecondLevel" EntitySet="SecondLevel" />
           </AssociationSet>
@@ -186,25 +189,29 @@
             <End Role="SecondLevel" EntitySet="SecondLevel" />
             <End Role="ThirdLevel" EntitySet="ThirdLevel" />
           </AssociationSet>
-          <FunctionImport Name="searchMainDir" ReturnType="Collection(String)" />
+          <FunctionImport Name="searchMainDir" ReturnType="Collection(String)">
+          <Parameter Name="roleId" Mode="In" Type="String" />
+          </FunctionImport>
           <FunctionImport Name="searchSecondDir" ReturnType="Collection(practiceModel.searchSecondDir_Result)">
-            <Parameter Name="firstLevelID" Mode="In" Type="Int32" />
+            <Parameter Name="roleId" Mode="In" Type="String" />
+            <Parameter Name="firstLevelId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="searchThirdDir" ReturnType="Collection(practiceModel.searchThirdDir_Result)">
-            <Parameter Name="secondLevelID" Mode="In" Type="Int32" />
+            <Parameter Name="roleId" Mode="In" Type="String" />
+            <Parameter Name="secondLevelId" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="searchSecondDir_Result">
-          <Property Type="String" Name="id" Nullable="true" MaxLength="12" />
+          <Property Type="Int32" Name="Id" Nullable="false" />
           <Property Type="String" Name="title" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="url" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="open" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="url" Nullable="true" MaxLength="50" />
         </ComplexType>
         <ComplexType Name="searchThirdDir_Result">
-          <Property Type="String" Name="id" Nullable="true" MaxLength="12" />
+          <Property Type="Int32" Name="Id" Nullable="false" />
           <Property Type="String" Name="title" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="url" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="open" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="url" Nullable="true" MaxLength="50" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -221,27 +228,27 @@
                 <ScalarProperty Name="midContent" ColumnName="midContent" />
                 <ScalarProperty Name="afterContent" ColumnName="afterContent" />
                 <ScalarProperty Name="activityFlag" ColumnName="activityFlag" />
-                <ScalarProperty Name="createdDate" ColumnName="createdDate" />
                 <ScalarProperty Name="createdBy" ColumnName="createdBy" />
-                <ScalarProperty Name="lastUpdatedDate" ColumnName="lastUpdatedDate" />
+                <ScalarProperty Name="createdDate" ColumnName="createdDate" />
                 <ScalarProperty Name="lastUpdatedBy" ColumnName="lastUpdatedBy" />
+                <ScalarProperty Name="lastUpdatedDate" ColumnName="lastUpdatedDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="SecondLevel">
             <EntityTypeMapping TypeName="practiceModel.SecondLevel">
               <MappingFragment StoreEntitySet="SecondLevel">
+                <ScalarProperty Name="activityFlag" ColumnName="activityFlag" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="orderId" ColumnName="orderId" />
                 <ScalarProperty Name="title" ColumnName="title" />
                 <ScalarProperty Name="url" ColumnName="url" />
                 <ScalarProperty Name="open" ColumnName="open" />
-                <ScalarProperty Name="firstLevelID" ColumnName="firstLevelID" />
-                <ScalarProperty Name="activityFlag" ColumnName="activityFlag" />
-                <ScalarProperty Name="createdDate" ColumnName="createdDate" />
+                <ScalarProperty Name="firstLevelId" ColumnName="firstLevelId" />
                 <ScalarProperty Name="createdBy" ColumnName="createdBy" />
+                <ScalarProperty Name="createdDate" ColumnName="createdDate" />
+                <ScalarProperty Name="lastUpdatedBy" ColumnName="lastUpdatedBy" />
                 <ScalarProperty Name="lastUpdatedDate" ColumnName="lastUpdatedDate" />
-                <ScalarProperty Name="lastUpdateBy" ColumnName="lastUpdateBy" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -252,13 +259,13 @@
                 <ScalarProperty Name="orderId" ColumnName="orderId" />
                 <ScalarProperty Name="title" ColumnName="title" />
                 <ScalarProperty Name="url" ColumnName="url" />
+                <ScalarProperty Name="secondLevelId" ColumnName="secondLevelId" />
                 <ScalarProperty Name="open" ColumnName="open" />
-                <ScalarProperty Name="secondLevelID" ColumnName="secondLevelID" />
                 <ScalarProperty Name="activityFlag" ColumnName="activityFlag" />
-                <ScalarProperty Name="createdDate" ColumnName="createdDate" />
                 <ScalarProperty Name="createdBy" ColumnName="createdBy" />
+                <ScalarProperty Name="createdDate" ColumnName="createdDate" />
+                <ScalarProperty Name="lastUpdatedBy" ColumnName="lastUpdatedBy" />
                 <ScalarProperty Name="lastUpdatedDate" ColumnName="lastUpdatedDate" />
-                <ScalarProperty Name="lastUpdateBy" ColumnName="lastUpdateBy" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -266,20 +273,20 @@
           <FunctionImportMapping FunctionImportName="searchSecondDir" FunctionName="practiceModel.Store.searchSecondDir">
             <ResultMapping>
               <ComplexTypeMapping TypeName="practiceModel.searchSecondDir_Result">
-                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="title" ColumnName="title" />
-                <ScalarProperty Name="url" ColumnName="url" />
                 <ScalarProperty Name="open" ColumnName="open" />
+                <ScalarProperty Name="url" ColumnName="url" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="searchThirdDir" FunctionName="practiceModel.Store.searchThirdDir">
             <ResultMapping>
               <ComplexTypeMapping TypeName="practiceModel.searchThirdDir_Result">
-                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="title" ColumnName="title" />
-                <ScalarProperty Name="url" ColumnName="url" />
                 <ScalarProperty Name="open" ColumnName="open" />
+                <ScalarProperty Name="url" ColumnName="url" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

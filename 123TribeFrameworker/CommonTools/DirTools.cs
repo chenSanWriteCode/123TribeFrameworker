@@ -12,4 +12,13 @@ namespace _123TribeFrameworker.CommonTools
         public string beforContent { get; } = "<li><a href=\"#\"><h1>";
         
     }
+    /// <summary>
+    /// 目录级别
+    /// </summary>
+    public enum DirLevel
+    {
+        FirstLevel=1,
+        SecondLevel,
+        ThirdLLevel
+    }
 }

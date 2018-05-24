@@ -5,11 +5,14 @@ using System.Web;
 using _123TribeFrameworker.DAO.DirDAO;
 using _123TribeFrameworker.Entity;
 using _123TribeFrameworker.Models.DirModels;
+using Unity.Attributes;
 
 namespace _123TribeFrameworker.Services.Layer
 {
-    public class ThirdLevelDir
+    public class ThirdLevelDir:IThirdLevelDirService
     {
+        [Dependency]
+        public IRoleMenuLayerService dirService { get; set; }
         /// <summary>
         /// 通过条件进行查询
         /// </summary>
@@ -33,6 +36,17 @@ namespace _123TribeFrameworker.Services.Layer
             //resultPager.recTotal = 89;
             resultPager.recTotal = dao.getThirdLevelDirCount(pager.data);
             return resultPager;
+        }
+        /// <summary>
+        /// 根据id获取一条3级菜单
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ThirdLevelDirModel getSingleThirdDir(int id)
+        {
+            ThirdLevelDirDAO dao = new ThirdLevelDirDAO();
+            ThirdLevel entity = dao.getSingleThirdDir(id);
+            return entityToModel(entity);
         }
         /// <summary>
         /// 增加
@@ -77,6 +91,10 @@ namespace _123TribeFrameworker.Services.Layer
             {
                 result.result = false;
             }
+            else
+            {
+                dirService.deleteMenuAsync(id);
+            }
             return result;
         }
         #region  工具
@@ -95,10 +113,10 @@ namespace _123TribeFrameworker.Services.Layer
                 entity.orderId = model.orderId;
                 entity.createdBy = model.createdBy;
                 entity.createdDate = model.createdDate;
-                entity.lastUpdatedBy = model.lastUpdateBy;
+                entity.lastUpdatedBy = model.lastUpdatedBy;
                 entity.lastUpdatedDate = model.lastUpdatedDate;
                 entity.title = model.title;
-                entity.secondLevelID = model.secondLevelID.Value;
+                entity.secondLevelID = model.secondLevelId.Value;
                 entity.url = model.url;
             }
             return entity;

@@ -35,6 +35,9 @@
                 var checkStatus = myDatatable.checks;
                 if (typeof (checkStatus) == 'undefined' || checkStatus.checks.length == 0){
                     $('#changeDir').attr('hidden', false);
+                    $("input[name='id_upd']").val("");
+                    $("input[name='orderId_upd']").val("");
+                    $("input[name='content_upd']").val("");
                 }else if (checkStatus.checks.length > 1){
                     $('#jsAlertContext').html('同一时间只能修改一条记录，请重新选择');
                     $('#jsAlert').attr('hidden', false);
@@ -46,8 +49,7 @@
                             var checkedData = myData[i]["data"];
                             $("input[name='id_upd']").val(checkedData[0]["text"]);
                             $("input[name='orderId_upd']").val(checkedData[1]["text"]);
-                            $("input[name='content_upd']").val(checkedData[2]["text"])
-
+                            $("input[name='content_upd']").val(checkedData[2]["text"]);
                         }
                     }
                 }
@@ -91,7 +93,7 @@
                     <input type="submit" class="btn btn-block btn-primary" value="查询" />
                 </div>
                 <div class="col-md-1">
-                    <input type="button" class="btn btn-block btn-primary" value="修改" onclick="changeDirFormShow()" />
+                    <input type="button" class="btn btn-block btn-primary" value="维护" onclick="changeDirFormShow()" />
                 </div>
             </div>
         </form>

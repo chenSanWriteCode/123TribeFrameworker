@@ -10,7 +10,7 @@ namespace _123TribeFrameworker.Models.DirModels
         public int? id_upd { get; set; }
         public int? orderId_upd { get; set; }
         public string content_upd { get; set; }
-        public int secondLevelID { get; set; }
-        public string url { get; set; }
+        public int secondLevelID_upd { get; set; }
+        public string url_upd { get; set; }
     }
 }

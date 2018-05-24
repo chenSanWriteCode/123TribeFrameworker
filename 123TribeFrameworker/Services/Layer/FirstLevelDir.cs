@@ -5,11 +5,14 @@ using System.Web;
 using _123TribeFrameworker.DAO.DirDAO;
 using _123TribeFrameworker.Entity;
 using _123TribeFrameworker.Models.DirModels;
+using Unity.Attributes;
 
 namespace _123TribeFrameworker.Services.Layer
 {
-    public class FirstLevelDir 
+    public class FirstLevelDir : IFirstLevelDirService
     {
+        [Dependency]
+        public IRoleMenuLayerService dirService { get; set; }
         /// <summary>
         /// 通过条件进行查询
         /// </summary>
@@ -91,6 +94,10 @@ namespace _123TribeFrameworker.Services.Layer
             if (dao.deleteFirstlevelDir(id) != 1)
             {
                 result.result = false;
+            }
+            else
+            {
+                dirService.deleteMenuAsync(id);
             }
             return result;
         }

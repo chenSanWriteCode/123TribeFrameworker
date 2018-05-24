@@ -1,0 +1,57 @@
+﻿
+@using _123TribeFrameworker.Models
+@model RoleEditModel
+@using (Html.BeginForm())
+{
+    <input hidden="hidden" name="roleName" value="@Model.role.Name" />
+    <div class="panel panel-primary">
+        <div class="panel-heading">需要添加到 @Model.role.Name 的用户</div>
+        <table class="table table-striped">
+            @if (Model.nonMembers.Count==0)
+            {
+                <tr>
+                    <td>所有用户均具有 @Model.role.Name 的角色</td>
+                </tr>
+            }
+            else
+            {
+                foreach (var item in Model.nonMembers)
+                {
+                    <tr>
+                        <td>
+                            @item.UserName
+                        </td>
+                        <td>@item.trueName</td>
+                        <td>
+                            <input type="checkbox" name="addUsersIds" value="@item.Id" />
+                        </td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">需要删除 @Model.role.Name 的用户</div>
+        <table class="table table-striped">
+            @if (Model.members.Count==0)
+            {
+                <tr>
+                    <td>@Model.role.Name 不存在任何用户</td>
+                </tr>
+            }
+            else
+            {
+                foreach (var item in Model.members)
+                {
+                    <tr>
+                        <td>@item.UserName</td>
+                        <td>@item.trueName</td>
+                        <td><input type="checkbox" name="deleteUsersIds" value="@item.Id" /></td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+    <button type="submit" class="btn btn-primary">提交</button>
+    @Html.ActionLink("返回","Index",null,new { @class="btn btn-default"})
+}

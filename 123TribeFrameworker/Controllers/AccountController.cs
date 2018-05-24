@@ -11,12 +11,16 @@ using Microsoft.Owin.Security;
 using _123TribeFrameworker.Models;
 using System.Web.Security;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace _123TribeFrameworker.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
+        #region 属性
+        
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -53,13 +57,118 @@ namespace _123TribeFrameworker.Controllers
                 _userManager = value;
             }
         }
+        public ApplicationRoleManager roleManager
+        {
+            get
+            {
+                return HttpContext.GetOwinContext().GetUserManager<ApplicationRoleManager>();
+            }
+        }
+        #endregion
+        /// <summary>
+        /// 初始化页面，展示所有user
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Index()
+        {
+            var result = UserManager.Users.ToList();
+            return View(UserManager.Users.ToList());
+        }
+        [HttpPost]
+        public async Task<ActionResult> delete(string id)
+        {
+            ViewBag.returnUrl = "/Account/Index";
+            if (ModelState.IsValid)
+            {
+                ApplicationUser userModel = await UserManager.FindByIdAsync(id);
+                if (userModel!=null)
+                {
+                    var roleResult = await UserManager.RemoveFromRolesAsync(id, getCurrentRoleId().ToArray());
+                    var result = await UserManager.DeleteAsync(userModel);
+                }
+                else
+                {
+                    return View("Error", new string[] { "查不到该用户"});
+                }
+                
+            }
+            return RedirectToAction("Index");
+        }
+        public async Task<ActionResult> edit(string userID)
+        {
+            ViewBag.returnUrl = "/Account/Index";
+            ApplicationUser userModel = await UserManager.FindByIdAsync(userID);
+            if (userModel!=null)
+            {
+                return View(new UserEdit {
+                    id= userModel.Id,
+                    email= userModel.Email,
+                    phoneNumber=userModel.PhoneNumber,
+                    trueName= userModel.trueName,
+                    userName= userModel.UserName
+                });
+            }
+            else
+            {
+                return View("Error",new string[] { "不存在该用户" });
+            }
+        }
+        [HttpPost]
+        public async Task<ActionResult> edit(UserEdit viewModel)
+        {
+            ViewBag.returnUrl = "/Account/Index";
+            if (ModelState.IsValid)
+            {
+                ApplicationUser model = await UserManager.FindByIdAsync(viewModel.id);
+                model.UserName = viewModel.userName;
+                model.trueName = viewModel.trueName;
+                model.Email = viewModel.email;
+                model.PhoneNumber = viewModel.phoneNumber;
+                var result = await UserManager.UpdateAsync(model);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    AddErrors(result);
+                }
+            }
+            return View(viewModel);
+        }
+        public ActionResult updatePassword([Required]string id)
+        {
+            return View(new UpdatePasswordView() { id=id});
+        }
+        [HttpPost]
+        public async Task<ActionResult> updatePassword(UpdatePasswordView model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.beforPassword, model.Password);
+                if (result.Succeeded)
+                {
+                    var userID = User.Identity.GetUserId();
+                    var user = UserManager.Users.Where(x => x.Id == userID).First();
+                    user.password = model.Password;
+                    var updateResult = await UserManager.UpdateAsync(user);
+                    return RedirectToAction("edit",new { userID = model.id});
+                }
+                else
+                {
+                    AddErrors(result);
+                }
+            }
+            return View(model);
+        }
+        
 
         //
         // GET: /Account/Login
         [AllowAnonymous]
-        public ActionResult Login(string returnUrl)
+        public ActionResult Login(string returnUrl=null)
         {
-            ViewBag.ReturnUrl = returnUrl;
+            ViewBag.ReturnUrl = returnUrl??"/Home/Index";
             return View();
         }
 
@@ -90,10 +199,47 @@ namespace _123TribeFrameworker.Controllers
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "无效的登录尝试。");
+                    ModelState.AddModelError("ErrMessage", "无效的登录尝试。");
                     return View(model);
             }
         }
+        //
+        // GET: /Account/Register
+        public ActionResult Register()
+        {
+            return View();
+        }
+
+        //
+        // POST: /Account/Register
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Register(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser { UserName = model.loginName, password = model.Password, trueName = model.userName,Email=model.email,PhoneNumber=model.phoneNumber };
+                var result = await UserManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+                    // 有关如何启用帐户确认和密码重置的详细信息，请访问 http://go.microsoft.com/fwlink/?LinkID=320771
+                    // 发送包含此链接的电子邮件
+                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    // await UserManager.SendEmailAsync(user.Id, "确认你的帐户", "请通过单击 <a href=\"" + callbackUrl + "\">這裏</a>来确认你的帐户");
+
+                    return RedirectToAction("Index");
+                }
+                AddErrors(result);
+            }
+
+            // 如果我们进行到这一步时某个地方出错，则重新显示表单
+            return View(model);
+        }
+
 
         //
         // GET: /Account/VerifyCode
@@ -138,43 +284,7 @@ namespace _123TribeFrameworker.Controllers
             }
         }
 
-        //
-        // GET: /Account/Register
-        [AllowAnonymous]
-        public ActionResult Register()
-        {
-            return View();
-        }
-
-        //
-        // POST: /Account/Register
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = new ApplicationUser { UserName = model.LoginName, Email = model.LoginName };
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // 有关如何启用帐户确认和密码重置的详细信息，请访问 http://go.microsoft.com/fwlink/?LinkID=320771
-                    // 发送包含此链接的电子邮件
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "确认你的帐户", "请通过单击 <a href=\"" + callbackUrl + "\">這裏</a>来确认你的帐户");
-
-                    return RedirectToAction("Index", "Home");
-                }
-                AddErrors(result);
-            }
-
-            // 如果我们进行到这一步时某个地方出错，则重新显示表单
-            return View(model);
-        }
+        
 
         //
         // GET: /Account/ConfirmEmail
@@ -396,7 +506,7 @@ namespace _123TribeFrameworker.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("login", "Account");
         }
 
         //
@@ -446,7 +556,22 @@ namespace _123TribeFrameworker.Controllers
                 ModelState.AddModelError("", error);
             }
         }
-
+        public List<string> getCurrentRoleId()
+        {
+            List<string> roles = new List<string>();
+            Dictionary<string, string> dict = roleManager.Roles.ToDictionary(x => x.Id, x => x.Name);
+            if (dict != null)
+            {
+                foreach (var item in dict)
+                {
+                    if (User.IsInRole(item.Value))
+                    {
+                        roles.Add(item.Key);
+                    }
+                }
+            }
+            return roles;
+        }
         private ActionResult RedirectToLocal(string returnUrl)
         {
             if (Url.IsLocalUrl(returnUrl))

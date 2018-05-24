@@ -1,9 +1,27 @@
-﻿@model System.Web.Mvc.HandleErrorInfo
+﻿@model IEnumerable<string>
 
-@{
-    ViewBag.Title = "Error";
-}
+<div class="alert alert-warning">
+    @switch (Model.Count())
+    {
+        case 0:
+            @: something went wrong, please try again.
+            break;
+        case 1:
+            @Model.First();
+            break;
+        default:
+            @: the following errors were encountered:
+            <ul>
+                @foreach (var item in Model)
+                {
+                    <li>@item</li>
+                }
+            </ul>
+            break;
+    }
+    <br />
+    <br />
+    @Html.ActionLink("OK", "returnBack", "Home", new { returnUrl = ViewBag.returnUrl }, new { @class = "btn btn-primary" })
+</div>
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
 

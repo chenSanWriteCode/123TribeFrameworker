@@ -26,12 +26,31 @@
                 if (data != null) {
                     $.each(data, function (key, value) {
                         $('<option value="' + key + '">' + value + '</option>').appendTo("#secondLevelID");
-                        $('#secondLevelID').trigger('chosen:updated');
+                        $('<option value="' + key + '">' + value + '</option>').appendTo("#secondLevelID_upd");
                     })
+                    var selectedId = @ViewBag.condition.secondLevelID;
+                    if (selectedId != null) {
+                        $('#secondLevelID').val(selectedId);
+                        $('#secondLevelID_upd').val(selectedId);
+                    }
                 }
             });
         })
-        function deleteRow() {
+        function updateInfo(id) {
+            if (id != null) {
+                $('#changeDir').attr('hidden', false);
+                $('#id_upd').val(id);
+                $.post('/ThirdLevelDir/getSingleThirdDir', { id: id }, function (data) {
+                    data = $.parseJSON(data);
+                    $('#orderId_upd').val(data.orderId);
+                    $('#content_upd').val(data.title);
+                    $('#url_upd').val(data.url);
+                    $('#secondLevelID_upd').val(data.secondLevelID);
+                });
+            }
+        }
+        function deleteInfo(id) {
+            $("#id_upd").val(id);
             $('#updateForm').attr('action', '/ThirdLevelDir/deleteThirdLevelDir');
             $('#updateForm').submit();
         }
@@ -39,26 +58,10 @@
             if ($('#changeDir').attr('hidden') != 'hidden') {
                 $('#changeDir').attr('hidden', true);
             } else {
-                var myDatatable = $('table.datatable').data('zui.datatable');
-                var checkStatus = myDatatable.checks;
-                if (typeof (checkStatus) == 'undefined' || checkStatus.checks.length == 0) {
-                    $('#changeDir').attr('hidden', false);
-                } else if (checkStatus.checks.length > 1) {
-                    $('#jsAlertContext').html('同一时间只能修改一条记录，请重新选择');
-                    $('#jsAlert').attr('hidden', false);
-                } else {
-                    $('#changeDir').attr('hidden', false);
-                    var myData = myDatatable.data.rows;
-                    for (var i = 0; i < myData.length; i++) {
-                        if (myData[i]["id"] === checkStatus.checks[0]) {
-                            var checkedData = myData[i]["data"];
-                            $("input[name='id_upd']").val(checkedData[0]["text"]);
-                            $("input[name='orderId_upd']").val(checkedData[1]["text"]);
-                            $("input[name='content_upd']").val(checkedData[2]["text"])
-
-                        }
-                    }
-                }
+                $('#orderId_upd').val("");
+                $('#content_upd').val("");
+                $('#secondLevelID').val();
+                $('#changeDir').attr('hidden', false);
             }
         }
     </script>
@@ -84,8 +87,8 @@
             }
 
         }
-        <form id="searchCondition" action="/ThirdLevelDir/searchThirdLevelDir" method="post" class="form-horizontal container">
-            <div class="form-group required container">
+        <form id="searchCondition" action="/ThirdLevelDir/searchThirdLevelDir" method="post" class="form-horizontal">
+            <div class="form-group">
                 <label for="firstLevelID" class="col-md-1">顺序</label>
                 <div class="col-md-3">
                     <input type="text" class="form-control" value="@ViewBag.condition.orderId" id="firstLevelID" name="orderId" placeholder="数字 1，2，3..." />
@@ -94,11 +97,23 @@
                 <div class="col-md-3">
                     <input type="text" class="form-control" value="@ViewBag.condition.title" id="firstLevelContent" name="title" placeholder="模块名称" />
                 </div>
+                <label for="url" class="col-md-1">URL</label>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" value="@ViewBag.condition.url" id="url" name="url" placeholder="url链接" />
+                </div>
+                </div>
+            <div class="form-group">
+                <label class="col-md-1">上级菜单</label>
+                <div class="col-md-3">
+                    <select data-placeholder="上级菜单..." id="secondLevelID" name="secondLevelID" class="chosen-select form-control"></select>
+                </div>
+            </div>
+            <div class="form-group">
                 <div class="col-md-1">
                     <input type="submit" class="btn btn-block btn-primary" value="查询" />
                 </div>
                 <div class="col-md-1">
-                    <input type="button" class="btn btn-block btn-primary" value="修改" onclick="changeDirFormShow()" />
+                    <input type="button" class="btn btn-block btn-primary" value="增加" onclick="changeDirFormShow()" />
                 </div>
             </div>
         </form>
@@ -108,10 +123,9 @@
         <label id="jsAlertContext"></label>
     </div>
     <div id="dispalyDir" style="margin-top:10px">
-        <table class="table datatable" style="margin-bottom:10px">
+        <table class="table table-hover" style="margin-bottom:10px">
             <thead>
                 <tr>
-                    <th data-ignore="true">id</th>
                     <th>顺序</th>
                     <th>模块</th>
                     <th>上级菜单</th>
@@ -120,6 +134,8 @@
                     <th>创建人</th>
                     <th>最后修改时间</th>
                     <th>最后修改人</th>
+                    <th>修改</th>
+                    <th>删除</th>
                 </tr>
             </thead>
             <tbody>
@@ -128,7 +144,6 @@
                     foreach (var item in Model.data)
                     {
                         <tr>
-                            <td>@item.id</td>
                             <td>@item.orderId</td>
                             <td>@item.title</td>
                             <td>@item.secondLevelName</td>
@@ -137,6 +152,8 @@
                             <td>@item.createdBy</td>
                             <td>@item.lastUpdatedDate</td>
                             <td>@item.lastUpdatedBy</td>
+                            <td><button class="btn btn-primary " onclick="updateInfo(@item.id)" type="button">修改</button></td>
+                            <td><button class="btn btn-danger  " onclick="deleteInfo(@item.id)" type="button">删除</button></td>
                         </tr>
                     }
                 }
@@ -150,7 +167,9 @@
             <div hidden="hidden">
                 <input value="@ViewBag.condition.orderId" name="orderId" />
                 <input value="@ViewBag.condition.title" name="title" />
-                <input name="id_upd" />
+                <input value="@ViewBag.condition.secondLevelID" name="secondLevelID" />
+                <input value="@ViewBag.condition.url" name="url" />
+                <input name="id_upd" id="id_upd" />
             </div>
             <div class="form-group">
                 <label for="orderId_upd" class="col-md-1">顺序</label>
@@ -161,21 +180,19 @@
                 <div class="col-md-3">
                     <input type="text" class="form-control required" id="content_upd" name="content_upd" placeholder="模块名称" />
                 </div>
-                <label class="col-md-1">上级菜单</label>
+                <label for="url_upd" class="col-md-1">URL</label>
                 <div class="col-md-3">
-                    <select data-placeholder="上级菜单..." id="secondLevelID" name="secondLevelID" class="chosen-select form-control"></select>
+                    <input type="text" class="form-control required" id="url_upd" name="url_upd" placeholder="url链接,如/Home/Index" />
                 </div>
+                
             </div>
             <div class="form-group">
-                <label for="url" class="col-md-1">URL</label>
+                <label class="col-md-1">上级菜单</label>
                 <div class="col-md-3">
-                    <input type="text" class="form-control required" id="url" name="url" placeholder="链接，如/home/index" />
+                    <select data-placeholder="上级菜单..." id="secondLevelID_upd" name="secondLevelID_upd" class="chosen-select form-control"></select>
                 </div>
                 <div class="col-md-1">
                     <input type="submit" class="btn btn-block btn-primary" value="提交" />
-                </div>
-                <div class="col-md-1">
-                    <input type="button" class="btn btn-block btn-primary" value="删除" onclick="deleteRow()" />
                 </div>
             </div>
         </form>

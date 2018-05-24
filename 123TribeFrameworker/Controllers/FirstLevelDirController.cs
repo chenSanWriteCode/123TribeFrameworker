@@ -7,6 +7,7 @@ using _123TribeFrameworker.Models.DirModels;
 using _123TribeFrameworker.Services.Layer;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Unity.Attributes;
 
 namespace _123TribeFrameworker.Controllers
 {
@@ -16,14 +17,8 @@ namespace _123TribeFrameworker.Controllers
     /// </summary>
     public class FirstLevelDirController : Controller
     {
-
-        //private FirstLevelDir firstLeveldir;
-
-        //public FirstLevelDirController(IFirstLevelDir firstLevel)
-        //{
-        //    this.firstLevel = firstLevel;
-        //}
-        // GET: FirstLevelDir
+        [Dependency]
+        public FirstLevelDir layer{ get; set; }
         public ActionResult Index(FirstLevelDirModel model)
         {
             Pager<List<FirstLevelDirModel>> pager = new Pager<List<FirstLevelDirModel>>();
@@ -38,12 +33,11 @@ namespace _123TribeFrameworker.Controllers
         /// <returns></returns>
         public ActionResult searchFirstLevelDir(FirstLevelDirModel model, Pager<FirstLevelDirModel> pager)
         {
-            FirstLevelDir firstLeveldir = new FirstLevelDir();
             if (model != null)
             {
                 pager.data = model;
             }
-            Pager<List<FirstLevelDirModel>> result = firstLeveldir.getFirstLevelDir(pager);
+            Pager<List<FirstLevelDirModel>> result = layer.getFirstLevelDir(pager);
             ViewBag.condition = model;
             return View("Index", result);
         }
@@ -54,7 +48,6 @@ namespace _123TribeFrameworker.Controllers
         /// <returns></returns>
         public ActionResult changeFirstLevelDir(FirstLevelDirModel condition,FirstLevelDirModel_update model_upd)
         {
-            FirstLevelDir firstLeveldir = new FirstLevelDir();
             FirstLevelDirModel model = new FirstLevelDirModel(model_upd);
             Result<FirstLevelDirModel> result;
             StringBuilder sb = new StringBuilder("");
@@ -62,14 +55,14 @@ namespace _123TribeFrameworker.Controllers
             {
                 model.lastUpdatedBy = User.Identity.Name;
                 model.lastUpdatedDate = DateTime.Now;
-                result = firstLeveldir.updateFirstLevelDir(model);
+                result = layer.updateFirstLevelDir(model);
                 sb.Append("修改");
             }
             else
             {
                 model.createdBy = User.Identity.Name;
                 model.createdDate = DateTime.Now;
-                result = firstLeveldir.addFirstLevelDir(model);
+                result = layer.addFirstLevelDir(model);
                 sb.Append("增加");
             }
 
@@ -83,19 +76,7 @@ namespace _123TribeFrameworker.Controllers
             }
             return RedirectToAction("searchFirstLevelDir", condition);
         }
-        /// <summary>
-        /// 返回一级菜单列表
-        /// </summary>
-        /// <returns></returns>
-        public string getFirstLevelDirList()
-        {
-            FirstLevelDir layer = new FirstLevelDir();
-            //JObject json = new JObject();
-            Dictionary<int, string> firstDirDict = layer.getFirstLevelDirDict();
-            //json.Add(firstDirDict);
-            string jsonStr = JsonConvert.SerializeObject(firstDirDict);
-            return jsonStr;
-        }
+        
         /// <summary>
         /// delete
         /// </summary>
@@ -106,7 +87,6 @@ namespace _123TribeFrameworker.Controllers
         {
             if (model_upd.id_upd.HasValue)
             {
-                FirstLevelDir layer = new FirstLevelDir();
                 StringBuilder sb = new StringBuilder("删除");
                 Result<FirstLevelDirModel> result = layer.deleteFirstLevelDir(model_upd.id_upd.Value);
                 if (result.result)
@@ -120,6 +100,41 @@ namespace _123TribeFrameworker.Controllers
             }
             return RedirectToAction("searchFirstLevelDir", condition);
         }
+        //[HttpPost]
+        //public ActionResult delete(FirstLevelDirModel model, Pager<FirstLevelDirModel> pager,string id)
+        //{
+        //    ViewBag.retrunURL = "searchFirstLevelDir";
+        //    if (ModelState.IsValid)
+        //    {
+        //        StringBuilder sb = new StringBuilder("删除");
+        //        Result<FirstLevelDirModel> result = layer.deleteFirstLevelDir(Convert.ToInt32(id));
+        //        if (result.result)
+        //        {
+        //            return RedirectToAction("searchFirstLevelDir",new { model,pager});
+        //        }
+        //        else
+        //        {
+        //            return View("Error", new string[] { result.message });
+        //        }
+        //    }
+        //    else
+        //    {
+        //        return View("Error", new string[] { "无效的菜单" });
+        //    }
+        //}
+        #region tool
+        /// <summary>
+        /// 返回一级菜单列表
+        /// </summary>
+        /// <returns></returns>
+        public string getFirstLevelDirList()
+        {
+            //JObject json = new JObject();
+            Dictionary<int, string> firstDirDict = layer.getFirstLevelDirDict();
+            //json.Add(firstDirDict);
+            string jsonStr = JsonConvert.SerializeObject(firstDirDict);
+            return jsonStr;
+        }
         /// <summary>
         /// 根据id获取一条主菜单
         /// </summary>
@@ -127,9 +142,9 @@ namespace _123TribeFrameworker.Controllers
         /// <returns></returns>
         //public string getSingleFirstDir(int id)
         //{
-        //    FirstLevelDir layer = new FirstLevelDir();
         //    FirstLevelDirModel model = layer.getSingleSecondDir(id);
         //    return JsonConvert.SerializeObject(model);
         //}
+        #endregion
     }
 }

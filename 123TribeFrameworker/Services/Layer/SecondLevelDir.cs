@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using System.Web;
 using _123TribeFrameworker.DAO.DirDAO;
 using _123TribeFrameworker.Entity;
 using _123TribeFrameworker.Models.DirModels;
+using Unity.Attributes;
 
 namespace _123TribeFrameworker.Services.Layer
 {
-    public class SecondLevelDir
+    public class SecondLevelDir : ISecondLevelDirService
     {
+        [Dependency]
+        public IRoleMenuLayerService dirService { get; set; }
         /// <summary>
         /// 通过条件进行查询
         /// </summary>
@@ -104,6 +108,10 @@ namespace _123TribeFrameworker.Services.Layer
             {
                 result.result = false;
             }
+            else
+            {
+                dirService.deleteMenuAsync(id);
+            }
             return result;
         }
         #region  工具
@@ -122,15 +130,13 @@ namespace _123TribeFrameworker.Services.Layer
                 entity.orderId = model.orderId;
                 entity.createdBy = model.createdBy;
                 entity.createdDate = model.createdDate;
-                entity.lastUpdatedBy = model.lastUpdateBy;
+                entity.lastUpdatedBy = model.lastUpdatedBy;
                 entity.lastUpdatedDate = model.lastUpdatedDate;
                 entity.title = model.title;
-                entity.firstLevelID = model.firstLevelID.Value;
+                entity.firstLevelID = model.firstLevelId.Value;
             }
             return entity;
         }
-
-
         #endregion
     }
 }

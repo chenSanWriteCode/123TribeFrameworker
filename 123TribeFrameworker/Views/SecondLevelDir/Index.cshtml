@@ -15,7 +15,7 @@
             //    scrollPos: "out",
             //    fixCellHeight: false
             //});
-            
+
             //$('#table2').datagrid({
             //    states: {
             //        //pager: { page: 1, recPerPage: 100 },
@@ -29,6 +29,7 @@
             $('#myPager').on('onPageChange', function (e, state, oldState) {
                 if (state.page !== oldState.page) {
                     var href = $('#searchCondition').attr("action");
+                    console.log("onPageChange+"+state.page)
                     href = href + "?page=" + state.page;
                     $('#searchCondition').attr("action", href);
                     $('#searchCondition').submit();
@@ -39,15 +40,18 @@
                 if (data != null) {
                     $.each(data, function (key, value) {
                         $('<option value="' + key + '">' + value + '</option>').appendTo(".chosen-select");
-                        $('#firstLevelID').trigger('chosen:updated');
                     })
+                    var selectedId = @ViewBag.condition.firstLevelID;
+                    if (selectedId.length!=0) {
+                        $('#firstLevelID').val(selectedId);
+                    }
                 }
             })
         })
         function clickRow(id) {
             if (id != null) {
                 $('#id_upd').val(id);
-                $.post('/SecondLevelDir/getSingleSecondDir', {id:id}, function (data) {
+                $.post('/SecondLevelDir/getSingleSecondDir', { id: id }, function (data) {
                     data = $.parseJSON(data);
                     $('#orderId_upd').val(data.orderId);
                     $('#content_upd').val(data.title);
@@ -55,11 +59,11 @@
                 });
             }
         }
-        function updateInfo(id){
+        function updateInfo(id) {
             if (id != null) {
                 $('#changeDir').attr('hidden', false);
                 $('#id_upd').val(id);
-                $.post('/SecondLevelDir/getSingleSecondDir', {id:id}, function (data) {
+                $.post('/SecondLevelDir/getSingleSecondDir', { id: id }, function (data) {
                     data = $.parseJSON(data);
                     $('#orderId_upd').val(data.orderId);
                     $('#content_upd').val(data.title);
@@ -67,7 +71,8 @@
                 });
             }
         }
-        function deleteInfo(id){
+        function deleteInfo(id) {
+            $("#id_upd").val(id);
             $('#updateForm').attr('action', '/SecondLevelDir/deleteSecondLevelDir');
             $('#updateForm').submit();
         }
@@ -93,7 +98,7 @@
             {
                 <div class="alert alert-success alert-dismissable">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    @msgData.msg
+                    @msgData.msg 
                 </div>
             }
             else
@@ -105,16 +110,22 @@
             }
 
         }
-        <form id="searchCondition" action="/SecondLevelDir/searchSecondLevelDir" method="post" class="form-horizontal container">
-            <div class="form-group required container">
+        <form id="searchCondition" action="/SecondLevelDir/searchSecondLevelDir" method="post" class="form-horizontal">
+            <div class="form-group">
                 <label for="firstLevelID" class="col-md-1">顺序</label>
                 <div class="col-md-3">
-                    <input type="text" class="form-control" value="@ViewBag.condition.orderId" id="firstLevelID" name="orderId" placeholder="数字 1，2，3..." />
+                    <input type="text" class="form-control" value="@ViewBag.condition.orderId" id="orderId" name="orderId" placeholder="数字 1，2，3..." />
                 </div>
                 <label for="secondLevelContent" class="col-md-1">内容</label>
                 <div class="col-md-3">
                     <input type="text" class="form-control" value="@ViewBag.condition.title" id="secondLevelContent" name="title" placeholder="模块名称" />
                 </div>
+                <label class="col-md-1">上级菜单</label>
+                <div class="col-md-3">
+                    <select data-placeholder="上级菜单..." id="firstLevelID" name="firstLevelID" class="chosen-select form-control"></select>
+                </div>
+                </div>
+            <div class="form-group">
                 <div class="col-md-1">
                     <input type="submit" class="btn btn-block btn-primary" value="查询" />
                 </div>
@@ -170,12 +181,12 @@
 
     <div id="changeDir" style="margin-bottom:10px" class="panel" hidden="hidden">
 
-        @Html.ValidationMessage("ErrMessageOfChange", new { style = "color:red" })
         <form action="/SecondLevelDir/changeSecondLevelDir" method="post" class="form-horizontal" id="updateForm">
             <div hidden="hidden">
                 <input value="@ViewBag.condition.orderId" name="orderId" />
                 <input value="@ViewBag.condition.title" name="title" />
-                <input name="id_upd" />
+                <input value="@ViewBag.condition.firstLevelID" name="firstLevelID" />
+                <input name="id_upd" id="id_upd" />
             </div>
             <div class="form-group">
                 <label for="orderId_upd" class="col-md-1">顺序</label>
@@ -196,8 +207,8 @@
                     <input type="submit" class="btn btn-block btn-primary" value="提交" />
                 </div>
                 @*<div class="col-md-1">
-                    <input type="button" class="btn btn-block btn-primary" value="删除" onclick="deleteRow()" />
-                </div>*@
+                        <input type="button" class="btn btn-block btn-primary" value="删除" onclick="deleteRow()" />
+                    </div>*@
             </div>
         </form>
     </div>

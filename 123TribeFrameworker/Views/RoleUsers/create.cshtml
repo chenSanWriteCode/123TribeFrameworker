@@ -1,0 +1,14 @@
+﻿@model string
+    @{ 
+        ViewBag.Title = "创建角色";
+    }
+<div>
+    @Html.ValidationSummary(false)
+   @using (Html.BeginForm())
+   {
+       <label for="name">Name</label>
+       <input id="name" name="name" value="@Model" class="form-control">
+       <button type="submit" class="btn btn-primary">创建</button>
+   }
+    @Html.ActionLink("返回", "Index", null, new { @class="btn btn-default"})
+</div>

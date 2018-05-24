@@ -1,0 +1,101 @@
+﻿@{
+    ViewBag.Title = "物料查询";
+}
+@using _123TribeFrameworker.Entity
+@model Pager<List<MaterialInfo>>
+<script type="text/javascript">
+    $(function () {
+        $('#materialTable').datatable({ sortable: true });
+        $('#dataPager').pager({
+            page: @Model.page,
+            recTotal: @Model.recTotal,
+            recPerPage:@Model.recPerPage,
+        });
+    })
+</script>
+<div>
+
+    @using (Html.BeginForm())
+    {
+        <div class="panel-body">
+            <div class="col-md-3">
+                <div class="input-control has-label-left-lg">
+                    <input id="materialName" name="materialName" value="@ViewBag.condition.materialName" type="text" class="form-control">
+                    <label for="materialName" class="input-control-label-left"> 产品名称:</label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-control has-label-left-lg">
+                    <input id="alias" name="alias" value="@ViewBag.condition.alias" type="text" class="form-control">
+                    <label for="alias" class="input-control-label-left"> 别名:</label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-control has-label-left">
+                    <input id="mat_size" name="mat_size" value="@ViewBag.condition.mat_size" type="text" class="form-control">
+                    <label for="mat_size" class="input-control-label-left"> 规格:</label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-control has-label-left">
+                    <input id="remark" name="remark" value="@ViewBag.condition.remark" type="text" class="form-control">
+                    <label for="remark" class="input-control-label-left"> 备注:</label>
+                </div>
+            </div>
+        </div>
+        <div class="panel-heading">
+            <button class="btn btn-primary" type="submit">查询</button>
+            @Html.ActionLink("新增", "add", null, new { @class = "btn btn-primary" })
+        </div>
+    }
+
+    <table id="materialTable" class="table datatable table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>产品名称</th>
+                <th>别名</th>
+                <th>规格</th>
+                <th>单位</th>
+                <th>采购价</th>
+                <th>建议零售价</th>
+                <th>备注</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.data.Count > 0)
+            {
+                for (int i = 0; i < Model.data.Count; i++)
+                {
+                    <tr>
+                        <td>@((Model.page - 1) * Model.recPerPage + i + 1)</td>
+                        <td>@Model.data[i].materialName</td>
+                        <td>@Model.data[i].alias</td>
+                        <td>@Model.data[i].mat_size</td>
+                        <td>@Model.data[i].unit</td>
+                        <td>@Model.data[i].referencePriceIn</td>
+                        <td>@Model.data[i].referencePriceOut</td>
+                        <td>@Model.data[i].remark</td>
+                        <td>
+                            @using (Html.BeginForm("delete", "MaterialInfo", new
+                            {
+                                id = Model.data[i].id,
+                                alias = ViewBag.condition.alias,
+                                materialName = ViewBag.condition.materialName,
+                                remark = ViewBag.condition.remark,
+                                mat_size = ViewBag.condition.mat_size
+                            }))
+                            {
+                                @Html.ActionLink("修改", "edit", new { id = Model.data[i].id }, new { @class = "btn btn-primary" })
+                                <button class="btn btn-danger" type="submit">删除</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <div style="margin-top:-20px"><ul id="dataPager" class="pager"></ul></div>
+
+</div>

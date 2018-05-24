@@ -11,11 +11,11 @@ namespace _123TribeFrameworker.Entity
         {
             data = new T();
         }
-        public Pager(int page)
-        {
-            this.page = page;
-            data = new T();
-        }
+        //public Pager(int page)
+        //{
+        //    this.page = page;
+        //    data = new T();
+        //}
         public Pager(int page,int recPerPage)
         {
             this.page = page;
@@ -34,7 +34,7 @@ namespace _123TribeFrameworker.Entity
         /// <summary>
         /// 每页记录数
         /// </summary>
-        public int recPerPage { get; set; } = 10;
+        public int recPerPage { get; set; } = 5;
         /// <summary>
         /// 结果集
         /// </summary>

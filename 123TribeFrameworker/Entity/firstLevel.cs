@@ -15,14 +15,14 @@ namespace _123TribeFrameworker.Entity
     public partial class FirstLevel
     {
         public int id { get; set; }
-        public int orderId { get; set; }
+        public Nullable<int> orderId { get; set; }
         public string beforContent { get; set; }
         public string midContent { get; set; }
         public string afterContent { get; set; }
         public Nullable<int> activityFlag { get; set; }
-        public Nullable<System.DateTime> createdDate { get; set; }
         public string createdBy { get; set; }
-        public Nullable<System.DateTime> lastUpdatedDate { get; set; }
+        public Nullable<System.DateTime> createdDate { get; set; }
         public string lastUpdatedBy { get; set; }
+        public Nullable<System.DateTime> lastUpdatedDate { get; set; }
     }
 }

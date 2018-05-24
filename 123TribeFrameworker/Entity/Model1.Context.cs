@@ -31,27 +31,39 @@ namespace _123TribeFrameworker.Entity
         public virtual DbSet<SecondLevel> SecondLevel { get; set; }
         public virtual DbSet<ThirdLevel> ThirdLevel { get; set; }
     
-        public virtual ObjectResult<string> searchMainDir()
+        public virtual ObjectResult<string> searchMainDir(string roleId)
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("searchMainDir");
+            var roleIdParameter = roleId != null ?
+                new ObjectParameter("roleId", roleId) :
+                new ObjectParameter("roleId", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("searchMainDir", roleIdParameter);
         }
     
-        public virtual ObjectResult<searchSecondDir_Result> searchSecondDir(Nullable<int> firstLevelID)
+        public virtual ObjectResult<searchSecondDir_Result> searchSecondDir(string roleId, Nullable<int> firstLevelId)
         {
-            var firstLevelIDParameter = firstLevelID.HasValue ?
-                new ObjectParameter("firstLevelID", firstLevelID) :
-                new ObjectParameter("firstLevelID", typeof(int));
+            var roleIdParameter = roleId != null ?
+                new ObjectParameter("roleId", roleId) :
+                new ObjectParameter("roleId", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<searchSecondDir_Result>("searchSecondDir", firstLevelIDParameter);
+            var firstLevelIdParameter = firstLevelId.HasValue ?
+                new ObjectParameter("firstLevelId", firstLevelId) :
+                new ObjectParameter("firstLevelId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<searchSecondDir_Result>("searchSecondDir", roleIdParameter, firstLevelIdParameter);
         }
     
-        public virtual ObjectResult<searchThirdDir_Result> searchThirdDir(Nullable<int> secondLevelID)
+        public virtual ObjectResult<searchThirdDir_Result> searchThirdDir(string roleId, Nullable<int> secondLevelId)
         {
-            var secondLevelIDParameter = secondLevelID.HasValue ?
-                new ObjectParameter("secondLevelID", secondLevelID) :
-                new ObjectParameter("secondLevelID", typeof(int));
+            var roleIdParameter = roleId != null ?
+                new ObjectParameter("roleId", roleId) :
+                new ObjectParameter("roleId", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<searchThirdDir_Result>("searchThirdDir", secondLevelIDParameter);
+            var secondLevelIdParameter = secondLevelId.HasValue ?
+                new ObjectParameter("secondLevelId", secondLevelId) :
+                new ObjectParameter("secondLevelId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<searchThirdDir_Result>("searchThirdDir", roleIdParameter, secondLevelIdParameter);
         }
     }
 }

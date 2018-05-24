@@ -1,0 +1,41 @@
+﻿@using _123TribeFrameworker.Models
+@using _123TribeFrameworker.Infrastructrue
+@model IEnumerable<AplicationRole>
+<div class="panel panel-primary">
+    <div class="panel-heading">角色</div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>RoleId</th>
+                <th>RoleName</th>
+                <th>Users</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Count() == 0)
+            {
+                <tr><td colspan="4" style="text-align:center">No Role</td></tr>
+            }
+            else
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.Name</td>
+                        <td>@string.Join(",", item.Users.Select(x => Html.getUserName(x.UserId)))</td>
+                        <td>
+                            @using (Html.BeginForm("delete", "RoleUsers", new { id = item.Id }))
+                            {
+                                @Html.ActionLink("Edit", "edit", "RoleUsers", new { id = item.Id }, new { @class = "btn btn-danger" })
+                                <button type="submit" class="btn btn-warning">delete</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    @Html.ActionLink("创建角色", "create", "RoleUsers",null,new { @class="btn btn-primary"})
+</div>

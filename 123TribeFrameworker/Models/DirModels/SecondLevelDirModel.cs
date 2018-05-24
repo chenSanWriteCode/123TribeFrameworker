@@ -24,12 +24,14 @@ namespace _123TribeFrameworker.Models.DirModels
         public int? orderId { get; set; }
         public string title { get; set; }
 
-        public int firstLevelID { get; set; }
+        public int? firstLevelID { get; set; }
 
         public string firstLevelName { get; set; }
         public DateTime? createdDate { get; set; }
         public string createdBy { get; set; }
         public DateTime? lastUpdatedDate { get; set; }
         public string lastUpdatedBy { get; set; }
+
+        public string url { get; set; } = "#";
     }
 }

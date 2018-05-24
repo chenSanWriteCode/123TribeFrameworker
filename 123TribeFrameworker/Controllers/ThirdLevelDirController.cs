@@ -6,15 +6,25 @@ using System.Web;
 using System.Web.Mvc;
 using _123TribeFrameworker.Entity;
 using _123TribeFrameworker.Models.DirModels;
+using _123TribeFrameworker.Services;
 using _123TribeFrameworker.Services.Layer;
+using Newtonsoft.Json;
+using Unity.Attributes;
 
 namespace _123TribeFrameworker.Controllers
 {
+    
     public class ThirdLevelDirController : Controller
     {
+        [Dependency]
+        public IThirdLevelDirService layer { get; set; }
         public ActionResult Index(ThirdLevelDirModel model)
         {
             Pager<List<ThirdLevelDirModel>> pager = new Pager<List<ThirdLevelDirModel>>();
+            if (!model.secondLevelID.HasValue)
+            {
+                model.secondLevelID = 1;
+            }
             ViewBag.condition = model;
             return View(pager);
         }
@@ -26,12 +36,12 @@ namespace _123TribeFrameworker.Controllers
         /// <returns></returns>
         public ActionResult searchThirdLevelDir(ThirdLevelDirModel model, Pager<ThirdLevelDirModel> pager)
         {
-            ThirdLevelDir ThirdLeveldir = new ThirdLevelDir();
             if (model != null)
             {
                 pager.data = model;
             }
-            Pager<List<ThirdLevelDirModel>> result = ThirdLeveldir.getThirdLevelDir(pager);
+            
+            Pager<List<ThirdLevelDirModel>> result = layer.getThirdLevelDir(pager);
             ViewBag.condition = model;
             return View("Index", result);
         }
@@ -42,7 +52,6 @@ namespace _123TribeFrameworker.Controllers
         /// <returns></returns>
         public ActionResult changeThirdLevelDir(ThirdLevelDirModel condition, ThirdLevelDirModel_update model_upd)
         {
-            ThirdLevelDir ThirdLeveldir = new ThirdLevelDir();
             ThirdLevelDirModel model = new ThirdLevelDirModel(model_upd);
             Result<ThirdLevelDirModel> result;
             StringBuilder sb = new StringBuilder("");
@@ -50,14 +59,14 @@ namespace _123TribeFrameworker.Controllers
             {
                 model.lastUpdatedBy = User.Identity.Name;
                 model.lastUpdatedDate = DateTime.Now;
-                result = ThirdLeveldir.updateThirdLevelDir(model);
+                result = layer.updateThirdLevelDir(model);
                 sb.Append("修改");
             }
             else
             {
                 model.createdBy = User.Identity.Name;
                 model.createdDate = DateTime.Now;
-                result = ThirdLeveldir.addThirdLevelDir(model);
+                result = layer.addThirdLevelDir(model);
                 sb.Append("增加");
             }
 
@@ -69,6 +78,7 @@ namespace _123TribeFrameworker.Controllers
             {
                 TempData["Msg"] = new Message(sb.Append("失败").ToString());
             }
+           // condition.secondLevelID = model_upd.secondLevelID_upd;
             return RedirectToAction("searchThirdLevelDir", condition);
         }
         /// <summary>
@@ -81,7 +91,6 @@ namespace _123TribeFrameworker.Controllers
         {
             if (model_upd.id_upd.HasValue)
             {
-                ThirdLevelDir layer = new ThirdLevelDir();
                 StringBuilder sb = new StringBuilder("删除");
                 Result<ThirdLevelDirModel> result = layer.deleteThirdLevelDir(model_upd.id_upd.Value);
                 if (result.result)
@@ -94,6 +103,16 @@ namespace _123TribeFrameworker.Controllers
                 }
             }
             return RedirectToAction("searchThirdLevelDir", condition);
+        }
+        /// <summary>
+        /// 根据id获取一条3级菜单
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public string getSingleThirdDir(int id)
+        {
+            ThirdLevelDirModel model = layer.getSingleThirdDir(id);
+            return JsonConvert.SerializeObject(model);
         }
     }
 }

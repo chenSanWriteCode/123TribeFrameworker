@@ -18,7 +18,7 @@ namespace _123TribeFrameworker.DAO.DirDAO
         public List<SecondLevel> getSecondLevelDir(Pager<SecondLevelDirModel> pager)
         {
             practiceEntities entities = new practiceEntities();
-            var result = entities.SecondLevel.Where(x => x.id > 0 && x.activityFlag == 1);
+            var result = entities.SecondLevel.Where(x => x.activityFlag == 1);
             int start = (pager.page - 1) * pager.recPerPage;
             if (pager.data.id.HasValue)
             {
@@ -28,8 +28,9 @@ namespace _123TribeFrameworker.DAO.DirDAO
             {
                 result = !pager.data.orderId.HasValue ? result : result.Where(x => x.orderId == pager.data.orderId);
                 result = string.IsNullOrEmpty(pager.data.title) ? result : result.Where(x => x.title == pager.data.title);
+                result = !pager.data.firstLevelID.HasValue ? result : result.Where(x => x.firstLevelId == pager.data.firstLevelID);
                 result = string.IsNullOrEmpty(pager.data.createdBy) ? result : result.Where(x => x.createdBy == pager.data.createdBy);
-                result = string.IsNullOrEmpty(pager.data.lastUpdatedBy) ? result : result.Where(x => x.lastUpdateBy == pager.data.lastUpdatedBy);
+                result = string.IsNullOrEmpty(pager.data.lastUpdatedBy) ? result : result.Where(x => x.lastUpdatedBy == pager.data.lastUpdatedBy);
                 result = !pager.data.createdDate.HasValue ? result : result.Where(x => x.createdDate == pager.data.createdDate);
                 result = !pager.data.lastUpdatedDate.HasValue ? result : result.Where(x => x.lastUpdatedDate == pager.data.lastUpdatedDate);
             }
@@ -65,7 +66,7 @@ namespace _123TribeFrameworker.DAO.DirDAO
         public int getSecondLevelDirCount(SecondLevelDirModel model)
         {
             practiceEntities entities = new practiceEntities();
-            var result = entities.SecondLevel.Where(x => x.id > 0 && x.activityFlag == 1);
+            var result = entities.SecondLevel.Where(x => x.activityFlag == 1);
             if (model.id.HasValue)
             {
                 result = result.Where(x => x.id == model.id.Value);
@@ -75,7 +76,7 @@ namespace _123TribeFrameworker.DAO.DirDAO
                 result = model.orderId.HasValue ? result : result.Where(x => x.orderId == model.orderId);
                 result = string.IsNullOrEmpty(model.title) ? result : result.Where(x => x.title == model.title);
                 result = string.IsNullOrEmpty(model.createdBy) ? result : result.Where(x => x.createdBy == model.createdBy);
-                result = string.IsNullOrEmpty(model.lastUpdatedBy) ? result : result.Where(x => x.lastUpdateBy == model.lastUpdatedBy);
+                result = string.IsNullOrEmpty(model.lastUpdatedBy) ? result : result.Where(x => x.lastUpdatedBy == model.lastUpdatedBy);
                 result = model.createdDate.HasValue ? result : result.Where(x => x.createdDate == model.createdDate);
                 result = model.lastUpdatedDate.HasValue ? result : result.Where(x => x.lastUpdatedDate == model.lastUpdatedDate);
             }
@@ -89,12 +90,13 @@ namespace _123TribeFrameworker.DAO.DirDAO
         public int deleteSecondlevelDir(int id)
         {
             practiceEntities entities = new practiceEntities();
-            var result = entities.SecondLevel.Where(x => x.id ==id);
+            var result = entities.SecondLevel.Where(x => x.id == id);
             SecondLevel entity = result.First();
             if (entity != null)
             {
                 entity.activityFlag = 0;
             }
+            entities.SecondLevel.Remove(entity);
             return entities.SaveChanges();
         }
         /// <summary>
@@ -105,13 +107,10 @@ namespace _123TribeFrameworker.DAO.DirDAO
         public int updateSecondLevelDir(SecondLevelDirModel model)
         {
             practiceEntities entities = new practiceEntities();
-            var result = entities.SecondLevel.Where(x => x.id > 0 && x.activityFlag == 1);
+            var result = entities.SecondLevel.Where(x => x.activityFlag == 1);
             result = model.id.HasValue ? result.Where(x => x.id == model.id.Value) : null;
-            if (result != null)
-            {
-                SecondLevel entity = result.First();
-                modelToEntity(model, ref entity);
-            }
+            SecondLevel entity = result.First();
+            modelToEntity(model, ref entity);
             return entities.SaveChanges();
         }
         /// <summary>
@@ -126,10 +125,8 @@ namespace _123TribeFrameworker.DAO.DirDAO
             {
                 SecondLevel entity = new SecondLevel();
                 modelToEntity(model, ref entity);
-                //DirTools tools = new DirTools();
-                //entity.afterContent = tools.afterContent;
-                //entity.beforContent = tools.beforContent;
                 entity.activityFlag = 1;
+                entity.url = "#";
                 var result = entities.SecondLevel.Add(entity);
             }
             return entities.SaveChanges();
@@ -167,13 +164,13 @@ namespace _123TribeFrameworker.DAO.DirDAO
                 }
                 if (!string.IsNullOrEmpty(model.lastUpdatedBy))
                 {
-                    entity.lastUpdateBy = model.lastUpdatedBy?.ToString();
+                    entity.lastUpdatedBy = model.lastUpdatedBy?.ToString();
                 }
                 if (!string.IsNullOrEmpty(model.title))
                 {
                     entity.title = model.title?.ToString();
                 }
-                entity.firstLevelID = model.firstLevelID;
+                entity.firstLevelId = model.firstLevelID;
             }
         }
         #endregion

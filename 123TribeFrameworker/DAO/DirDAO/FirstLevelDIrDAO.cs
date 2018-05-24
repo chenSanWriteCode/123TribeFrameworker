@@ -85,6 +85,7 @@ namespace _123TribeFrameworker.DAO.DirDAO
             {
                 entity.activityFlag = 0;
             }
+            entities.FirstLevel.Remove(entity);
             return entities.SaveChanges();
         }
         /// <summary>

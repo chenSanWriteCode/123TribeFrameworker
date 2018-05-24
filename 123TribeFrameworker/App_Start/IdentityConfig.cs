@@ -47,17 +47,17 @@ namespace _123TribeFrameworker
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)
             {
                 AllowOnlyAlphanumericUserNames = false,
-                RequireUniqueEmail = true
+                RequireUniqueEmail = false
             };
 
             // 配置密码的验证逻辑
             manager.PasswordValidator = new PasswordValidator
             {
                 RequiredLength = 6,
-                RequireNonLetterOrDigit = true,
-                RequireDigit = true,
-                RequireLowercase = true,
-                RequireUppercase = true,
+                RequireNonLetterOrDigit = false,
+                RequireDigit = false,
+                RequireLowercase = false,
+                RequireUppercase = false,
             };
 
             // 配置用户锁定默认值
@@ -67,17 +67,17 @@ namespace _123TribeFrameworker
 
             // 注册双重身份验证提供程序。此应用程序使用手机和电子邮件作为接收用于验证用户的代码的一个步骤
             // 你可以编写自己的提供程序并将其插入到此处。
-            manager.RegisterTwoFactorProvider("电话代码", new PhoneNumberTokenProvider<ApplicationUser>
-            {
-                MessageFormat = "你的安全代码是 {0}"
-            });
-            manager.RegisterTwoFactorProvider("电子邮件代码", new EmailTokenProvider<ApplicationUser>
-            {
-                Subject = "安全代码",
-                BodyFormat = "你的安全代码是 {0}"
-            });
-            manager.EmailService = new EmailService();
-            manager.SmsService = new SmsService();
+            //manager.RegisterTwoFactorProvider("电话代码", new PhoneNumberTokenProvider<ApplicationUser>
+            //{
+            //    MessageFormat = "你的安全代码是 {0}"
+            //});
+            //manager.RegisterTwoFactorProvider("电子邮件代码", new EmailTokenProvider<ApplicationUser>
+            //{
+            //    Subject = "安全代码",
+            //    BodyFormat = "你的安全代码是 {0}"
+            //});
+            //manager.EmailService = new EmailService();
+            //manager.SmsService = new SmsService();
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {
@@ -85,6 +85,26 @@ namespace _123TribeFrameworker
                     new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;
+        }
+    }
+    //public class AplicationRoleManager : RoleManager<AplicationRole>, IDisposable
+    //{
+    //    public AplicationRoleManager(RoleStore<AplicationRole> store) : base(store)
+    //    {
+    //    }
+    //    public static AplicationRoleManager Create(IdentityFactoryOptions<AplicationRoleManager> options,OwinContext context)
+    //    {
+    //        return new AplicationRoleManager(new RoleStore<AplicationRole>(context.Get<ApplicationDbContext>()));
+    //    }
+    //}
+    public class ApplicationRoleManager : RoleManager<AplicationRole>, IDisposable
+    {
+        public ApplicationRoleManager(RoleStore<AplicationRole> store) : base(store)
+        {
+        }
+        public static ApplicationRoleManager Create(IdentityFactoryOptions<ApplicationRoleManager> options, IOwinContext context)
+        {
+            return new ApplicationRoleManager(new RoleStore<AplicationRole>(context.Get<ApplicationDbContext>()));
         }
     }
 
@@ -113,7 +133,8 @@ namespace _123TribeFrameworker
                 var result = Task<SignInStatus>.Factory.StartNew(()=> { return SignInStatus.Success; });
                 return result;
             }
-            return base.PasswordSignInAsync(userName, password, isPersistent, shouldLockout);
+            var result1 = base.PasswordSignInAsync(userName, password, isPersistent, shouldLockout);
+            return result1;
         }
     }
 }

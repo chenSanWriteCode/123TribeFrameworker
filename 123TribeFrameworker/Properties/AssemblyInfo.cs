@@ -35,4 +35,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("1.0.0.0")]
 [assembly: InternalsVisibleTo("123TribeFrameworker.Tests1")]
 [assembly: InternalsVisibleTo("123TribeFrameworker.Explorables")]
+[assembly: InternalsVisibleTo("123TribeFrameworker.Tests")]
 
