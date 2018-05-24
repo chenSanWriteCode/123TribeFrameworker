@@ -15,6 +15,7 @@ namespace _123TribeFrameworker.Entity
     public partial class SecondLevel
     {
         public int id { get; set; }
+        public Nullable<int> orderId { get; set; }
         public string title { get; set; }
         public string url { get; set; }
         public string open { get; set; }
@@ -24,7 +25,6 @@ namespace _123TribeFrameworker.Entity
         public string createdBy { get; set; }
         public Nullable<System.DateTime> lastUpdatedDate { get; set; }
         public string lastUpdateBy { get; set; }
-        public Nullable<int> orderId { get; set; }
     
         public virtual FirstLevel FirstLevel { get; set; }
     }

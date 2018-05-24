@@ -13,6 +13,7 @@ namespace _123TribeFrameworker.Entity
     
     public partial class searchSecondDir_Result
     {
+        public string id { get; set; }
         public string title { get; set; }
         public string url { get; set; }
         public string open { get; set; }

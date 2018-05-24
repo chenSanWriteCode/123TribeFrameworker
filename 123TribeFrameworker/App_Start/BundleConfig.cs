@@ -28,8 +28,7 @@ namespace _123TribeFrameworker
                       "~/Content/site.css"));
             //"~/Scripts/dist/lib/datatable/zui.datatable.css"
             bundles.Add(new StyleBundle("~/bundles/zuiCSS").Include("~/Scripts/dist/css/zui.css", "~/Scripts/dist/lib/datagrid/zui.datagrid.css", "~/Scripts/dist/lib/datatable/zui.datatable.css", "~/Scripts/dist/lib/chosen/zui.chosen.css"));
-            bundles.Add(new ScriptBundle("~/bundles/zuiJS").Include("~/Scripts/dist/lib/jquery/jquery.js",
-                "~/Scripts/dist/js/zui.js", "~/Scripts/dist/lib/datagrid/zui.datagrid.js", "~/Scripts/dist/lib/datatable/zui.datatable.js", "~/Scripts/dist/lib/chosen/zui.chosen.js"));
+            bundles.Add(new ScriptBundle("~/bundles/zuiJS").Include("~/Scripts/dist/lib/jquery/jquery.js", "~/Scripts/dist/lib/jquery/jquery.cookie.js","~/Scripts/dist/js/zui.js", "~/Scripts/dist/lib/datagrid/zui.datagrid.js", "~/Scripts/dist/lib/datatable/zui.datatable.js", "~/Scripts/dist/lib/chosen/zui.chosen.js"));
             
         }
     }

@@ -10,38 +10,34 @@
     @RenderSection("scripts", required: false)
     <script type="text/javascript">
         $(function () {
+            alert(document.cookie+'  a')
             $('#mainMenu').on('click', 'a', function () {
                 $('#mainMenu li.active').removeClass('active');
                 $(this).closest('li').addClass('active');
                 var mainID = $(this).attr('href').split('#')[1];
                 document.cookie = "mainID=" + mainID;
                 getSecDir(mainID);
+                alert(document.cookie + '  d')
             });
-
             // 手动通过点击模拟高亮菜单项
             $('#treeMenu').on('click', 'a', function () {
                 $('#treeMenu li.active').removeClass('active');
                 $(this).closest('li').addClass('active');
-                if ($(this).parent().parent().parent('li').attr("id") != undefined) {
-                    document.cookie = "openli=" + $(this).parent().parent().parent('li').attr("id")
-                    document.cookie = "activeli=" + $(this)
+                var id = $(this).parent().parent().parent('li').attr("data-id");
+                if (id != undefined) {
+                    //delCookie("openli");
+                    $.cookie('current', null);
+                    $.cookie('openli', null);
+                    $.cookie('openli', 'id');
+                    //setcookie("openli", id);
+                    //delCookie("activeli");
+                    $.cookie('activeli', null);
+                    $.cookie('activeli', $(this).parent('li').attr("data-id"));
+                    //setcookie("activeli", $(this).parent('li').attr("data-id"));
                 }
             });
             activeMianDir();
-            activeSecDir();
-            activeThirdDir()
         })
-
-        function activeSecDir() {
-            if (getcookie('openli') != "") {
-                $('#' + getcookie('openli')).attr('class', 'open')
-            }
-        }
-        function activeThirdDir() {
-            if (getcookie('activeli') != "") {
-                getcookie('activeli').attr('class', 'active')
-            }
-        }
         function activeMianDir() {
             if (getcookie('mainID') != "") {
                 $('#mainMenu').children('li').each(function (index, e) {
@@ -56,10 +52,6 @@
                 getSecDir(1);
             }
         }
-
-
-
-
         //通过mainID获取二级菜单
         function getSecDir(mainID) {
             $.post("/Home/getSecondDirs", { ID: mainID }, function (data) {
@@ -73,9 +65,28 @@
                         var secondTree = $('#treeMenu').data('zui.tree')
                         secondTree.reload(secondMenu);
                     }
-
+                    alert(document.cookie + '  b')
+                    activeSecDir();
+                    activeThirdDir();
+                    alert(document.cookie + '  c')
                 }
             })
+        }
+        function activeSecDir() {
+            var dataId = $.cookie('openli');
+            if (dataId != "") {
+                $('li[data-id=' + dataId + ']').attr('class', 'open');
+            }
+        }
+        function activeThirdDir() {
+            var dataId = $.cookie('activeli');
+            if (dataId != "") {
+                $('li[data-id=' + dataId + ']').attr('class', 'active');
+            }
+        }
+        function setcookie(name, value) {
+            document.cookie = name + "=" + value + "; path=/";
+            console.log(document.cookie);
         }
         //从cookie获取name
         function getcookie(Name) {
@@ -92,6 +103,13 @@
                 }
             }
             return returnvalue;
+        }
+        function delCookie(name) {
+            var exp = new Date();
+            exp.setTime(exp.getTime() - 1);
+            var cval = getcookie(name);
+            if (cval != null)
+                document.cookie = name + "=" + cval + "; path=/;expires=" + exp.toGMTString();
         }
     </script>
 </head>

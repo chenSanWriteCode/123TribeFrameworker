@@ -18,7 +18,7 @@ namespace _123TribeFrameworker.Models.DirModels
             }
             this.orderId = model_upd.orderId_upd.Value;
             this.title = model_upd.content_upd?.ToString();
-            this.firstLevelID = model_upd.firstLevelID;
+            this.firstLevelID = model_upd.firstLevelID_upd;
         }
         public int? id { get; set; }
         public int? orderId { get; set; }
