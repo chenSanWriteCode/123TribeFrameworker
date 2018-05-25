@@ -10,7 +10,7 @@ namespace _123TribeFrameworker.DAO
 
         int searchCountByCondition(T t);
 
-        T searchById(int id);
+        Task<T> searchById(int id);
 
         Task<int> add(T t);
 

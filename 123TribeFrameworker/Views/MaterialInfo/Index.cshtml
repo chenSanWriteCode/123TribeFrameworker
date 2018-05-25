@@ -17,39 +17,35 @@
 
     @using (Html.BeginForm())
     {
-        <div class="panel-body">
-            <div class="col-md-3">
-                <div class="input-control has-label-left-lg">
-                    <input id="materialName" name="materialName" value="@ViewBag.condition.materialName" type="text" class="form-control">
-                    <label for="materialName" class="input-control-label-left"> 产品名称:</label>
-                </div>
+        <div class="col-md-3  form-group">
+            <div class="input-control has-label-left-lg">
+                <input id="materialName" name="materialName" value="@ViewBag.condition.materialName" type="text" class="form-control">
+                <label for="materialName" class="input-control-label-left"> 产品名称:</label>
             </div>
-            <div class="col-md-3">
-                <div class="input-control has-label-left-lg">
+        </div>
+            <div class="col-md-3  form-group">
+                <div class="input-control has-label-left">
                     <input id="alias" name="alias" value="@ViewBag.condition.alias" type="text" class="form-control">
                     <label for="alias" class="input-control-label-left"> 别名:</label>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3  form-group">
                 <div class="input-control has-label-left">
                     <input id="mat_size" name="mat_size" value="@ViewBag.condition.mat_size" type="text" class="form-control">
                     <label for="mat_size" class="input-control-label-left"> 规格:</label>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3  form-group">
                 <div class="input-control has-label-left">
                     <input id="remark" name="remark" value="@ViewBag.condition.remark" type="text" class="form-control">
                     <label for="remark" class="input-control-label-left"> 备注:</label>
                 </div>
             </div>
-        </div>
-        <div class="panel-heading">
             <button class="btn btn-primary" type="submit">查询</button>
             @Html.ActionLink("新增", "add", null, new { @class = "btn btn-primary" })
-        </div>
     }
 
-    <table id="materialTable" class="table datatable table-striped">
+    <table id="materialTable" class="table datatable table-striped table-condensed">
         <thead>
             <tr>
                 <th>#</th>
@@ -69,7 +65,7 @@
                 for (int i = 0; i < Model.data.Count; i++)
                 {
                     <tr>
-                        <td>@((Model.page - 1) * Model.recPerPage + i + 1)</td>
+                        <td>@((Model.page - 1) * Model.recPerPage + i + 1 )</td>
                         <td>@Model.data[i].materialName</td>
                         <td>@Model.data[i].alias</td>
                         <td>@Model.data[i].mat_size</td>

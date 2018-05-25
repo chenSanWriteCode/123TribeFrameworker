@@ -10,5 +10,6 @@ namespace _123TribeFrameworker.DAO
     public interface IMaterialInfoDAO : ICommonDAO<MaterialInfo>
     {
         //Task<MaterialInfo> searchByMaterial(string material);
+        List<MaterialInfo> searchAllMaterialInfo();
     }
 }

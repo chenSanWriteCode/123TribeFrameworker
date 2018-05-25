@@ -44,14 +44,10 @@ namespace _123TribeFrameworker.Controllers
             return View(model);
         }
 
-        public ActionResult edit(int id)
+        public async Task<ActionResult> edit(int id)
         {
-            var result = service.searchByid(id);
-            if (!result.result)
-            {
-                return View("Error", new string[] { result.message });
-            }
-            return View(result.data);
+            var model = await service.searchByid(id);
+            return View(model);
         }
         [HttpPost]
         public async Task<ActionResult> edit(MaterialInfo model)

@@ -24,7 +24,7 @@ namespace _123TribeFrameworker.Entity
         /// 订单状态
         /// </summary>
         [Required]
-        public int status { get; set; }
+        public string status { get; set; }
         /// <summary>
         /// 合计进货价格
         /// </summary>
@@ -49,6 +49,10 @@ namespace _123TribeFrameworker.Entity
         /// 进货单下发时间
         /// </summary>
         public DateTime createdDate { get; set; } = DateTime.Now;
+        [NotMapped]
+        public DateTime? createdDateBegin { get; set; }
+        [NotMapped]
+        public DateTime? createdDateEnd { get; set; }
         public DateTime? lastUpdatedDate { get; set; }
         [MaxLength(20)]
         public string lastUpdatedBy { get; set; }
@@ -56,6 +60,10 @@ namespace _123TribeFrameworker.Entity
         /// 收货时间
         /// </summary>
         public DateTime? receivedDate { get; set; }
+        [NotMapped]
+        public DateTime? receivedDateBegin { get; set; }
+        [NotMapped]
+        public DateTime? receivedDateEnd { get; set; }
         [ForeignKey("status")]
         public virtual OrderStatus orderStatus { get; set; }
     }
@@ -79,7 +87,6 @@ namespace _123TribeFrameworker.Entity
         /// <summary>
         /// 物料名称
         /// </summary>
-        [Required]
         [MaxLength(50)]
         public string materialName { get; set; }
         /// <summary>
@@ -201,7 +208,9 @@ namespace _123TribeFrameworker.Entity
     public class OrderStatus
     {
         [Key]
-        public int id { get; set; }
+        [MaxLength(20)]
+        [Index(IsUnique =true)]
+        public string statusKey { get; set; }
         [MaxLength(20)]
         public string status { get; set; }
     }

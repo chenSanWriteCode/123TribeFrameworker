@@ -4,6 +4,7 @@ namespace _123TribeFrameworker.Migrations.LayerMigrations
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
+    using Entity;
 
     internal sealed class Configuration : DbMigrationsConfiguration<_123TribeFrameworker.Entity.LayerDbContext>
     {
@@ -13,20 +14,24 @@ namespace _123TribeFrameworker.Migrations.LayerMigrations
             MigrationsDirectory = @"Migrations\LayerMigrations";
         }
 
-        protected override void Seed(_123TribeFrameworker.Entity.LayerDbContext context)
+        protected override void Seed(LayerDbContext context)
         {
-            //  This method will be called after migrating to the latest version.
-
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data. E.g.
-            //
-            //    context.People.AddOrUpdate(
-            //      p => p.FullName,
-            //      new Person { FullName = "Andrew Peters" },
-            //      new Person { FullName = "Brice Lambson" },
-            //      new Person { FullName = "Rowan Miller" }
-            //    );
-            //
+            if (context.orderStatus.Where(x => x.statusKey == "generated").Count()==0)
+            {
+                OrderStatus model = new OrderStatus() { statusKey="generated",status = "已下发" };
+                context.orderStatus.Add(model);
+            }
+            if (context.orderStatus.Where(x => x.statusKey == "completed").Count() == 0)
+            {
+                OrderStatus model = new OrderStatus() { status = "完成",statusKey="completed" };
+                context.orderStatus.Add(model);
+            }
+            if (context.orderStatus.Where(x => x.statusKey == "excepted").Count() == 0)
+            {
+                OrderStatus model = new OrderStatus() { status = "收货异常",statusKey= "excepted" };
+                context.orderStatus.Add(model);
+            }
+            context.SaveChanges();
         }
     }
 }

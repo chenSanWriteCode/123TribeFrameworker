@@ -5,9 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using _123TribeFrameworker.Entity;
 
-namespace _123TribeFrameworker.Services
+namespace _123TribeFrameworker.DAO
 {
-    public interface IMaterialInfoService: ICommonService<MaterialInfo>
+    public interface IOrderInfoDAO:ICommonDAO<OrderInfo>
     {
+        Task<OrderInfo> searchByOrder(string orderNo);
     }
 }

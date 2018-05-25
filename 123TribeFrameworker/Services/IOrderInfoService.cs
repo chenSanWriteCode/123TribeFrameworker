@@ -7,7 +7,8 @@ using _123TribeFrameworker.Entity;
 
 namespace _123TribeFrameworker.Services
 {
-    public interface IMaterialInfoService: ICommonService<MaterialInfo>
+    public interface IOrderInfoService:ICommonService<OrderInfo>
     {
+        Task<OrderInfo> searchByOrder(string orderNo);
     }
 }

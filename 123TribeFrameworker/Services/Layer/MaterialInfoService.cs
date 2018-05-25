@@ -56,12 +56,14 @@ namespace _123TribeFrameworker.Services.Layer
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Result<MaterialInfo> searchByid(int id)
+        public async Task<MaterialInfo> searchByid(int id)
         {
-            Result<MaterialInfo> result = new Result<MaterialInfo>();
-            Task<MaterialInfo> task = Task.Factory.StartNew(() => dao.searchById(id));
-            result.data = task.Result;
-            return result;
+            MaterialInfo model =await dao.searchById(id);
+            if (model==null)
+            {
+                model = new MaterialInfo();
+            }
+            return model;
         }
         /// <summary>
         /// 根据id删除

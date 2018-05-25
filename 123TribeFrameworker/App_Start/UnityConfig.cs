@@ -58,9 +58,12 @@ namespace _123TribeFrameworker
             container.RegisterType<IThirdLevelDirService, ThirdLevelDir>();
             container.RegisterType<IRoleMenuLayerService, RoleMenuLayer>();
             container.RegisterType<IDirLayerService, DirLayer>();
+
             container.RegisterType<IMaterialInfoDAO, MaterialInfoDAO>();
             container.RegisterType<IMaterialInfoService, MaterialInfoService>();
-            
+
+            container.RegisterType<IOrderInfoService, OrderInfoService>();
+            container.RegisterType<IOrderInfoDAO, OrderInfoDAO>();
         }
     }
 }

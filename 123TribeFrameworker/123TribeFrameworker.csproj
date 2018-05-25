@@ -231,11 +231,13 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MaterialInfoController.cs" />
+    <Compile Include="Controllers\OrderInfoController.cs" />
     <Compile Include="Controllers\OutRecordsController.cs" />
     <Compile Include="Controllers\RoleMenuController.cs" />
     <Compile Include="Controllers\RoleUsersController.cs" />
     <Compile Include="Controllers\SecondLevelDirController.cs" />
     <Compile Include="Controllers\ThirdLevelDirController.cs" />
+    <Compile Include="DAO\BussinessDAO\OrderInfoDAO.cs" />
     <Compile Include="DAO\DirDAO\FirstLevelDirDAO.cs" />
     <Compile Include="DAO\BussinessDAO\MaterialInfoDAO.cs" />
     <Compile Include="DAO\DirDAO\RoleMenuDAO.cs" />
@@ -243,6 +245,7 @@
     <Compile Include="DAO\DirDAO\ThirdLevelDirDAO.cs" />
     <Compile Include="DAO\ICommonDAO.cs" />
     <Compile Include="DAO\IMaterialInfoDAO.cs" />
+    <Compile Include="DAO\IOrderInfoDAO.cs" />
     <Compile Include="Entity\FirstLevel.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -282,6 +285,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructrue\BaseDataHelper.cs" />
     <Compile Include="Infrastructrue\BeanHelper.cs" />
     <Compile Include="Infrastructrue\IdentityHelper.cs" />
     <Compile Include="Migrations\ApplicationsMigrations\201805210321207_InitBlogDb.cs" />
@@ -299,9 +303,11 @@
     <Compile Include="Models\DirModels\ThirdLevelDirModel_update.cs" />
     <Compile Include="Entity\LayerDbContext.cs" />
     <Compile Include="Models\RoleMenuDbContext.cs" />
+    <Compile Include="Services\ICommonService.cs" />
     <Compile Include="Services\IDirLayerService.cs" />
     <Compile Include="Services\IFirstLevelDirService.cs" />
     <Compile Include="Services\IMaterialInfoService.cs" />
+    <Compile Include="Services\IOrderInfoService.cs" />
     <Compile Include="Services\IOutRecordsLayer.cs" />
     <Compile Include="Services\IRoleMenuLayerService.cs" />
     <Compile Include="Services\ISecondLevelDirService.cs" />
@@ -314,6 +320,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Layer\FirstLevelDir.cs" />
     <Compile Include="Services\Layer\MaterialInfoService.cs" />
+    <Compile Include="Services\Layer\OrderInfoService.cs" />
     <Compile Include="Services\Layer\OutRecordsLayer.cs" />
     <Compile Include="Services\Layer\RoleMenuLayer.cs" />
     <Compile Include="Services\Layer\SecondLevelDir.cs" />
@@ -555,6 +562,8 @@
     <Content Include="Views\MaterialInfo\Index.cshtml" />
     <Content Include="Views\MaterialInfo\add.cshtml" />
     <Content Include="Views\MaterialInfo\edit.cshtml" />
+    <Content Include="Views\OrderInfo\Index.cshtml" />
+    <Content Include="Views\OrderInfo\add.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

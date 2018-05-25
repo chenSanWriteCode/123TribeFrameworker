@@ -38,6 +38,16 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             return result;
         }
         /// <summary>
+        /// 获取所有物料
+        /// </summary>
+        /// <returns></returns>
+        public List<MaterialInfo> searchAllMaterialInfo()
+        {
+            LayerDbContext context = new LayerDbContext();
+            return context.materialInfos.ToList();
+        }
+
+        /// <summary>
         /// 根据条件查询
         /// </summary>
         /// <param name="pager"></param>
@@ -64,10 +74,10 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public MaterialInfo searchById(int id)
+        public async Task<MaterialInfo> searchById(int id)
         {
             LayerDbContext context = new LayerDbContext();
-            var model = context.materialInfos.Find(id);
+            var model = await context.materialInfos.FindAsync(id);
             return model;
         }
         /// <summary>
