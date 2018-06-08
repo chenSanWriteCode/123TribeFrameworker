@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using _123TribeFrameworker.Entity;
+using _123TribeFrameworker.Models.QueryModel;
 using _123TribeFrameworker.Services;
 using Unity.Attributes;
 
@@ -16,7 +17,7 @@ namespace _123TribeFrameworker.Controllers
         [Dependency]
         public IMaterialInfoService service { get; set; }
         // GET: MaterialInfo
-        public ActionResult Index(Pager<List<MaterialInfo>> pager, MaterialInfo condition)
+        public ActionResult Index(Pager<List<MaterialInfo>> pager, MaterialInfoQuery condition)
         {
             ViewBag.condition = condition;
             pager = service.searchByCondition(pager, condition);
@@ -75,6 +76,25 @@ namespace _123TribeFrameworker.Controllers
                 return View("Error", new string[] { result.message });
             }
             return RedirectToAction("Index", condition);
+        }
+
+        public ActionResult selectList()
+        {
+            return View();
+        }
+        public JsonResult list(MaterialInfoQuery condition)
+        {
+            ViewBag.condition = condition;
+            Pager<List<MaterialInfo>> pager = new Pager<List<MaterialInfo>>();
+            pager = service.searchByCondition(pager, condition);
+            JsonResult result = Json(pager.data);
+            return result;
+        }
+
+        public async Task<JsonResult> searchModel(int id)
+        {
+            var result = await service.searchByid(Convert.ToInt32(id));
+            return Json(result);
         }
     }
 }

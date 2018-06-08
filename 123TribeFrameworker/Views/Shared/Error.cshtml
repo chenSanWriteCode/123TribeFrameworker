@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<string>
 
-<div class="alert alert-warning">
+<div class="alert alert-warning" style="text-align:center">
     @switch (Model.Count())
     {
         case 0:
@@ -21,7 +21,7 @@
     }
     <br />
     <br />
-    @Html.ActionLink("OK", "returnBack", "Home", new { returnUrl = ViewBag.returnUrl }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("OK", "returnBack", "Home", new { returnUrl = ViewBag.returnUrl }, new { @class = "btn btn-primary  btn-block" })
 </div>
 
 

@@ -4,14 +4,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using _123TribeFrameworker.Entity;
+using _123TribeFrameworker.Models.QueryModel;
 
 namespace _123TribeFrameworker.DAO.BussinessDAO
 {
     public class OrderInfoDAO : IOrderInfoDAO
     {
-        public Task<int> add(OrderInfo t)
+        public async Task<int> add(OrderInfo t)
         {
-            throw new NotImplementedException();
+            LayerDbContext context = new LayerDbContext();
+            context.orderInfo.Add(t);
+            return await context.SaveChangesAsync();
         }
 
         public Task<int> deleteById(int id)
@@ -19,7 +22,7 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             throw new NotImplementedException();
         }
 
-        public List<OrderInfo> searchByCondition(Pager<List<OrderInfo>> pager, OrderInfo t)
+        public List<OrderInfo> searchByCondition(Pager<List<OrderInfo>> pager, OrderInfoQuery t)
         {
             LayerDbContext context = new LayerDbContext();
             int start = (pager.page - 1) * pager.recPerPage;
@@ -46,7 +49,7 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             return result;
         }
 
-        public int searchCountByCondition(OrderInfo t)
+        public int searchCountByCondition(OrderInfoQuery t)
         {
             LayerDbContext context = new LayerDbContext();
             var result = context.orderInfo.Where(x => x.id > 0);

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web;
 using _123TribeFrameworker.DAO;
 using _123TribeFrameworker.Entity;
+using _123TribeFrameworker.Models.QueryModel;
 using Unity.Attributes;
 
 namespace _123TribeFrameworker.Services.Layer
@@ -21,7 +22,7 @@ namespace _123TribeFrameworker.Services.Layer
         public async Task<Result<MaterialInfo>> addAsync(MaterialInfo model)
         {
             Result<MaterialInfo> result = new Result<MaterialInfo>();
-            MaterialInfo condition = new MaterialInfo() { materialName = model.materialName };
+            MaterialInfoQuery condition = new MaterialInfoQuery() { materialName = model.materialName };
             var isExist = dao.searchCountByCondition(condition);
             if (isExist>0)
             {
@@ -43,7 +44,7 @@ namespace _123TribeFrameworker.Services.Layer
         /// <param name="pager"></param>
         /// <param name="condition"></param>
         /// <returns></returns>
-        public Pager<List<MaterialInfo>> searchByCondition(Pager<List<MaterialInfo>> pager, MaterialInfo condition)
+        public Pager<List<MaterialInfo>> searchByCondition(Pager<List<MaterialInfo>> pager, MaterialInfoQuery condition)
         {
             Task<List<MaterialInfo>> task = Task.Factory.StartNew(() => dao.searchByCondition(pager,condition));
             pager.data = task.Result;

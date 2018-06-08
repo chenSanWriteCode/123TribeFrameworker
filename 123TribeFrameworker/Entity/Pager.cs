@@ -22,6 +22,11 @@ namespace _123TribeFrameworker.Entity
             this.recPerPage = recPerPage;
             data = new T();
         }
+        public Pager(int recPerPage)
+        {
+            this.recPerPage = recPerPage;
+            data = new T();
+        }
 
         /// <summary>
         /// 初始状态的当前页码

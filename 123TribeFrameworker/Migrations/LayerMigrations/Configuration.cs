@@ -11,6 +11,7 @@ namespace _123TribeFrameworker.Migrations.LayerMigrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = true;
             MigrationsDirectory = @"Migrations\LayerMigrations";
         }
 

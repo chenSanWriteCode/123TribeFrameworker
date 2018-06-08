@@ -1,0 +1,115 @@
+﻿@using _123TribeFrameworker.Entity;
+@using _123TribeFrameworker.Infrastructrue;
+@model Pager<List<OrderDetailInfo>>
+@{
+    ViewBag.title = "订单详情";
+}
+<script type="text/javascript">
+    $(function () {
+        $('#myDataGrid').datatable({
+            sortable: true,
+            checkable:true
+        });
+        $('#myPager').pager({
+            page: @Model.page,
+            recTotal: @Model.recTotal,
+            recPerPage:@Model.recPerPage,
+        });
+    })
+</script>
+<form action="/OrderDetailInfo/search" method="post">
+    <div class="col-md-3  form-group">
+        <div class="input-control has-label-left-lg">
+            <input id="orderNo" name="orderNo" value="@ViewBag.condition.orderNo" type="text" class="form-control">
+            <label for="orderNo" class="input-control-label-left"> 进货单号:</label>
+        </div>
+    </div>
+    <div class="col-md-3 form-group">
+        <div class="input-control has-label-left-lg">
+            <select id="status" name="status" value="@ViewBag.condition.status" class="chosen-select form-control">
+                <option value=""></option>
+                @foreach (var item in Html.orderStatus())
+                {
+                    <option value="@item.Key">@item.Value</option>
+                }
+            </select>
+            <label for="status" class="input-control-label-left"> 单据状态:</label>
+        </div>
+    </div>
+    <div class="col-md-3  form-group">
+        <div class="input-control has-label-left-lg">
+            <input id="materialName" name="materialName" value="@ViewBag.condition.materialName" type="text" class="form-control">
+            <label for="materialName" class="input-control-label-left"> 产品名称:</label>
+        </div>
+    </div>
+    <div class="col-md-3  form-group">
+        <div class="input-control has-label-left">
+            <input id="alias" name="alias" value="@ViewBag.condition.alias" type="text" class="form-control">
+            <label for="alias" class="input-control-label-left"> 别名:</label>
+        </div>
+    </div>
+    <div class="col-md-3  form-group">
+        <div class="input-control has-label-left">
+            <input id="mat_size" name="mat_size" value="@ViewBag.condition.mat_size" type="text" class="form-control">
+            <label for="mat_size" class="input-control-label-left"> 规格:</label>
+        </div>
+    </div>
+    @*<div class="col-md-3  form-group">
+            <div class="input-control has-label-left">
+                <input id="remark" name="remark" value="@ViewBag.condition.materialInfo.remark" type="text" class="form-control">
+                <label for="remark" class="input-control-label-left"> 备注:</label>
+            </div>
+        </div>*@
+    <button class="btn btn-primary" type="submit">查询</button>
+</form>
+<table class="table datatable table-striped" id="myDataGrid">
+    <thead>
+        <tr>
+            <th>
+                进货单号
+            </th>
+            <th>
+                产品名称
+            </th>
+            <th>
+                别名
+            </th>
+            <th>
+                规格
+            </th>
+            <th>
+                数量
+            </th>
+            <th>
+                订单状态
+            </th>
+            <th>
+                下发时间
+            </th>
+            <th>
+                收货时间
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.data.Count > 0)
+        {
+            foreach (var item in Model.data)
+            {
+                <tr>
+                    <td>
+                        @item.orderNo
+                    </td>
+                    <td>@item.materialName</td>
+                    <td>@item.materialInfo.alias</td>
+                    <td>@item.materialInfo.mat_size</td>
+                    <td>@item.num</td>
+                    <td>@item.orderInfo.orderStatus.status</td>
+                    <td>@item.createdDate</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<div id="myPager" class="pager"></div>
+

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using _123TribeFrameworker.Entity;
+using _123TribeFrameworker.Models.QueryModel;
 
 namespace _123TribeFrameworker.DAO
 {
@@ -11,5 +12,9 @@ namespace _123TribeFrameworker.DAO
     {
         //Task<MaterialInfo> searchByMaterial(string material);
         List<MaterialInfo> searchAllMaterialInfo();
+
+        List<MaterialInfo> searchByCondition(Pager<List<MaterialInfo>> pager, MaterialInfoQuery t);
+
+        int searchCountByCondition(MaterialInfoQuery t);
     }
 }

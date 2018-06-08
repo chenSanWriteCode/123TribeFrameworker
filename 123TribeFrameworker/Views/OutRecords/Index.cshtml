@@ -4,7 +4,7 @@
 
 <script type="text/javascript">
     var cols = [
-            { name: 'material', label: '物料号' },
+            { name: 'material', width:1, label: '物料号' },
             { name: 'materialName', label: '物料名称' },
             { name: 'mat_type', label: '型号' },
             { name: 'mat_size', label: '规格' },
@@ -20,15 +20,16 @@
     $(function () {
         $("#dataGrid").datagrid({
             dataSource: {
-                cols: cols
+                cols: cols,
+                array: content1
             },
             states: {
                 pager: { page: 1, recPerPage: 5 }
             },
+            height: 'page',
             sortable: true,
             checkable: true,
-            responsive: true,
-            height: 'page',
+            responsive: true
         })
     })
     function searchByCondition() {
@@ -43,9 +44,8 @@
     <div>
         <button class="btn btn-primary" type="button" onclick="searchByCondition()">查询</button>
     </div>
-    <div id="dataGrid" class="datagrid datagrid-striped">
+    <div id="dataGrid" class="datagrid">
         <div class="datagrid-container"></div>
         <div class="pager"></div>
-
     </div>
 </div>

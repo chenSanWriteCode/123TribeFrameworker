@@ -41,6 +41,10 @@
         /// </summary>
         public virtual DbSet<Inventory> inventory { get; set; }
         /// <summary>
+        /// 入库记录表
+        /// </summary>
+        public virtual DbSet<InStorageRecord> inStorageRecord { get; set; }
+        /// <summary>
         /// 单据状态
         /// </summary>
         public virtual DbSet<OrderStatus> orderStatus { get; set; }

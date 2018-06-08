@@ -1,0 +1,7 @@
+﻿
+
+<div class="alert alert-success with-icon">
+    <i class="icon-ok-sign"></i>
+    <div class="content">@ViewBag.Msg</div>
+</div>
+@Html.ActionLink("OK", "returnBack", "Home", new { returnUrl = ViewBag.returnUrl }, new { @class = "btn btn-primary btn-block" })

@@ -1,0 +1,249 @@
+﻿@using _123TribeFrameworker.Entity
+@model Pager<List<Inventory>>
+    @{ 
+        ViewBag.title = "创建订单";
+    }
+<script type="text/javascript">
+    var cols = [
+            { name: 'materialId', width: 1, label: '物料号' },
+            { name: 'materialName', label: '物料名称' },
+            { name: 'mat_size', label: '规格' },
+            { name: 'num', label: '数量' },
+            { name: 'referencePriceIn', label: '成本' }
+    ]
+    $(function () {
+        $('#myDataTable').datatable({ sortable: true });
+
+        $('#dataPager').pager({
+            page: @Model.page,
+            recTotal: @Model.recTotal,
+            recPerPage:@Model.recPerPage,
+        });
+
+        $("#orders").datagrid({
+            dataSource: {
+                cols: cols
+            },states:{
+                pager:{page:1,recPerPage:10}
+            },
+            sortable: true,
+            checkable: true,
+            height:'page'
+        })
+
+        
+    })
+
+    function addToOrder() {
+        if ($('#materialId').val()=="") {
+            alert("无效的产品，请重新选择");
+            return;
+        }
+        if ($('#materialName').val()=="") {
+            alert("请选择商品");
+            return;
+        }
+        if ($('#num').val() == "") {
+            alert("请输入数量");
+            return;
+        }
+        if (parseInt($('#num').val())<=0) {
+            alert("数量需要大于0");
+            return;
+        }
+        var myDataGrid = $('#orders').data('zui.datagrid');
+        var context = myDataGrid.getData()
+        var data = $('#orderModel').serializeArray();
+        var obj = {};
+        $.each(data, function (i, v) {
+            obj[v.name] = v.value;
+        })
+        if (typeof (context) == "undefined") {
+            context = new Array();
+        } else {
+            var falg = true;
+            $.each(context, function () {
+                if (this.materialId == $('#materialId').val()) {
+                    alert("本产品已添加过");
+                    falg = false;
+                    return false;
+                }
+            })
+            if (!falg) {
+                return;
+            }
+        }
+        context.push(obj)
+        myDataGrid.setDataSource(context)
+        myDataGrid.render()
+    }
+    function chooseMaterial() {
+        var myDataGrid = $('#ListTable').data('zui.datagrid');
+        var data = myDataGrid.getCheckItems();
+        if (data.length == 1) {
+            setInput(data[0])
+        } else {
+            alert("仅且仅能选择一条产品信息")
+        }
+        var context = myDataGrid.getData()
+        for (var i = 0; i < context.length; i++) {
+            myDataGrid.checkRow(i, false);
+        }
+        myDataGrid.render()
+    }
+    function setForm(id){
+        $.post("/MaterialInfo/searchModel", { id }, function (data){
+            setInput(data);
+        })
+        }
+
+    function setInput(materialInfo){
+        $('#materialId').val(materialInfo.id);
+        $('#materialName').val(materialInfo.materialName);
+        $('#alias').val(materialInfo.alias);
+        $('#mat_size').val(materialInfo.mat_size);
+        $('#unit').val(materialInfo.unit);
+        $('#referencePriceIn').val(materialInfo.referencePriceIn);
+        $('#remark').val(materialInfo.remark);
+        $('#num').val(0)
+    }
+
+    function deleteFormOrder(){
+        var myDataGrid = $('#orders').data('zui.datagrid');
+        var checkedData = myDataGrid.getCheckItems();
+        if (checkedData.length==0) {
+            alert("请选中需要删除的订单")
+            return;
+        }
+        var data = myDataGrid.getData();
+        if (confirm("确定要删除本条订单？")) {
+            $.each(checkedData,function(){
+                var index = data.indexOf(this)
+                data.splice(index,1)
+            })
+            myDataGrid.setDataSource(data);
+            myDataGrid.render();
+        }
+    }
+    function generateOrder(){
+        var myDataGrid = $('#orders').data('zui.datagrid');
+        var data = myDataGrid.getData();
+        if (data.length==0) {
+            alert("请先添加订单")
+            return;
+        }
+        $('#jsonOrder').val(JSON.stringify(data));
+        $('#gengrateForm').submit()
+    }
+</script>
+<div style="width:40%;float:left">
+    <table id="myDataTable" class="table datatable table-striped">
+        <thead>
+            <tr>
+                <th>商品</th>
+                <th>规格</th>
+                <th>库存</th>
+                <th>添加</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.data.Count > 0)
+            {
+                for (int i = 0; i < Model.data.Count; i++)
+                {
+                    <tr>
+                        <td>@Model.data[i].materialInfo.materialName</td>
+                        <td>@Model.data[i].materialInfo.mat_size</td>
+                        <td>@Model.data[i].count</td>
+                        <td>
+                            <button type="button" class="btn btn-primary" onclick="setForm(@Model.data[i].materialId)">添加</button>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <div style="margin-top:-20px"><ul id="dataPager" class="pager"></ul></div>
+</div>
+<div style="width:60%;float:right">
+    <form class="form-horizontal" id="orderModel">
+        @Html.Hidden("materialId", null, new { id = "materialId" })
+        <div class="form-group">
+            <label for="materialName" class="col-md-2">商品名称</label>
+            <div class="col-md-3">
+                <input type="text" class="form-control" readonly="readonly" name="materialName" id="materialName" />
+            </div>
+            <div class="col-md-1">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">选择</button>
+            </div>
+            <label for="mat_size" class="col-md-2">规格</label>
+            <div class="col-md-4">
+                <input type="text" class="form-control" readonly="readonly" name="mat_size" id="mat_size" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="num" class="col-md-2">数量</label>
+            <div class="col-md-4">
+                <input type="number" class="form-control" name="num" id="num" />
+            </div>
+            <label for="unit" class="col-md-2">单位</label>
+            <div class="col-md-4">
+                <input type="text" disabled="disabled" class="form-control" name="unit" id="unit" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="alias" class="col-md-2">别名</label>
+            <div class="col-md-4">
+                <input type="text" disabled="disabled" class="form-control" name="alias" id="alias" />
+            </div>
+            <label for="referencePriceIn" class="col-md-2">成本</label>
+            <div class="col-md-4">
+                <input type="text" readonly="readonly" class="form-control" name="referencePriceIn" id="referencePriceIn" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="remark" class="col-md-2">备注</label>
+            <div class="col-md-10">
+                <input type="text" disabled="disabled" class="form-control" name="remark" id="remark" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2"></label>
+            <div class="col-md-5">
+                <button type="button" class="btn btn-primary btn-block" onclick="addToOrder()">增加</button>
+            </div>
+            <div class="col-md-5">
+                <button type="button" class="btn btn-warning btn-block" onclick="deleteFormOrder()">删除</button>
+            </div>
+        </div>
+    </form>
+    <div class="datagrid" id="orders">
+        <div class="datagrid-container"></div>
+        <div class="pager"></div>
+    </div>
+    <form id="gengrateForm" method="post"  action="/OrderDetailInfo/generateOrder">
+        @Html.Hidden("jsonOrder", null,new { id="jsonOrder"})
+        <button type="button" class="btn btn-primary btn-block" onclick="generateOrder()">生成订单</button>
+        @*@Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default btn-block" })*@
+    </form>
+</div>
+
+
+<!-- 对话框HTML -->
+<div class="modal fade" data-moveable="true" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>产品选择</h3>
+            </div>
+            <div class="modal-body">
+                @Html.Action("selectList", "materialInfo")
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="chooseMaterial()">选择</button>
+            </div>
+        </div>
+    </div>
+</div>
+

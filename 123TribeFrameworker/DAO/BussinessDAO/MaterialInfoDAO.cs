@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using _123TribeFrameworker.Entity;
+using _123TribeFrameworker.Models.QueryModel;
 
 namespace _123TribeFrameworker.DAO.BussinessDAO
 {
@@ -53,7 +54,7 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
         /// <param name="pager"></param>
         /// <param name="t"></param>
         /// <returns></returns>
-        public List<MaterialInfo> searchByCondition(Pager<List<MaterialInfo>> pager, MaterialInfo t)
+        public List<MaterialInfo> searchByCondition(Pager<List<MaterialInfo>> pager, MaterialInfoQuery t)
         {
             LayerDbContext context = new LayerDbContext();
             int start=(pager.page - 1)*pager.recPerPage;
@@ -85,7 +86,7 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
         /// </summary>
         /// <param name="t"></param>
         /// <returns></returns>
-        public int searchCountByCondition(MaterialInfo t)
+        public int searchCountByCondition(MaterialInfoQuery t)
         {
             LayerDbContext context = new LayerDbContext();
             var result = context.materialInfos.Where(x => x.id > 0);

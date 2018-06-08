@@ -74,6 +74,7 @@ namespace _123TribeFrameworker.Entity
     public class OrderDetailInfo
     {
         [Key, Column(Order = 1)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int id { get; set; }
         [Required]
         [Key, Column(Order = 2)]
@@ -137,7 +138,7 @@ namespace _123TribeFrameworker.Entity
         /// </summary>
         public DateTime createdDate { get; set; } = DateTime.Now;
         [ForeignKey("recordId")]
-        public TradingRecord record { get; set; }
+        public virtual TradingRecord record { get; set; }
     }
     /// <summary>
     /// 交易记录
@@ -164,10 +165,10 @@ namespace _123TribeFrameworker.Entity
         /// </summary>
         public string createdBy { get; set; }
         [ForeignKey("materialId")]
-        public MaterialInfo materialInfo { get; set; }
+        public virtual MaterialInfo materialInfo { get; set; }
     }
     /// <summary>
-    /// 库存 后期可以多长时间一删
+    /// 库存 count=0就删掉
     /// </summary>
     [Table("Layer_Inventory")]
     public class Inventory
@@ -178,13 +179,44 @@ namespace _123TribeFrameworker.Entity
         /// 物料id
         /// </summary>
         [Required]
-        [Index("UI_priceInAndmaterialId", 1, IsUnique = true)]
+        [Index]
         public int materialId { get; set; }
         /// <summary>
         /// 成本价
         /// </summary>
         [Required]
-        [Index("UI_priceInAndmaterialId",2,IsUnique =true)]
+        public double priceIn { get; set; }
+        /// <summary>
+        /// 数量
+        /// </summary>
+        [Required]
+        public int count { get; set; }
+        /// <summary>
+        /// 入库时间
+        /// </summary>
+        [Index]
+        public DateTime createdDate { get; set; } = DateTime.Now;
+        [ForeignKey("materialId")]
+        public virtual MaterialInfo materialInfo { get; set; }
+    }
+    /// <summary>
+    /// 入库记录
+    /// </summary>
+    [Table("Layer_InStorageRecord")]
+    public class InStorageRecord
+    {
+        [Key]
+        public int id { get; set; }
+        /// <summary>
+        /// 物料id
+        /// </summary>
+        [Required]
+        [Index]
+        public int materialId { get; set; }
+        /// <summary>
+        /// 成本价
+        /// </summary>
+        [Required]
         public double priceIn { get; set; }
         /// <summary>
         /// 数量
@@ -199,7 +231,10 @@ namespace _123TribeFrameworker.Entity
         /// <summary>
         /// 入库时间
         /// </summary>
+        [Index]
         public DateTime createdDate { get; set; } = DateTime.Now;
+        [ForeignKey("materialId")]
+        public virtual MaterialInfo materialInfo { get; set; }
     }
     /// <summary>
     /// 基础表_订单状态

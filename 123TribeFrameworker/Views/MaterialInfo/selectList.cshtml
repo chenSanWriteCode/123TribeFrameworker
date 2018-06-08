@@ -1,0 +1,71 @@
+﻿@{
+    Layout = null;
+}
+<script type="text/javascript">
+    var colsList = [
+    { name: 'id', width: 1, label: 'id' },
+    { name: 'materialName', label: '物料名称' },
+    { name: 'alias', width: 1, label: '别名' },
+    { name: 'mat_size', label: '规格' },
+    { name: 'unit', width: 1, label: '单位' },
+    { name: 'referencePriceIn', width: 1, label: '成本' },
+    { name: 'remark', label: '备注' }
+    ]
+    $(function () {
+        $("#ListTable").datagrid({
+            dataSource: {
+                cols: colsList
+            },
+            states: {
+                pager: { page: 1, recPerPage: 5 }
+            },
+            sortable: true,
+            checkable: true,
+            responsive: true,
+            height: 'page'
+        })
+    })
+    function search() {
+        $.ajax({
+            //几个参数需要注意一下
+            type: "POST",//方法类型
+            dataType: "json",//预期服务器返回的数据类型
+            url: "/materialInfo/list",//url
+            data: $('#myForm').serialize(),
+            success: function (result) {
+                var myDataGrid = $('#ListTable').data('zui.datagrid');
+                myDataGrid.setDataSource(result)
+                myDataGrid.render()
+            }
+        });
+    }
+</script>
+<body>
+    <form id="myForm" class="form-horizontal">
+        <div class="form-group">
+            <div class="col-md-5">
+                <input name="materialName" type="text" class="form-control" placeholder="产品名称">
+            </div>
+            <div class="col-md-3">
+                <input name="alias" type="text" class="form-control" placeholder="别名">
+            </div>
+            <div class="col-md-3">
+                <input name="mat_size" type="text" class="form-control" placeholder="规格">
+            </div>
+            
+        </div>
+        <div class="form-group">
+            <div class="col-md-8">
+                <input name="remark" type="text" class="form-control" placeholder="备注">
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary" type="button" onclick="search()">查询</button>
+            </div>
+        </div>
+    </form>
+
+    <div id="ListTable" class="datagrid">
+        <div class="datagrid-container"></div>
+        <div class="pager"></div>
+    </div>
+</body>

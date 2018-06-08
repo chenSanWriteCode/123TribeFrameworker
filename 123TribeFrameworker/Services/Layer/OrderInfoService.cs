@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web;
 using _123TribeFrameworker.DAO;
 using _123TribeFrameworker.Entity;
+using _123TribeFrameworker.Models.QueryModel;
 using Unity.Attributes;
 
 namespace _123TribeFrameworker.Services.Layer
@@ -13,9 +14,19 @@ namespace _123TribeFrameworker.Services.Layer
     {
         [Dependency]
         public IOrderInfoDAO dao { get; set; }
-        public Task<Result<OrderInfo>> addAsync(OrderInfo model)
+
+        
+
+        public async Task<Result<OrderInfo>> addAsync(OrderInfo model)
         {
-            throw new NotImplementedException();
+            Result<OrderInfo> result = new Result<OrderInfo>();
+            var count = await dao.add(model);
+            if (count!=1)
+            {
+                result.result = false;
+                result.message = "订单生成失败";
+            }
+            return result;
         }
 
         public Task<Result<int>> deleteByIdAsync(int id)
@@ -23,13 +34,18 @@ namespace _123TribeFrameworker.Services.Layer
             throw new NotImplementedException();
         }
 
-        public Pager<List<OrderInfo>> searchByCondition(Pager<List<OrderInfo>> pager, OrderInfo condition)
+        public Pager<List<OrderInfo>> searchByCondition(Pager<List<OrderInfo>> pager, OrderInfoQuery condition)
         {
             Task<List<OrderInfo>> task = Task.Factory.StartNew(() => dao.searchByCondition(pager, condition));
             pager.data = task.Result;
             Task<int> countTask = Task.Factory.StartNew(() => dao.searchCountByCondition(condition));
             pager.recTotal = countTask.Result;
             return pager;
+        }
+
+        public Pager<List<OrderInfo>> searchByCondition<QueryT>(Pager<List<OrderInfo>> pager, QueryT condition)
+        {
+            throw new NotImplementedException();
         }
 
         public Task<OrderInfo> searchByid(int id)
@@ -45,5 +61,6 @@ namespace _123TribeFrameworker.Services.Layer
         {
             throw new NotImplementedException();
         }
+        
     }
 }

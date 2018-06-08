@@ -1,0 +1,75 @@
+﻿@using _123TribeFrameworker.Entity
+@model Pager<JsonResult>
+
+<script type="text/javascript">
+    var cols = [
+            { name: 'materialInfo.materialName', label: '物料名称' },
+            { name: 'materialInfo.alias', label: '别名' },
+            { name: 'materialInfo.mat_size', label: '规格' },
+            { name: 'count', label: '数量' },
+            { name: 'materialInfo.unit', label: '单位' },
+            { name: 'materialInfo.remark', label: '备注' }
+    ]
+    $(function () {
+        $('#myDataGrid').datagrid({
+            dataSource: {
+                cols: cols,
+            },
+            height: 'page',
+            sortable: true
+        })
+    })
+    function search(){
+        $.ajax({
+            //几个参数需要注意一下
+            type: "POST",//方法类型
+            dataType: "json",//预期服务器返回的数据类型
+            url: "/Inventory/search",//url
+            data: $('#myForm').serialize(),
+            success: function (result) {
+                var myDataGrid = $('#myDataGrid').data('zui.datagrid');
+                console.log(result)
+                myDataGrid.setDataSource(result)
+                myDataGrid.render()
+            }
+        });
+    }
+    function choose() {
+        var myDataGrid = $('#myDataGrid').data('zui.datagrid');
+        var data = myDataGrid.getCheckItems();
+        console.log(data)
+    }
+</script>
+<div id="condition">
+    <form action="/Inventory/search" id="myForm">
+        <div class="col-md-3  form-group">
+            <div class="input-control has-label-left-lg">
+                <input id="materialName" name="materialName" value="@ViewBag.materialName" type="text" class="form-control">
+                <label for="materialName" class="input-control-label-left"> 产品名称:</label>
+            </div>
+        </div>
+        <div class="col-md-3  form-group">
+            <div class="input-control has-label-left">
+                <input id="alias" name="alias" value="@ViewBag.alias" type="text" class="form-control">
+                <label for="alias" class="input-control-label-left"> 别名:</label>
+            </div>
+        </div>
+        <div class="col-md-3  form-group">
+            <div class="input-control has-label-left">
+                <input id="mat_size" name="mat_size" value="@ViewBag.mat_size" type="text" class="form-control">
+                <label for="mat_size" class="input-control-label-left"> 规格:</label>
+            </div>
+        </div>
+        <div class="col-md-3  form-group">
+            <div class="input-control has-label-left">
+                <input id="remark" name="remark" value="@ViewBag.remark" type="text" class="form-control">
+                <label for="remark" class="input-control-label-left"> 备注:</label>
+            </div>
+        </div>
+        <button class="btn btn-primary" type="button" onclick="search()">查询</button>
+        <button class="btn btn-primary" type="button" onclick="choose()">aaa</button>
+    </form>
+</div>
+<div class="datagrid" id="myDataGrid">
+    <div class="datagrid-container"></div>
+</div>
