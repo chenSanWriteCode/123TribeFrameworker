@@ -18,6 +18,15 @@ namespace _123TribeFrameworker.Services.Layer
         {
             throw new NotImplementedException();
         }
+        /// <summary>
+        /// 增加库存list
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public async Task<Result<int>> addRangeAsync(List<Inventory> list)
+        {
+            return await dao.addRange(list);
+        }
 
         public Task<Result<int>> deleteByIdAsync(int id)
         {

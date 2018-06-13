@@ -60,6 +60,7 @@ namespace _123TribeFrameworker.Entity
         /// 收货时间
         /// </summary>
         public DateTime? receivedDate { get; set; }
+        public string receivedBy { get; set; }
         [NotMapped]
         public DateTime? receivedDateBegin { get; set; }
         [NotMapped]
@@ -214,15 +215,24 @@ namespace _123TribeFrameworker.Entity
         [Index]
         public int materialId { get; set; }
         /// <summary>
+        /// 进货单号
+        /// </summary>
+        [Required]
+        public string orderNo { get; set; }
+        /// <summary>
         /// 成本价
         /// </summary>
         [Required]
         public double priceIn { get; set; }
         /// <summary>
-        /// 数量
+        /// 应收入数量
+        /// </summary>
+        public int countReference { get; set; }
+        /// <summary>
+        /// 实际收入数量
         /// </summary>
         [Required]
-        public int count { get; set; }
+        public int countReal { get; set; }
         /// <summary>
         /// 回执单编号
         /// </summary>
@@ -312,5 +322,24 @@ namespace _123TribeFrameworker.Entity
         /// </summary>
         [MaxLength(200)]
         public string remark { get; set; }
+    }
+
+    /// <summary>
+    /// 订单状态
+    /// </summary>
+    public enum OrderStatusEnum
+    {
+        /// <summary>
+        /// 订单下发
+        /// </summary>
+        generated=1,
+        /// <summary>
+        /// 订单完成
+        /// </summary>
+        completed,
+        /// <summary>
+        /// 收货异常
+        /// </summary>
+        excepted
     }
 }

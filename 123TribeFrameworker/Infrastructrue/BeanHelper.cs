@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web;
+using _123TribeFrameworker.Entity;
 
 namespace _123TribeFrameworker.Infrastructrue
 {
@@ -30,6 +31,27 @@ namespace _123TribeFrameworker.Infrastructrue
                 aim = new Aim();
             }
         }
+        /// <summary>
+        /// 整合结果
+        /// </summary>
+        /// <param name="results"></param>
+        /// <returns></returns>
+        public static Result<object> combineResult(params Result<object>[] results)
+        {
+            Result<object> result = new Result<object>();
+            if (results!=null)
+            {
+                foreach (var item in results)
+                {
+                    if (!item.result)
+                    {
+                        result.addError(item.message);
+                    }
+                }
+            }
+            return result;
+        }
+
 
     }
 }

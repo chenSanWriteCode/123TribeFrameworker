@@ -12,5 +12,7 @@ namespace _123TribeFrameworker.Services
     {
         Task<Result<List<OrderDetailInfo>>> addRange(List<OrderDetailInfo> list);
         Pager<List<OrderDetailInfo>> searchByCondition(Pager<List<OrderDetailInfo>> pager, OrderDetailInfoQuery condition);
+        List<OrderDetailInfo> searchAllByCondition(OrderDetailInfoQuery condition);
+        Task<Result<int>> receiveOrder(List<InStorageRecord> list,string userName);
     }
 }

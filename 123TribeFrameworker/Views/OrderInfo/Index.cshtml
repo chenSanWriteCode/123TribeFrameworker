@@ -6,11 +6,19 @@
 }
 <script type="text/javascript">
     $(function () {
-        $('#myDataTable').datatable({ sortable: true });
+        $('#myDataTable').datagrid({ sortable: true,checkable:true,selectable:false });
         $('#dataPager').pager({
             page: @Model.page,
             recTotal: @Model.recTotal,
             recPerPage:@Model.recPerPage,
+            onPageChange: function(state, oldState) {
+                if (typeof(oldState.page)!="undefined" && state.page !== oldState.page) {
+                    var href = $('#searchForm').attr("action");
+                    href = href + "?page=" + state.page;
+                    $('#searchForm').attr("action", href);
+                    $('#searchForm').submit();
+                }
+            }
         });
         // 选择时间和日期
         $(".form-datetime").datetimepicker(
@@ -23,72 +31,101 @@
             forceParse: 0,
             showMeridian: 1,
             format: "yyyy-mm-dd hh:ii"
-        });
-        $('select.chosen-select').chosen({
-            no_results_text: '没有找到',    // 当检索时没有找到匹配项时显示的提示文本
-            disable_search_threshold: 10, // 10 个以下的选择项则不显示检索框
-            search_contains: true         // 从任意位置开始检索
-        });
+        })
     })
+    function deleteByOrderNo(){
+
+    }
+    function receiveOrder(){
+        var myTable = $('#myDataTable').data('zui.datagrid');
+        var data = myTable.getCheckItems();
+        if (data.length==0) {
+            alert('请选中一个订单')
+            return
+        }
+        if (data.length>1) {
+            alert('每次只能接收一个订单')
+            return
+        }
+        var status = data[0][1];
+        if (status!="已下发") {
+            alert("订单已收货，无法重复操作")
+            return;
+        }
+        var orderNo = data[0][0];
+        $('#modalContent').html("确定订单"+orderNo+"已到货？")
+        $('#receiveOrderNo').val(orderNo)
+        $('#myModal').modal({
+            keyboard : false,
+            show     : true,
+            moveable:'inside'
+        })
+    }
+    function submitReceive(){
+        $('#receiveOrder').submit();
+    }
 </script>
-@using (Html.BeginForm())
-{
-    <div class="col-md-3 form-group">
-        <div class="input-control has-label-left-lg">
-            <input id="orderNo" name="orderNo" value="@ViewBag.condition.orderNo" type="text" class="form-control">
-            <label for="orderNo" class="input-control-label-left"> 进货单号:</label>
+<form class="form-horizontal" method="post" action="/OrderInfo/search" id="searchForm">
+    <div class="form-group">
+        <div class="col-md-3">
+            <div class="input-control has-label-left-lg">
+                <input id="orderNo" name="orderNo" value="@ViewBag.condition.orderNo" type="text" class="form-control">
+                <label for="orderNo" class="input-control-label-left"> 进货单号:</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-control has-label-left-lg">
+                <select id="status" name="status" value="@ViewBag.condition.status" class="chosen-select form-control">
+                    <option value=""></option>
+                    @foreach (var item in Html.orderStatus())
+                    {
+                        <option value="@item.Key">@item.Value</option>
+                    }
+                </select>
+                <label for="status" class="input-control-label-left"> 单据状态:</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-control has-label-left-lg">
+                <input id="createdDateBegin" name="createdDateBegin" value="@ViewBag.condition.createdDateBegin" type="text" class="form-control form-datetime">
+                <label for="createdDateBegin" class="input-control-label-left"> 创建时间1:</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-control has-label-left-lg">
+                <input id="createdDateEnd" name="createdDateEnd" value="@ViewBag.condition.createdDateEnd" type="text" class="form-control form-datetime">
+                <label for="createdDateEnd" class="input-control-label-left"> 创建时间2:</label>
+            </div>
         </div>
     </div>
-    <div class="col-md-3 form-group">
-        <div class="input-control has-label-left-lg">
-            <select id="status" name="status" value="@ViewBag.condition.status" class="chosen-select form-control">
-                <option value=""></option>
-                @foreach (var item in Html.orderStatus())
-                {
-                    <option value="@item.Key">@item.Value</option>
-                }
-            </select>
-            <label for="status" class="input-control-label-left"> 单据状态:</label>
+    <div class="form-group">
+        <div class="col-md-3">
+            <div class="input-control has-label-left-lg">
+                <input id="receivedDateBegin" name="receivedDateBegin" value="@ViewBag.condition.receivedDateBegin" type="text" class="form-control form-datetime">
+                <label for="receivedDateBegin" class="input-control-label-left"> 收货时间1:</label>
+            </div>
         </div>
-    </div>
-    <div class="col-md-3 form-group">
-        <div class="input-control has-label-left-lg">
-            <input id="createdDateBegin" name="createdDateBegin" value="@ViewBag.condition.createdDateBegin" type="text" class="form-control form-datetime">
-            <label for="createdDateBegin" class="input-control-label-left"> 创建时间1:</label>
-        </div>
-    </div>
-    <div class="col-md-3 form-group">
-        <div class="input-control has-label-left-lg">
-            <input id="createdDateEnd" name="createdDateEnd" value="@ViewBag.condition.createdDateEnd" type="text" class="form-control form-datetime">
-            <label for="createdDateEnd" class="input-control-label-left"> 创建时间2:</label>
-        </div>
-    </div>
-    <div class="col-md-3 form-group">
-        <div class="input-control has-label-left-lg">
-            <input id="receivedDateBegin" name="receivedDateBegin" value="@ViewBag.condition.receivedDateBegin" type="text" class="form-control form-datetime">
-            <label for="receivedDateBegin" class="input-control-label-left"> 收货时间1:</label>
-        </div>
-    </div>
-    <div class="col-md-3 form-group">
-        <div class="input-control has-label-left-lg">
-            <input id="receivedDateEnd" name="receivedDateEnd" value="@ViewBag.condition.receivedDateEnd" type="text" class="form-control form-datetime">
-            <label for="receivedDateEnd" class="input-control-label-left"> 收货时间2:</label>
+        <div class="col-md-3">
+            <div class="input-control has-label-left-lg">
+                <input id="receivedDateEnd" name="receivedDateEnd" value="@ViewBag.condition.receivedDateEnd" type="text" class="form-control form-datetime">
+                <label for="receivedDateEnd" class="input-control-label-left"> 收货时间2:</label>
+            </div>
         </div>
     </div>
     <button class="btn btn-primary" type="submit">查询</button>
-    @Html.ActionLink("创建进货单", "add","OrderDetailInfo", null, new { @class = "btn btn-primary" })
-}
-<table id="myDataTable" class="table datatable table-striped">
+    <button class="btn btn-primary" type="button" onclick="receiveOrder()" >收货</button>
+    <button class="btn btn-primary" type="button" onclick="updateOrder()">修改</button>
+    <button class="btn btn-danger" type="button" onclick="deleteByOrderNo()">取消</button>
+    @Html.ActionLink("创建进货单", "add", "OrderDetailInfo", null, new { @class = "btn btn-primary" })
+</form>
+<table id="myDataTable" class="table">
     <thead>
         <tr>
-            <th>#</th>
             <th>进货单号</th>
             <th>单据状态</th>
             <th>进货总价</th>
             <th>创建时间</th>
             <th>收货时间</th>
-            <th>操作</th>
-        </tr>
     </thead>
     <tbody>
         @if (Model.data.Count > 0)
@@ -96,31 +133,31 @@
             for (int i = 0; i < Model.data.Count; i++)
             {
                 <tr>
-                    <td>@((Model.page - 1) * Model.recPerPage + i + 1 )</td>
                     <td>@Model.data[i].orderNo</td>
-                    <td>@Model.data[i].status</td>
+                    <td>@Model.data[i].orderStatus.status</td>
                     <td>@Model.data[i].sumPrice</td>
                     <td>@Model.data[i].createdDate</td>
                     <td>@Model.data[i].receivedDate</td>
-                    <td>
-                        @using (Html.BeginForm("delete", "OrderInfo", new
-                        {
-                            orderNo = Model.data[i].orderNo,
-                            status = ViewBag.condition.status,
-                            createdDateBegin = ViewBag.condition.createdDateBegin,
-                            createdDateEnd = ViewBag.condition.createdDateEnd,
-                            receivedDateBegin = ViewBag.condition.receivedDateBegin,
-                            receivedDateEnd = ViewBag.condition.receivedDateEnd
-                        }))
-                        {
-                            @Html.ActionLink("收货", "receive", new { id = Model.data[i].orderNo }, new { @class = "btn btn-primary" })
-                            @Html.ActionLink("修改", "edit", new { id = Model.data[i].orderNo }, new { @class = "btn btn-primary" })
-                            <button class="btn btn-danger" type="button" onclick="deleteByOrderNo">取消</button>
-                        }
-                    </td>
                 </tr>
             }
         }
     </tbody>
 </table>
-<div style="margin-top:-20px"><ul id="dataPager" class="pager"></ul></div>
+<div><ul id="dataPager" class="pager"></ul></div>
+<form hidden="hidden" action="/OrderDetailInfo/receive" method="post" id="receiveOrder">
+    <input name="orderNo" id="receiveOrderNo" />
+</form>
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-header" id="modalContent" style="text-align:center">
+        </div>
+        <div class="modal-footer">
+            <div class="col-md-6">
+                <button type="button" class="btn btn-default btn-block" data-dismiss="modal">取消</button>
+            </div>
+            <div class="col-md-6">
+                <button type="button" class="btn btn-warning btn-block" data-dismiss="modal" onclick="submitReceive()">确定</button>
+            </div>
+        </div>
+    </div>
+</div>

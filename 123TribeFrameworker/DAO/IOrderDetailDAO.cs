@@ -13,6 +13,7 @@ namespace _123TribeFrameworker.DAO
         Task<int> addRange(List<OrderDetailInfo> list);
 
         List<OrderDetailInfo> searchByCondition(Pager<List<OrderDetailInfo>> pager, OrderDetailInfoQuery t);
+        List<OrderDetailInfo> searchAllByCondition(OrderDetailInfoQuery t);
 
         int searchCountByCondition(OrderDetailInfoQuery t);
     }

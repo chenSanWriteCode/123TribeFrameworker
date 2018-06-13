@@ -14,10 +14,30 @@
             page: @Model.page,
             recTotal: @Model.recTotal,
             recPerPage:@Model.recPerPage,
+            onPageChange: function(state, oldState) {
+                if (typeof(oldState.page)!="undefined" && state.page !== oldState.page) {
+                    var href = $('#searchForm').attr("action");
+                    href = href + "?page=" + state.page;
+                    $('#searchForm').attr("action", href);
+                    $('#searchForm').submit();
+                }
+            }
+        });
+        // 选择时间和日期
+        $(".form-datetime").datetimepicker(
+        {
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            forceParse: 0,
+            showMeridian: 1,
+            format: "yyyy-mm-dd hh:ii"
         });
     })
 </script>
-<form action="/OrderDetailInfo/search" method="post">
+<form action="/OrderDetailInfo/search" method="post" id="searchForm">
     <div class="col-md-3  form-group">
         <div class="input-control has-label-left-lg">
             <input id="orderNo" name="orderNo" value="@ViewBag.condition.orderNo" type="text" class="form-control">
@@ -54,12 +74,30 @@
             <label for="mat_size" class="input-control-label-left"> 规格:</label>
         </div>
     </div>
-    @*<div class="col-md-3  form-group">
-            <div class="input-control has-label-left">
-                <input id="remark" name="remark" value="@ViewBag.condition.materialInfo.remark" type="text" class="form-control">
-                <label for="remark" class="input-control-label-left"> 备注:</label>
-            </div>
-        </div>*@
+    <div class="col-md-3 form-group">
+        <div class="input-control has-label-left-lg">
+            <input id="createdDateBegin" name="createdDateBegin" value="@ViewBag.condition.createdDateBegin" type="text" class="form-control form-datetime">
+            <label for="createdDateBegin" class="input-control-label-left"> 创建时间1:</label>
+        </div>
+    </div>
+    <div class="col-md-3 form-group">
+        <div class="input-control has-label-left-lg">
+            <input id="createdDateEnd" name="createdDateEnd" value="@ViewBag.condition.createdDateEnd" type="text" class="form-control form-datetime">
+            <label for="createdDateEnd" class="input-control-label-left"> 创建时间2:</label>
+        </div>
+    </div>
+    <div class="col-md-3 form-group">
+        <div class="input-control has-label-left-lg">
+            <input id="receivedDateBegin" name="receivedDateBegin" value="@ViewBag.condition.receivedDateBegin" type="text" class="form-control form-datetime">
+            <label for="receivedDateBegin" class="input-control-label-left"> 收货时间1:</label>
+        </div>
+    </div>
+    <div class="col-md-3 form-group">
+        <div class="input-control has-label-left-lg">
+            <input id="receivedDateEnd" name="receivedDateEnd" value="@ViewBag.condition.receivedDateEnd" type="text" class="form-control form-datetime">
+            <label for="receivedDateEnd" class="input-control-label-left"> 收货时间2:</label>
+        </div>
+    </div>
     <button class="btn btn-primary" type="submit">查询</button>
 </form>
 <table class="table datatable table-striped" id="myDataGrid">
@@ -84,7 +122,7 @@
                 订单状态
             </th>
             <th>
-                下发时间
+                创建时间
             </th>
             <th>
                 收货时间
@@ -97,19 +135,18 @@
             foreach (var item in Model.data)
             {
                 <tr>
-                    <td>
-                        @item.orderNo
-                    </td>
-                    <td>@item.materialName</td>
+                    <td>@item.orderNo</td>
+                    <td>@item.materialInfo.materialName</td>
                     <td>@item.materialInfo.alias</td>
                     <td>@item.materialInfo.mat_size</td>
                     <td>@item.num</td>
                     <td>@item.orderInfo.orderStatus.status</td>
                     <td>@item.createdDate</td>
+                    <td>@item.orderInfo.receivedDate</td>
                 </tr>
             }
         }
     </tbody>
 </table>
-<div id="myPager" class="pager"></div>
+<ul id="myPager" class="pager"  style="margin-top:0px"></ul>
 

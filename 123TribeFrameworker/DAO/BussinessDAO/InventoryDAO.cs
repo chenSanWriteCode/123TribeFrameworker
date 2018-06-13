@@ -27,11 +27,22 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public async Task<int> addRange(List<Inventory> list)
+        public async Task<Result<int>> addRange(List<Inventory> list)
         {
-            LayerDbContext context = new LayerDbContext();
-            context.inventory.AddRange(list);
-            var result = await context.SaveChangesAsync();
+            Result<int> result = new Result<int>();
+            try
+            {
+                LayerDbContext context = new LayerDbContext();
+                if (list.Count > 0)
+                {
+                    context.inventory.AddRange(list);
+                }
+                result.data = await context.SaveChangesAsync();
+            }
+            catch (Exception err)
+            {
+                result.addError(err.Message);
+            }
             return result;
         }
 

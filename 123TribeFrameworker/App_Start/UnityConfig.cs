@@ -65,11 +65,14 @@ namespace _123TribeFrameworker
             container.RegisterType<IOrderInfoService, OrderInfoService>();
             container.RegisterType<IOrderInfoDAO, OrderInfoDAO>();
 
+            container.RegisterType<IOrderDetailInfoService, OrderDetailInfoService>();
+            container.RegisterType<IOrderDetailInfoDAO, OrderDetailInfoDAO>();
+
             container.RegisterType<IInventoryService, InventoryService>();
             container.RegisterType<IInventoryDAO, InventoryDAO>();
 
-            container.RegisterType<IOrderDetailInfoService, OrderDetailInfoService>();
-            container.RegisterType<IOrderDetailInfoDAO, OrderDetailInfoDAO>();
+            container.RegisterType<IInStorageRecordService, InStorageRecordService>();
+            container.RegisterType<IInStorageRecordDAO, InStorageRecordDAO>();
         }
     }
 }

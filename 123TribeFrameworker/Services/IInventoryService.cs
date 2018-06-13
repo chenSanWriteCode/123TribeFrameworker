@@ -12,5 +12,7 @@ namespace _123TribeFrameworker.Services
     {
         Pager<List<Inventory>> searchByNumOrder(Pager<List<Inventory>> pager);
         Pager<List<Inventory>> searchByCondition(Pager<List<Inventory>> pager, InventoryQuery condition);
+
+        Task<Result<int>> addRangeAsync(List<Inventory> list);
     }
 }

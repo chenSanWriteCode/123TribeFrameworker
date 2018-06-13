@@ -14,7 +14,7 @@ namespace _123TribeFrameworker.Entity
         public  void addError(string message)
         {
             this.result = false;
-            this.message = message;
+            this.message = message+";";
         }
     }
 }

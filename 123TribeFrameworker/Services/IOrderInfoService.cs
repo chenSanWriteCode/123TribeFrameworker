@@ -8,9 +8,11 @@ using _123TribeFrameworker.Models.QueryModel;
 
 namespace _123TribeFrameworker.Services
 {
-    public interface IOrderInfoService:ICommonService<OrderInfo>
+    public interface IOrderInfoService : ICommonService<OrderInfo>
     {
         Task<OrderInfo> searchByOrder(string orderNo);
         Pager<List<OrderInfo>> searchByCondition(Pager<List<OrderInfo>> pager, OrderInfoQuery condition);
+
+        Task<Result<int>> changeOrderStatus(string orderNo,string userName, OrderStatusEnum status);
     }
 }

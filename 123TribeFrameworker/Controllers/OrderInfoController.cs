@@ -23,9 +23,21 @@ namespace _123TribeFrameworker.Controllers
         public ActionResult Index(Pager<List<OrderInfo>> pager, OrderInfoQuery condition)
         {
             ViewBag.condition = condition;
-            pager = service.searchByCondition(pager, condition);
+            //pager = service.searchByCondition(pager, condition);
             return View(pager);
         }
-       
+        public ActionResult search(Pager<List<OrderInfo>> pager, OrderInfoQuery condition)
+        {
+            ViewBag.condition = condition;
+            pager = service.searchByCondition(pager, condition);
+            return View("Index",pager);
+        }
+
+        public ActionResult receive(string orderNo)
+        {
+            return RedirectToAction("Index");
+        }
+
+
     }
 }

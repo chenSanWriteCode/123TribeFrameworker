@@ -14,9 +14,6 @@ namespace _123TribeFrameworker.Services.Layer
     {
         [Dependency]
         public IOrderInfoDAO dao { get; set; }
-
-        
-
         public async Task<Result<OrderInfo>> addAsync(OrderInfo model)
         {
             Result<OrderInfo> result = new Result<OrderInfo>();
@@ -29,10 +26,11 @@ namespace _123TribeFrameworker.Services.Layer
             return result;
         }
 
-        public Task<Result<int>> deleteByIdAsync(int id)
+        public async Task<Result<int>> changeOrderStatus(string orderNo, string userName, OrderStatusEnum status)
         {
-            throw new NotImplementedException();
+            return await dao.changeOrderStatus(orderNo, userName, status);
         }
+
 
         public Pager<List<OrderInfo>> searchByCondition(Pager<List<OrderInfo>> pager, OrderInfoQuery condition)
         {
@@ -61,6 +59,10 @@ namespace _123TribeFrameworker.Services.Layer
         {
             throw new NotImplementedException();
         }
-        
+        public Task<Result<int>> deleteByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

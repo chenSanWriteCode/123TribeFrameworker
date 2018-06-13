@@ -5,7 +5,7 @@ using System.Web;
 
 namespace _123TribeFrameworker.Models.QueryModel
 {
-    public class InStorageRecord
+    public class InStorageRecordQuery
     {
         /// <summary>
         /// 回执单编号

@@ -16,10 +16,40 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             context.orderInfo.Add(t);
             return await context.SaveChangesAsync();
         }
-
-        public Task<int> deleteById(int id)
+        /// <summary>
+        /// 修改订单状态
+        /// </summary>
+        /// <param name="orderNo"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public async Task<Result<int>> changeOrderStatus(string orderNo,string userName, OrderStatusEnum status)
         {
-            throw new NotImplementedException();
+            LayerDbContext context = new LayerDbContext();
+            Result<int> result = new Result<int>();
+            try
+            {
+                var model = context.orderInfo.Where(x => x.orderNo == orderNo).Single();
+                if (model.status==status.ToString())
+                {
+                    result.addError("进货单已被"+model.receivedBy+"收货");
+                }
+                else
+                {
+                    model.status = status.ToString();
+                    model.receivedDate = DateTime.Now;
+                    model.receivedBy = userName;
+                    var count = await context.SaveChangesAsync();
+                    if (count == 0)
+                    {
+                        result.addError("修改进货单状态失败，请稍后操作");
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                result.addError("未找到进货单号");
+            }
+            return result;
         }
 
         public List<OrderInfo> searchByCondition(Pager<List<OrderInfo>> pager, OrderInfoQuery t)
@@ -37,11 +67,7 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             result = result.Skip(start).Take(pager.recPerPage);
             return result.ToList();
         }
-
-        public Task<OrderInfo> searchById(int id)
-        {
-            throw new NotImplementedException();
-        }
+        
         public async Task<OrderInfo> searchByOrder(string orderNo)
         {
             LayerDbContext context = new LayerDbContext();
@@ -66,5 +92,15 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
         {
             throw new NotImplementedException();
         }
+        public Task<int> deleteById(int id)
+        {
+            throw new NotImplementedException();
+        }
+        public Task<OrderInfo> searchById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        
     }
 }
