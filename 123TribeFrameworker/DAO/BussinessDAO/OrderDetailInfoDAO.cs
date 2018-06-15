@@ -11,12 +11,7 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
 {
     public class OrderDetailInfoDAO : IOrderDetailInfoDAO
     {
-        public async Task<int> addRange(List<OrderDetailInfo> list)
-        {
-            LayerDbContext context = new LayerDbContext();
-            context.orderDetailInfo.AddRange(list);
-            return await context.SaveChangesAsync();
-        }
+        
         /// <summary>
         /// 查询所有
         /// </summary>
@@ -102,6 +97,48 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
         public Task<Result<int>> update(OrderDetailInfo t)
         {
             throw new NotImplementedException();
+        }
+        /// <summary>
+        /// 收货订单
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="userName"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// 1. 增加库存，2. 增加入库记录 3. 修改订单状态
+        /// </remarks>
+        public async Task<Result<int>> receiveOrder(List<InStorageRecord> list, string userName, OrderStatusEnum status)
+        {
+            Result<int> result = new Result<int>();
+            string orderNo = list.First().orderNo;
+            using (LayerDbContext context = new LayerDbContext())
+            {
+                try
+                {
+                    var model = context.orderInfo.Where(x => x.orderNo == orderNo).Single();
+                    if (model.status == status.ToString())
+                    {
+                        result.addError("进货单已被" + model.receivedBy + "收货");
+                    }
+                    else
+                    {
+                        model.status = status.ToString();
+                        model.receivedDate = DateTime.Now;
+                        model.receivedBy = userName;
+
+                        context.inStorageRecord.AddRange(list);
+
+
+                        await context.SaveChangesAsync();
+
+                    }
+                }
+                catch (Exception err)
+                {
+                    result.addError(err.Message);
+                }
+            }
         }
     }
 }

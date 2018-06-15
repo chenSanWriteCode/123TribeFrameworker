@@ -21,26 +21,6 @@ namespace _123TribeFrameworker.Services.Layer
         public IOrderInfoService Orderservice { get; set; }
 
         /// <summary>
-        /// 生成订单
-        /// </summary>
-        /// <param name="list"></param>
-        /// <returns></returns>
-        public async Task<Result<List<OrderDetailInfo>>> addRange(List<OrderDetailInfo> list)
-        {
-            Result<List<OrderDetailInfo>> result = new Result<List<OrderDetailInfo>>();
-            if (list.Count > 0)
-            {
-                var count = await dao.addRange(list);
-                if (count < list.Count)
-                {
-                    result.result = false;
-                    result.message = "存在生成失败项，请检查";
-                }
-            }
-            return result;
-        }
-
-        /// <summary>
         /// 查询页
         /// </summary>
         /// <param name="pager"></param>
@@ -69,6 +49,12 @@ namespace _123TribeFrameworker.Services.Layer
         public async Task<Result<int>> receiveOrder(List<InStorageRecord> list,string userName)
         {
             Result<int> result = new Result<int>();
+            OrderStatusEnum status = OrderStatusEnum.completed;
+            if (list.Where(x => x.countReference != x.countReal).Count() > 0)
+            {
+                status = OrderStatusEnum.excepted;
+            }
+                return await dao.receiveOrder(list, userName, status);
             //增加入库记录与库存
             if (list.Count > 0)
             {
@@ -97,24 +83,6 @@ namespace _123TribeFrameworker.Services.Layer
             }
             return result;
         }
-        public Task<OrderDetailInfo> searchByid(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Result<int>> update(OrderDetailInfo model)
-        {
-            throw new NotImplementedException();
-        }
-        public Task<Result<int>> deleteByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-        public Task<Result<OrderDetailInfo>> addAsync(OrderDetailInfo model)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<Result<int>> deleteByOrderNo(string orderNo)
         {
             throw new NotImplementedException();

@@ -16,24 +16,10 @@ namespace _123TribeFrameworker.Services.Layer
         public IOrderInfoDAO dao { get; set; }
         [Dependency]
         public IOrderDetailInfoService detailService { get; set; }
-        public async Task<Result<OrderInfo>> addAsync(OrderInfo model)
-        {
-            Result<OrderInfo> result = new Result<OrderInfo>();
-            var count = await dao.add(model);
-            if (count!=1)
-            {
-                result.result = false;
-                result.message = "订单生成失败";
-            }
-            return result;
-        }
-
         public async Task<Result<int>> changeOrderStatus(string orderNo, string userName, OrderStatusEnum status)
         {
             return await dao.changeOrderStatus(orderNo, userName, status);
         }
-
-
         public Pager<List<OrderInfo>> searchByCondition(Pager<List<OrderInfo>> pager, OrderInfoQuery condition)
         {
             Task<List<OrderInfo>> task = Task.Factory.StartNew(() => dao.searchByCondition(pager, condition));
@@ -74,29 +60,7 @@ namespace _123TribeFrameworker.Services.Layer
         {
             return dao.searchByOrder(orderNo);
         }
-
-
-        public Pager<List<OrderInfo>> searchByCondition<QueryT>(Pager<List<OrderInfo>> pager, QueryT condition)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OrderInfo> searchByid(int id)
-        {
-            throw new NotImplementedException();
-        }
-       
-
-        public Task<Result<int>> update(OrderInfo model)
-        {
-            throw new NotImplementedException();
-        }
-        public Task<Result<int>> deleteByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Result<List<OrderDetailInfo>>> addOrder(List<OrderDetailInfo> orderList, string name, float sumPrice)
+        public async Task<Result<List<OrderDetailInfo>>> addOrder(List<OrderDetailInfo> orderList, string name, float sumPrice)
         {
             OrderInfo order = new OrderInfo();
             order.createdBy = name;

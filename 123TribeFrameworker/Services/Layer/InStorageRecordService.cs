@@ -16,10 +16,7 @@ namespace _123TribeFrameworker.Services.Layer
         public IInStorageRecordDAO dao { get; set; }
         [Dependency]
         public IInventoryDAO inventoryDao { get; set; }
-        public Task<Result<InStorageRecord>> addAsync(InStorageRecord model)
-        {
-            throw new NotImplementedException();
-        }
+        
         /// <summary>
         /// 增加入库记录
         /// </summary>
@@ -48,21 +45,6 @@ namespace _123TribeFrameworker.Services.Layer
                 result = await inventoryDao.addRange(inventoryList);
             }
             return result;
-        }
-
-        public Task<Result<int>> deleteByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<InStorageRecord> searchByid(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Result<int>> update(InStorageRecord model)
-        {
-            throw new NotImplementedException();
         }
     }
 }

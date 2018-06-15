@@ -130,13 +130,12 @@ namespace _123TribeFrameworker.Controllers
             var sumPrice = priceList.Sum(x => x.referencePriceIn * x.num);
             
             var orderResult = await Orderservice.addOrder(orderList, User.Identity.Name, sumPrice);
-            var detailResult = await detailService.addRange(orderList);
-            if (detailResult.result)
+            if (orderResult.result)
             {
-                ViewBag.Msg = "订单生成成功:" + order.orderNo;
+                ViewBag.Msg = "订单生成成功:" + orderResult.data.First().orderNo;
                 return View("Success");
             }
-            return View("Error", new string[] { detailResult.message });
+            return View("Error", new string[] { orderResult.message });
         }
     }
     #endregion

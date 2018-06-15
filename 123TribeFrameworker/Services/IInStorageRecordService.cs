@@ -7,7 +7,7 @@ using _123TribeFrameworker.Entity;
 
 namespace _123TribeFrameworker.Services
 {
-    public interface IInStorageRecordService:ICommonService<InStorageRecord>
+    public interface IInStorageRecordService
     {
         /// <summary>
         /// 增加list

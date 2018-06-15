@@ -10,12 +10,7 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
 {
     public class OrderInfoDAO : IOrderInfoDAO
     {
-        public async Task<int> add(OrderInfo t)
-        {
-            LayerDbContext context = new LayerDbContext();
-            context.orderInfo.Add(t);
-            return await context.SaveChangesAsync();
-        }
+        
         /// <summary>
         /// 修改订单状态
         /// </summary>
@@ -88,14 +83,6 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             return result.Count();
         }
 
-        public Task<int> update(OrderInfo t)
-        {
-            throw new NotImplementedException();
-        }
-        public Task<int> deleteById(int id)
-        {
-            throw new NotImplementedException();
-        }
         public Task<OrderInfo> searchById(int id)
         {
             throw new NotImplementedException();
@@ -105,27 +92,46 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
         {
             throw new NotImplementedException();
         }
-
-        public Task<Result<List<OrderDetailInfo>>> addOrder(OrderInfo order, List<OrderDetailInfo> orderList)
+        /// <summary>
+        /// 创建订单
+        /// </summary>
+        /// <param name="order"></param>
+        /// <param name="orderList"></param>
+        /// <returns></returns>
+        public async Task<Result<List<OrderDetailInfo>>> addOrder(OrderInfo order, List<OrderDetailInfo> orderList)
         {
             Result<List<OrderDetailInfo>> result = new Result<List<OrderDetailInfo>>();
-
+            using (LayerDbContext context = new LayerDbContext())
+            {
+                try
+                {
+                    context.orderInfo.Add(order);
+                    context.orderDetailInfo.AddRange(orderList);
+                    await context.SaveChangesAsync();
+                }
+                catch (Exception err)
+                {
+                    result.addError(err.Message);
+                    result.data = orderList;
+                }
+            }
             return result;
         }
 
-        Task<Result<int>> ICommonDAO<OrderInfo>.add(OrderInfo t)
+        public Task<Result<int>> add(OrderInfo t)
         {
             throw new NotImplementedException();
         }
 
-        Task<Result<int>> ICommonDAO<OrderInfo>.update(OrderInfo t)
+        public Task<Result<int>> update(OrderInfo t)
         {
             throw new NotImplementedException();
         }
 
-        Task<Result<int>> ICommonDAO<OrderInfo>.deleteById(int id)
+        public Task<Result<int>> deleteById(int id)
         {
             throw new NotImplementedException();
         }
+        
     }
 }
