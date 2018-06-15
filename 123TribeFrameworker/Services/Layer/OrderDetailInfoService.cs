@@ -115,6 +115,9 @@ namespace _123TribeFrameworker.Services.Layer
             throw new NotImplementedException();
         }
 
-
+        public Task<Result<int>> deleteByOrderNo(string orderNo)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -14,6 +14,8 @@ namespace _123TribeFrameworker.Services.Layer
     {
         [Dependency]
         public IOrderInfoDAO dao { get; set; }
+        [Dependency]
+        public IOrderDetailInfoService detailService { get; set; }
         public async Task<Result<OrderInfo>> addAsync(OrderInfo model)
         {
             Result<OrderInfo> result = new Result<OrderInfo>();
@@ -40,6 +42,39 @@ namespace _123TribeFrameworker.Services.Layer
             pager.recTotal = countTask.Result;
             return pager;
         }
+        public async Task<Result<int>> deleteByOrderNo(string orderNo)
+        {
+            Result<int> result = new Result<int>();
+            var resultPart1 = await detailService.deleteByOrderNo(orderNo);
+            if (!resultPart1.result)
+            {
+                result.addError(resultPart1.message);
+                return result;
+            }
+            var model = await dao.searchByOrder(orderNo);
+            if (model==null)
+            {
+                result.addError("订单已被删除");
+            }
+            else
+            {
+                if (model.status!="generated")
+                {
+                    result.addError("订单状态已改变，无法删除");
+                }
+                else
+                {
+                    var count = await dao.deleteByOrderNo(orderNo);
+                }
+            }
+            return result;
+        }
+
+        public Task<OrderInfo> searchByOrder(string orderNo)
+        {
+            return dao.searchByOrder(orderNo);
+        }
+
 
         public Pager<List<OrderInfo>> searchByCondition<QueryT>(Pager<List<OrderInfo>> pager, QueryT condition)
         {
@@ -50,10 +85,7 @@ namespace _123TribeFrameworker.Services.Layer
         {
             throw new NotImplementedException();
         }
-        public Task<OrderInfo> searchByOrder(string orderNo)
-        {
-            return dao.searchByOrder(orderNo);
-        }
+       
 
         public Task<Result<int>> update(OrderInfo model)
         {
@@ -64,5 +96,19 @@ namespace _123TribeFrameworker.Services.Layer
             throw new NotImplementedException();
         }
 
+        public Task<Result<List<OrderDetailInfo>>> addOrder(List<OrderDetailInfo> orderList, string name, float sumPrice)
+        {
+            OrderInfo order = new OrderInfo();
+            order.createdBy = name;
+            order.orderNo = DateTime.Now.ToString("yyyyMMddHHmmss");
+            order.status = "generated";
+            order.sumPrice = sumPrice;
+            foreach (var item in orderList)
+            {
+                item.orderNo = order.orderNo;
+                item.createdBy = order.createdBy;
+            }
+            return await dao.addOrder(order, orderList);
+        }
     }
 }

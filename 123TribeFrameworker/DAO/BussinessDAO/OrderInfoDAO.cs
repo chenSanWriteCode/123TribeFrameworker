@@ -101,6 +101,31 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             throw new NotImplementedException();
         }
 
-        
+        public Task<int> deleteByOrderNo(string orderNo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Result<List<OrderDetailInfo>>> addOrder(OrderInfo order, List<OrderDetailInfo> orderList)
+        {
+            Result<List<OrderDetailInfo>> result = new Result<List<OrderDetailInfo>>();
+
+            return result;
+        }
+
+        Task<Result<int>> ICommonDAO<OrderInfo>.add(OrderInfo t)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<Result<int>> ICommonDAO<OrderInfo>.update(OrderInfo t)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<Result<int>> ICommonDAO<OrderInfo>.deleteById(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -28,7 +28,7 @@ namespace _123TribeFrameworker.Entity
         /// <summary>
         /// 合计进货价格
         /// </summary>
-        public double sumPrice { get; set; }
+        public float sumPrice { get; set; }
         /// <summary>
         /// 是否打印
         /// </summary>
@@ -65,6 +65,8 @@ namespace _123TribeFrameworker.Entity
         public DateTime? receivedDateBegin { get; set; }
         [NotMapped]
         public DateTime? receivedDateEnd { get; set; }
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
         [ForeignKey("status")]
         public virtual OrderStatus orderStatus { get; set; }
     }
@@ -94,7 +96,7 @@ namespace _123TribeFrameworker.Entity
         /// <summary>
         /// 数量
         /// </summary>
-        public int num { get; set; }
+        public float num { get; set; }
         /// <summary>
         /// 供货商
         /// </summary>
@@ -105,6 +107,8 @@ namespace _123TribeFrameworker.Entity
         public string createdBy { get; set; }
         public DateTime? lastUpdatedDate { get; set; }
         public string lastUpdatedBy { get; set; }
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
         [ForeignKey("orderNo")]
         public virtual OrderInfo orderInfo { get; set; }
         [ForeignKey("materialId")]
@@ -125,19 +129,21 @@ namespace _123TribeFrameworker.Entity
         /// <summary>
         /// 成本价
         /// </summary>
-        public double priceIn { get; set; }
+        public float priceIn { get; set; }
         /// <summary>
         /// 零售价
         /// </summary>
-        public double priceOut { get; set; }
+        public float priceOut { get; set; }
         /// <summary>
         /// 利润
         /// </summary>
-        public double profit { get; set; }
+        public float profit { get; set; }
         /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime createdDate { get; set; } = DateTime.Now;
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
         [ForeignKey("recordId")]
         public virtual TradingRecord record { get; set; }
     }
@@ -156,7 +162,7 @@ namespace _123TribeFrameworker.Entity
         /// <summary>
         /// 数量
         /// </summary>
-        public int count { get; set; } = 1;
+        public float count { get; set; } = 1;
         /// <summary>
         /// 创建时间
         /// </summary>
@@ -165,6 +171,8 @@ namespace _123TribeFrameworker.Entity
         /// 交易人
         /// </summary>
         public string createdBy { get; set; }
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
         [ForeignKey("materialId")]
         public virtual MaterialInfo materialInfo { get; set; }
     }
@@ -186,17 +194,19 @@ namespace _123TribeFrameworker.Entity
         /// 成本价
         /// </summary>
         [Required]
-        public double priceIn { get; set; }
+        public float priceIn { get; set; }
         /// <summary>
         /// 数量
         /// </summary>
         [Required]
-        public int count { get; set; }
+        public float count { get; set; }
         /// <summary>
         /// 入库时间
         /// </summary>
         [Index]
         public DateTime createdDate { get; set; } = DateTime.Now;
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
         [ForeignKey("materialId")]
         public virtual MaterialInfo materialInfo { get; set; }
     }
@@ -223,16 +233,16 @@ namespace _123TribeFrameworker.Entity
         /// 成本价
         /// </summary>
         [Required]
-        public double priceIn { get; set; }
+        public float priceIn { get; set; }
         /// <summary>
         /// 应收入数量
         /// </summary>
-        public int countReference { get; set; }
+        public float countReference { get; set; }
         /// <summary>
         /// 实际收入数量
         /// </summary>
         [Required]
-        public int countReal { get; set; }
+        public float countReal { get; set; }
         /// <summary>
         /// 回执单编号
         /// </summary>
@@ -243,22 +253,12 @@ namespace _123TribeFrameworker.Entity
         /// </summary>
         [Index]
         public DateTime createdDate { get; set; } = DateTime.Now;
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
         [ForeignKey("materialId")]
         public virtual MaterialInfo materialInfo { get; set; }
     }
-    /// <summary>
-    /// 基础表_订单状态
-    /// </summary>
-    [Table("Base_OrderStatus")]
-    public class OrderStatus
-    {
-        [Key]
-        [MaxLength(20)]
-        [Index(IsUnique =true)]
-        public string statusKey { get; set; }
-        [MaxLength(20)]
-        public string status { get; set; }
-    }
+    
     /// <summary>
     /// 基础表_物料
     /// </summary>
@@ -302,7 +302,7 @@ namespace _123TribeFrameworker.Entity
         /// <summary>
         /// 重量
         /// </summary>
-        public double weight { get; set; }
+        public float weight { get; set; }
         /// <summary>
         /// 单位
         /// </summary>
@@ -312,18 +312,32 @@ namespace _123TribeFrameworker.Entity
         /// 参考进货价格
         /// </summary>
         [Required]
-        public double referencePriceIn { get; set; }
+        public float referencePriceIn { get; set; }
         /// <summary>
         /// 参考销售价格
         /// </summary>
-        public double referencePriceOut { get; set; }
+        public float referencePriceOut { get; set; }
         /// <summary>
         /// 备注
         /// </summary>
         [MaxLength(200)]
         public string remark { get; set; }
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
     }
-
+    /// <summary>
+    /// 基础表_订单状态
+    /// </summary>
+    [Table("Base_OrderStatus")]
+    public class OrderStatus
+    {
+        [Key]
+        [MaxLength(20)]
+        [Index(IsUnique = true)]
+        public string statusKey { get; set; }
+        [MaxLength(20)]
+        public string status { get; set; }
+    }
     /// <summary>
     /// 订单状态
     /// </summary>

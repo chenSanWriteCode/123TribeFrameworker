@@ -34,7 +34,7 @@ namespace _123TribeFrameworker.Models.QueryModel
         /// <summary>
         /// 重量
         /// </summary>
-        public double weight { get; set; }
+        public float weight { get; set; }
         /// <summary>
         /// 单位
         /// </summary>
@@ -42,11 +42,11 @@ namespace _123TribeFrameworker.Models.QueryModel
         /// <summary>
         /// 参考进货价格
         /// </summary>
-        public double referencePriceIn { get; set; }
+        public float referencePriceIn { get; set; }
         /// <summary>
         /// 参考销售价格
         /// </summary>
-        public double referencePriceOut { get; set; }
+        public float referencePriceOut { get; set; }
         /// <summary>
         /// 备注
         /// </summary>

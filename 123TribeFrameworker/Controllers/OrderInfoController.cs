@@ -12,8 +12,6 @@ using Unity.Attributes;
 
 namespace _123TribeFrameworker.Controllers
 {
-
-
     public class OrderInfoController : Controller
     {
         [Dependency]
@@ -33,9 +31,14 @@ namespace _123TribeFrameworker.Controllers
             return View("Index",pager);
         }
 
-        public ActionResult receive(string orderNo)
+        public async Task<ActionResult> delete(string orderNo)
         {
-            return RedirectToAction("Index");
+            var result = await service.deleteByOrderNo(orderNo);
+            if (!result.result)
+            {
+                return View("Error", new string[] { result.message });
+            }
+            return RedirectToAction("search", orderNo);
         }
 
 

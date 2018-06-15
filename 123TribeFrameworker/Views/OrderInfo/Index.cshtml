@@ -34,35 +34,55 @@
         })
     })
     function deleteByOrderNo(){
-
+        if (checkCondition()) {
+            var myTable = $('#myDataTable').data('zui.datagrid');
+            var data = myTable.getCheckItems();
+            var orderNo = data[0][0];
+            if (confirm("确定修改订单"+orderNo+"？")) {
+                location.href="/OrderInfo/delete?orderNo="+orderNo;
+            }
+        }
+    }
+    function updateOrder(){
+        if (checkCondition()) {
+            var myTable = $('#myDataTable').data('zui.datagrid');
+            var data = myTable.getCheckItems();
+            var orderNo = data[0][0];
+            if (confirm("确定修改订单"+orderNo+"？")) {
+                location.href="/OrderDetailInfo/update?orderNo="+orderNo;
+            }
+        }
     }
     function receiveOrder(){
+        if (checkCondition()) {
+            var myTable = $('#myDataTable').data('zui.datagrid');
+            var data = myTable.getCheckItems();
+            var orderNo = data[0][0];
+            if (confirm("确定订单"+orderNo+"已到货？")) {
+                location.href="/OrderDetailInfo/receive?orderNo="+orderNo;
+            }
+        }
+    }
+    function checkCondition(){
         var myTable = $('#myDataTable').data('zui.datagrid');
         var data = myTable.getCheckItems();
+        var flag = true;
         if (data.length==0) {
             alert('请选中一个订单')
-            return
+            flag = false;
         }
-        if (data.length>1) {
-            alert('每次只能接收一个订单')
-            return
+        else if (data.length>1) {
+            alert('每次只能处理一个订单')
+            flag = false;
         }
-        var status = data[0][1];
-        if (status!="已下发") {
-            alert("订单已收货，无法重复操作")
-            return;
+        else{
+            var status = data[0][1];
+            if (status!="已下发") {
+                alert("订单已收货，无法重复操作")
+                flag = false;
+            }
         }
-        var orderNo = data[0][0];
-        $('#modalContent').html("确定订单"+orderNo+"已到货？")
-        $('#receiveOrderNo').val(orderNo)
-        $('#myModal').modal({
-            keyboard : false,
-            show     : true,
-            moveable:'inside'
-        })
-    }
-    function submitReceive(){
-        $('#receiveOrder').submit();
+        return flag;
     }
 </script>
 <form class="form-horizontal" method="post" action="/OrderInfo/search" id="searchForm">
@@ -113,9 +133,9 @@
         </div>
     </div>
     <button class="btn btn-primary" type="submit">查询</button>
-    <button class="btn btn-primary" type="button" onclick="receiveOrder()" >收货</button>
-    <button class="btn btn-primary" type="button" onclick="updateOrder()">修改</button>
+    <button class="btn btn-primary" type="button" onclick="receiveOrder()">收货</button>
     <button class="btn btn-danger" type="button" onclick="deleteByOrderNo()">取消</button>
+    <button class="btn btn-danger" type="button" onclick="updateExceptedOrderNo()">处理异常</button>
     @Html.ActionLink("创建进货单", "add", "OrderDetailInfo", null, new { @class = "btn btn-primary" })
 </form>
 <table id="myDataTable" class="table">
@@ -144,10 +164,8 @@
     </tbody>
 </table>
 <div><ul id="dataPager" class="pager"></ul></div>
-<form hidden="hidden" action="/OrderDetailInfo/receive" method="post" id="receiveOrder">
-    <input name="orderNo" id="receiveOrderNo" />
-</form>
-<div class="modal fade" id="myModal">
+
+@*<div class="modal fade" id="myModal">
     <div class="modal-dialog">
         <div class="modal-header" id="modalContent" style="text-align:center">
         </div>
@@ -156,8 +174,10 @@
                 <button type="button" class="btn btn-default btn-block" data-dismiss="modal">取消</button>
             </div>
             <div class="col-md-6">
-                <button type="button" class="btn btn-warning btn-block" data-dismiss="modal" onclick="submitReceive()">确定</button>
+                <button type="button" class="btn btn-warning btn-block" data-dismiss="modal" onclick="submitReceive()">
+                    确定
+                </button>
             </div>
         </div>
-    </div>
+    </div>*@
 </div>

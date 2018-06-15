@@ -16,5 +16,14 @@ namespace _123TribeFrameworker.DAO
 
         int searchCountByCondition(OrderInfoQuery t);
         Task<Result<int>> changeOrderStatus(string orderNo, string userName, OrderStatusEnum status);
+
+        Task<int> deleteByOrderNo(string orderNo);
+        /// <summary>
+        /// 创建订单
+        /// </summary>
+        /// <param name="order">订单</param>
+        /// <param name="orderList">订单详情</param>
+        /// <returns></returns>
+        Task<Result<List<OrderDetailInfo>>> addOrder(OrderInfo order, List<OrderDetailInfo> orderList);
     }
 }

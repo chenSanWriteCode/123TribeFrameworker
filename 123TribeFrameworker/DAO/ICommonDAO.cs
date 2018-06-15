@@ -8,10 +8,10 @@ namespace _123TribeFrameworker.DAO
     {
         Task<T> searchById(int id);
 
-        Task<int> add(T t);
+        Task<Result<int>> add(T t);
 
-        Task<int> update(T t);
+        Task<Result<int>> update(T t);
 
-        Task<int> deleteById(int id);
+        Task<Result<int>> deleteById(int id);
     }
 }

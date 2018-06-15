@@ -24,16 +24,16 @@ namespace _123TribeFrameworker.Services.Layer
             Result<MaterialInfo> result = new Result<MaterialInfo>();
             MaterialInfoQuery condition = new MaterialInfoQuery() { materialName = model.materialName };
             var isExist = dao.searchCountByCondition(condition);
-            if (isExist>0)
+            if (isExist > 0)
             {
                 result.addError("产品已存在");
             }
             else
             {
-                var count = await dao.add(model);
-                if (count==0)
+                var resultDAO = await dao.add(model);
+                if (resultDAO.result)
                 {
-                    result.addError("保存失败");
+                    result.addError(resultDAO.message);
                 }
             }
             return result;
@@ -46,7 +46,7 @@ namespace _123TribeFrameworker.Services.Layer
         /// <returns></returns>
         public Pager<List<MaterialInfo>> searchByCondition(Pager<List<MaterialInfo>> pager, MaterialInfoQuery condition)
         {
-            Task<List<MaterialInfo>> task = Task.Factory.StartNew(() => dao.searchByCondition(pager,condition));
+            Task<List<MaterialInfo>> task = Task.Factory.StartNew(() => dao.searchByCondition(pager, condition));
             pager.data = task.Result;
             Task<int> countTask = Task.Factory.StartNew(() => dao.searchCountByCondition(condition));
             pager.recTotal = countTask.Result;
@@ -59,8 +59,8 @@ namespace _123TribeFrameworker.Services.Layer
         /// <returns></returns>
         public async Task<MaterialInfo> searchByid(int id)
         {
-            MaterialInfo model =await dao.searchById(id);
-            if (model==null)
+            MaterialInfo model = await dao.searchById(id);
+            if (model == null)
             {
                 model = new MaterialInfo();
             }
@@ -73,13 +73,8 @@ namespace _123TribeFrameworker.Services.Layer
         /// <returns></returns>
         public async Task<Result<int>> deleteByIdAsync(int id)
         {
-            Result<int> result = new Result<int>();
-            var count = await dao.deleteById(id);
-            if (count == 0)
-            {
-                result.addError("删除失败");
-            }
-            return result;
+            var resultDAO = await dao.deleteById(id);
+            return resultDAO;
 
         }
         /// <summary>
@@ -89,13 +84,7 @@ namespace _123TribeFrameworker.Services.Layer
         /// <returns></returns>
         public async Task<Result<int>> update(MaterialInfo model)
         {
-            Result<int> result = new Result<int>();
-            var count = await dao.update(model);
-            if (count==0)
-            {
-                result.addError("修改失败");
-            }
-            return result;
+            return await dao.update(model);
         }
     }
 }

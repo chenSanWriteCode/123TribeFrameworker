@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -15,11 +16,20 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
         /// </summary>
         /// <param name="t"></param>
         /// <returns></returns>
-        public async Task<int> add(MaterialInfo t)
+        public async Task<Result<int>> add(MaterialInfo t)
         {
-            LayerDbContext context = new LayerDbContext();
-            context.materialInfos.Add(t);
-            var result = await context.SaveChangesAsync();
+            Result<int> result = new Result<int>();
+            using (LayerDbContext context = new LayerDbContext()) {
+                try
+                {
+                    context.materialInfos.Add(t);
+                    await context.SaveChangesAsync();
+                }
+                catch (Exception err)
+                {
+                    result.addError(err.Message);
+                }
+            }
             return result;
         }
         /// <summary>
@@ -27,15 +37,57 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<int> deleteById(int id)
+        public async Task<Result<int>> deleteById(int id)
         {
-            LayerDbContext context = new LayerDbContext();
-            var model = context.materialInfos.Where(x => x.id == id).ToList();
-            if (model.Count > 0)
+            Result<int> result = new Result<int>();
+            using (LayerDbContext context = new LayerDbContext())
             {
-                context.materialInfos.Remove(model[0]);
+                try
+                {
+                    var model = context.materialInfos.Where(x => x.id == id).Single();
+                    context.materialInfos.Remove(model);
+                    await context.SaveChangesAsync();
+                }
+                catch (Exception err)
+                {
+                    result.addError(err.Message);
+                }
             }
-            var result = await context.SaveChangesAsync();
+            return result;
+        }
+        /// <summary>
+        /// 修改
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public async Task<Result<int>> update(MaterialInfo t)
+        {
+            Result<int> result = new Result<int>();
+            using (LayerDbContext context = new LayerDbContext())
+            {
+                try
+                {
+                    MaterialInfo model = await context.materialInfos.FindAsync(t.id); ;
+                    if (model != null)
+                    {
+                        model.alias = t.alias;
+                        model.material = t.material;
+                        model.materialName = t.materialName;
+                        model.mat_color = t.mat_color;
+                        model.mat_size = t.mat_size;
+                        model.mat_type = t.mat_type;
+                        model.referencePriceIn = t.referencePriceIn;
+                        model.referencePriceOut = t.referencePriceOut;
+                        model.remark = t.remark;
+                        model.weight = t.weight;
+                    }
+                    await context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException err)
+                {
+                    result.addError(err.Message);
+                }
+            }
             return result;
         }
         /// <summary>
@@ -101,26 +153,7 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             return result.Count();
         }
 
-        public async Task<int> update(MaterialInfo t)
-        {
-            LayerDbContext context = new LayerDbContext();
-            MaterialInfo model = await context.materialInfos.FindAsync(t.id); ;
-            if (model != null)
-            {
-                model.alias = t.alias;
-                model.material = t.material;
-                model.materialName = t.materialName;
-                model.mat_color = t.mat_color;
-                model.mat_size = t.mat_size;
-                model.mat_type = t.mat_type;
-                model.referencePriceIn = t.referencePriceIn;
-                model.referencePriceOut = t.referencePriceOut;
-                model.remark = t.remark;
-                model.weight = t.weight;
-            }
-            var result = await context.SaveChangesAsync();
-            return result;
-        }
+        
         /// <summary>
         /// 根据物料查询记录
         /// </summary>

@@ -11,23 +11,17 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
 {
     public class OrderDetailInfoDAO : IOrderDetailInfoDAO
     {
-        public Task<int> add(OrderDetailInfo t)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<int> addRange(List<OrderDetailInfo> list)
         {
             LayerDbContext context = new LayerDbContext();
             context.orderDetailInfo.AddRange(list);
             return await context.SaveChangesAsync();
         }
-
-        public Task<int> deleteById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
+        /// <summary>
+        /// 查询所有
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
         public List<OrderDetailInfo> searchAllByCondition(OrderDetailInfoQuery t)
         {
             LayerDbContext context = new LayerDbContext();
@@ -44,7 +38,12 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             result = !t.receivedDateEnd.HasValue ? result : result.Where(x => x.orderInfo.receivedDateEnd <= t.receivedDateEnd);
             return result.ToList();
         }
-
+        /// <summary>
+        /// 根据pager
+        /// </summary>
+        /// <param name="pager"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
         public List<OrderDetailInfo> searchByCondition(Pager<List<OrderDetailInfo>> pager, OrderDetailInfoQuery t)
         {
             LayerDbContext context = new LayerDbContext();
@@ -69,7 +68,11 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
         {
             throw new NotImplementedException();
         }
-
+        /// <summary>
+        /// 查询数量
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
         public int searchCountByCondition(OrderDetailInfoQuery t)
         {
             LayerDbContext context = new LayerDbContext();
@@ -87,7 +90,16 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             return result.Count();
         }
 
-        public Task<int> update(OrderDetailInfo t)
+
+        public Task<Result<int>> add(OrderDetailInfo t)
+        {
+            throw new NotImplementedException();
+        }
+        public Task<Result<int>> deleteById(int id)
+        {
+            throw new NotImplementedException();
+        }
+        public Task<Result<int>> update(OrderDetailInfo t)
         {
             throw new NotImplementedException();
         }

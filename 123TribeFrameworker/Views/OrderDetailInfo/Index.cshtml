@@ -6,7 +6,7 @@
 }
 <script type="text/javascript">
     $(function () {
-        $('#myDataGrid').datatable({
+        $('#myDataGrid').datagrid({
             sortable: true,
             checkable:true
         });
@@ -36,69 +36,107 @@
             format: "yyyy-mm-dd hh:ii"
         });
     })
+    function updateOrder(){
+        if (checkCondition()) {
+            var myTable = $('#myDataGrid').data('zui.datagrid');
+            var data = myTable.getCheckItems();
+            var orderNo = data[0][0];
+            if (confirm("确定修改订单"+orderNo+"？")) {
+                location.href="/OrderDetailInfo/update?orderNo="+orderNo;
+            }
+        }
+    }
+    function checkCondition(){
+        var myTable = $('#myDataGrid').data('zui.datagrid');
+        var data = myTable.getCheckItems();
+        var flag = true;
+        if (data.length==0) {
+            alert('请选中一个订单')
+            flag = false;
+        }
+        else if (data.length>1) {
+            alert('每次只能处理一个订单')
+            flag = false;
+        }
+        else{
+            var status = data[0][5];
+            if (status!="已下发") {
+                alert("订单已收货，无法重复操作")
+                flag = false;
+            }
+        }
+        return flag;
+    }
 </script>
-<form action="/OrderDetailInfo/search" method="post" id="searchForm">
-    <div class="col-md-3  form-group">
-        <div class="input-control has-label-left-lg">
-            <input id="orderNo" name="orderNo" value="@ViewBag.condition.orderNo" type="text" class="form-control">
-            <label for="orderNo" class="input-control-label-left"> 进货单号:</label>
+<form action="/OrderDetailInfo/search" method="post" id="searchForm" class="form-horizontal">
+    <div class="form-group">
+        <div class="col-md-3">
+            <div class="input-control has-label-left-lg">
+                <input id="orderNo" name="orderNo" value="@ViewBag.condition.orderNo" type="text" class="form-control">
+                <label for="orderNo" class="input-control-label-left"> 进货单号:</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-control has-label-left-lg">
+                <select id="status" name="status" value="@ViewBag.condition.status" class="chosen-select form-control">
+                    <option value=""></option>
+                    @foreach (var item in Html.orderStatus())
+                    {
+                        <option value="@item.Key">@item.Value</option>
+                    }
+                </select>
+                <label for="status" class="input-control-label-left"> 单据状态:</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-control has-label-left-lg">
+                <input id="materialName" name="materialName" value="@ViewBag.condition.materialName" type="text" class="form-control">
+                <label for="materialName" class="input-control-label-left"> 产品名称:</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-control has-label-left">
+                <input id="alias" name="alias" value="@ViewBag.condition.alias" type="text" class="form-control">
+                <label for="alias" class="input-control-label-left"> 别名:</label>
+            </div>
         </div>
     </div>
-    <div class="col-md-3 form-group">
-        <div class="input-control has-label-left-lg">
-            <select id="status" name="status" value="@ViewBag.condition.status" class="chosen-select form-control">
-                <option value=""></option>
-                @foreach (var item in Html.orderStatus())
-                {
-                    <option value="@item.Key">@item.Value</option>
-                }
-            </select>
-            <label for="status" class="input-control-label-left"> 单据状态:</label>
+    <div class="form-group">
+        <div class="col-md-3">
+            <div class="input-control has-label-left">
+                <input id="mat_size" name="mat_size" value="@ViewBag.condition.mat_size" type="text" class="form-control">
+                <label for="mat_size" class="input-control-label-left"> 规格:</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-control has-label-left-lg">
+                <input id="createdDateBegin" name="createdDateBegin" value="@ViewBag.condition.createdDateBegin" type="text" class="form-control form-datetime">
+                <label for="createdDateBegin" class="input-control-label-left"> 创建时间1:</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-control has-label-left-lg">
+                <input id="createdDateEnd" name="createdDateEnd" value="@ViewBag.condition.createdDateEnd" type="text" class="form-control form-datetime">
+                <label for="createdDateEnd" class="input-control-label-left"> 创建时间2:</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-control has-label-left-lg">
+                <input id="receivedDateBegin" name="receivedDateBegin" value="@ViewBag.condition.receivedDateBegin" type="text" class="form-control form-datetime">
+                <label for="receivedDateBegin" class="input-control-label-left"> 收货时间1:</label>
+            </div>
         </div>
     </div>
-    <div class="col-md-3  form-group">
-        <div class="input-control has-label-left-lg">
-            <input id="materialName" name="materialName" value="@ViewBag.condition.materialName" type="text" class="form-control">
-            <label for="materialName" class="input-control-label-left"> 产品名称:</label>
+    <div class="form-group">
+        <div class="col-md-3">
+            <div class="input-control has-label-left-lg">
+                <input id="receivedDateEnd" name="receivedDateEnd" value="@ViewBag.condition.receivedDateEnd" type="text" class="form-control form-datetime">
+                <label for="receivedDateEnd" class="input-control-label-left"> 收货时间2:</label>
+            </div>
         </div>
+        <button class="btn btn-primary" type="submit">查询</button>
+        <button class="btn btn-primary" type="button" onclick="updateOrder()">修改</button>
     </div>
-    <div class="col-md-3  form-group">
-        <div class="input-control has-label-left">
-            <input id="alias" name="alias" value="@ViewBag.condition.alias" type="text" class="form-control">
-            <label for="alias" class="input-control-label-left"> 别名:</label>
-        </div>
-    </div>
-    <div class="col-md-3  form-group">
-        <div class="input-control has-label-left">
-            <input id="mat_size" name="mat_size" value="@ViewBag.condition.mat_size" type="text" class="form-control">
-            <label for="mat_size" class="input-control-label-left"> 规格:</label>
-        </div>
-    </div>
-    <div class="col-md-3 form-group">
-        <div class="input-control has-label-left-lg">
-            <input id="createdDateBegin" name="createdDateBegin" value="@ViewBag.condition.createdDateBegin" type="text" class="form-control form-datetime">
-            <label for="createdDateBegin" class="input-control-label-left"> 创建时间1:</label>
-        </div>
-    </div>
-    <div class="col-md-3 form-group">
-        <div class="input-control has-label-left-lg">
-            <input id="createdDateEnd" name="createdDateEnd" value="@ViewBag.condition.createdDateEnd" type="text" class="form-control form-datetime">
-            <label for="createdDateEnd" class="input-control-label-left"> 创建时间2:</label>
-        </div>
-    </div>
-    <div class="col-md-3 form-group">
-        <div class="input-control has-label-left-lg">
-            <input id="receivedDateBegin" name="receivedDateBegin" value="@ViewBag.condition.receivedDateBegin" type="text" class="form-control form-datetime">
-            <label for="receivedDateBegin" class="input-control-label-left"> 收货时间1:</label>
-        </div>
-    </div>
-    <div class="col-md-3 form-group">
-        <div class="input-control has-label-left-lg">
-            <input id="receivedDateEnd" name="receivedDateEnd" value="@ViewBag.condition.receivedDateEnd" type="text" class="form-control form-datetime">
-            <label for="receivedDateEnd" class="input-control-label-left"> 收货时间2:</label>
-        </div>
-    </div>
-    <button class="btn btn-primary" type="submit">查询</button>
 </form>
 <table class="table datatable table-striped" id="myDataGrid">
     <thead>

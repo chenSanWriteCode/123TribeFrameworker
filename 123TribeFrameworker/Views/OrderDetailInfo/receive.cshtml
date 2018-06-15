@@ -3,6 +3,17 @@
 @{
     ViewBag.title = "订单入库";
 }
+<script type="text/javascript">
+    function receiveOrder() {
+        var receiveOrder = prompt("请输入回执单号")
+        if (receiveOrder != null && receiveOrder != "") {
+            $('input[name="receivedOrder"]').val(receiveOrder)
+            $('#myForm').submit();
+        } else {
+            alert("回执单号不能为空");
+        }
+    }
+</script>
 <div style="color:red">
     @Html.ValidationSummary(false)
 </div>
@@ -11,35 +22,36 @@
         <h3>订单入库</h3>
     </div>
     <div class="panel-body">
-        <form class="form-horizontal" action="/OrderDetailInfo/receiveOrder" method="post">
-            @foreach (var item in Model)
+        <form class="form-horizontal" action="/OrderDetailInfo/receive" method="post" id="myForm">
+            <input hidden="hidden" name="receivedOrder" />
+            @for (int i = 0; i < Model.Count; i++)
             {
-                @Html.Hidden("materialId", item.materialId)
-                @Html.Hidden("orderNo",item.orderNo)
-                @Html.Hidden("receivedOrder")
+                <input hidden="hidden" name="[@i].materialId" value="@Model[i].materialId" />
+                <input hidden="hidden" name="[@i].orderNo" value="@Model[i].orderNo" />
+                
                 <div class="form-group">
                     <label class="col-md-1">产品名称:</label>
                     <div class="col-md-2">
-                        <input class="form-control" type="text" readonly="readonly" value="@item.materialName"/>
+                        <input class="form-control" type="text" readonly="readonly" value="@Model[i].materialName" />
                     </div>
                     <label for="countReference" class="col-md-1">应收数量:</label>
                     <div class="col-md-1">
-                        <input class="form-control" type="number" readonly="readonly" value="@item.num" name="countReference" />
+                        <input class="form-control" type="number" readonly="readonly" value="@Model[i].num" name="[@i].countReference" />
                     </div>
                     <div>
                         <label for="count" class="col-md-1">实收数量:</label>
                         <div class="col-md-1">
-                            @*<input class="form-control" type="number" value="@item.num" name="countReal" />*@
+                            <input class="form-control" type="number" value="@Model[i].num" name="[@i].countReal" />
                         </div>
                     </div>
                     <label class="col-md-1">参考进价:</label>
                     <div class="col-md-1">
-                        <input class="form-control" type="number" readonly="readonly" value="@item.materialInfo.referencePriceIn" />
+                        <input class="form-control" type="number" readonly="readonly" value="@Model[i].materialInfo.referencePriceIn" />
                     </div>
                     <div>
                         <label for="priceIn" class="col-md-1">实际进价:</label>
                         <div class="col-md-1">
-                            <input class="form-control" type="number" value="@item.materialInfo.referencePriceIn" name="priceIn"  />
+                            <input class="form-control" type="number" value="@Model[i].materialInfo.referencePriceIn" name="[@i].priceIn" />
                         </div>
                     </div>
                 </div>
@@ -49,7 +61,7 @@
                 @Html.ActionLink("返回", "Index", "OrderInfo", null, new { @class = "btn btn-primary btn-block" })
             </div>
             <div class="col-md-6">
-                <button type="submit" class="btn btn-primary btn-block">收货</button>
+                <button type="button" class="btn btn-primary btn-block" onclick="receiveOrder()">收货</button>
             </div>
         </form>
     </div>

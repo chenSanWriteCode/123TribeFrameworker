@@ -57,6 +57,14 @@
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+            modelBuilder.Entity<MaterialInfo>().Property(p => p.RowVersion).IsRowVersion();
+            modelBuilder.Entity<InStorageRecord>().Property(p => p.RowVersion).IsRowVersion();
+            modelBuilder.Entity<Inventory>().Property(p => p.RowVersion).IsRowVersion();
+            modelBuilder.Entity<TradingRecord>().Property(p => p.RowVersion).IsRowVersion();
+            modelBuilder.Entity<ProfitRecord>().Property(p => p.RowVersion).IsRowVersion();
+            modelBuilder.Entity<OrderDetailInfo>().Property(p => p.RowVersion).IsRowVersion();
+            modelBuilder.Entity<OrderInfo>().Property(p => p.RowVersion).IsRowVersion();
+
         }
     }
 }

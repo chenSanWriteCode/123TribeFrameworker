@@ -14,5 +14,6 @@ namespace _123TribeFrameworker.Services
         Pager<List<OrderDetailInfo>> searchByCondition(Pager<List<OrderDetailInfo>> pager, OrderDetailInfoQuery condition);
         List<OrderDetailInfo> searchAllByCondition(OrderDetailInfoQuery condition);
         Task<Result<int>> receiveOrder(List<InStorageRecord> list,string userName);
+        Task<Result<int>> deleteByOrderNo(string orderNo);
     }
 }

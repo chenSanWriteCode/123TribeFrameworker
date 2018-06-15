@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -21,7 +22,7 @@ namespace _123TribeFrameworker.Controllers
         public IInventoryService invnetoryService { get; set; }
         [Dependency]
         public IOrderDetailInfoService detailService { get; set; }
-        
+
         // GET: OrderDetailInfo
         /// <summary>
         /// 初始化
@@ -44,9 +45,25 @@ namespace _123TribeFrameworker.Controllers
         {
             pager = detailService.searchByCondition(pager, condition);
             ViewBag.condition = condition;
-            return View("Index",pager);
+            return View("Index", pager);
         }
-        
+
+        public ActionResult update(string orderNo)
+        {
+            OrderDetailInfoQuery condition = new OrderDetailInfoQuery()
+            {
+                orderNo = orderNo,
+                status = "generated"
+            };
+            var list = detailService.searchAllByCondition(condition);
+            if (list.Count==0)
+            {
+                ViewBag.returnUrl = "/OrderInfo/Index";
+                return View("Error", new string[] { "未收货订单中查询不到" + orderNo + "，请检查订单是否已收货完成或取消" });
+            }
+            return View(list);
+        }
+        #region 订单收货
         /// <summary>
         /// 订单收货
         /// </summary>
@@ -56,7 +73,13 @@ namespace _123TribeFrameworker.Controllers
         {
             OrderDetailInfoQuery condition = new OrderDetailInfoQuery();
             condition.orderNo = orderNo;
+            condition.status = "generated";
             var result = detailService.searchAllByCondition(condition);
+            if (result.Count==0)
+            {
+                ViewBag.returnUrl = "/OrderInfo/Index";
+                return View("Error", new string[] { "未收货订单中查询不到"+orderNo + "，请检查订单是否已收货完成或取消" });
+            }
             return View(result);
         }
         /// <summary>
@@ -64,27 +87,33 @@ namespace _123TribeFrameworker.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult> receiveOrder(List<InStorageRecord> list)
+        public async Task<ActionResult> receive(List<InStorageRecord> list, [Required]string receivedOrder)
         {
-            if (ModelState.IsValid)
+            var orderNo = list.First().orderNo;
+            ViewBag.returnUrl = "/OrderDetailInfo/receive?orderNo="+orderNo;
+            var countCheck = list.Where(x => x.countReal < 0 ).Count();
+            if (countCheck > 0)
             {
-                Result<int> result = await detailService.receiveOrder(list,User.Identity.Name);
-                if (result.result)
-                {
-                    ViewBag.returnUrl = "/OrderInfo/Index";
-                    ViewBag.Msg = "订单收货成功！";
-                    return View("Success");
-                }
-                else
-                {
-                    ModelState.AddModelError("", result.message);
-                }
+                return View("Error",new string[] { "实收数量必须为正数" });
             }
-            return View();
+            var priceCheck = list.Where(x => x.priceIn <= 0).Count();
+            if (priceCheck>0)
+            {
+                return View("Error", new string[] { "实际进价必须为正数" });
+            }
+            list.ForEach(x => x.receivedOrder = receivedOrder);
+            Result<int> result = await detailService.receiveOrder(list, User.Identity.Name);
+            if (result.result)
+            {
+                ViewBag.returnUrl = "/OrderInfo/Index";
+                ViewBag.Msg = "订单收货成功！";
+                return View("Success");
+            }
+            return View("Error", new string[] { result.message });
         }
+        #endregion
 
         #region 创建订单
-
 
         public ActionResult add(Pager<List<Inventory>> pager)
         {
@@ -98,31 +127,22 @@ namespace _123TribeFrameworker.Controllers
             ViewBag.returnUrl = "/OrderDetailInfo/Index";
             var orderList = JsonConvert.DeserializeObject<List<OrderDetailInfo>>(jsonOrder);
             var priceList = JsonConvert.DeserializeObject<List<PriceCount>>(jsonOrder);
-            OrderInfo order = new OrderInfo();
-            order.createdBy = User.Identity.Name;
-            order.orderNo = DateTime.Now.ToString("yyyyMMddHHmmss");
-            order.status = "generated";
-            order.sumPrice = priceList.Sum(x=>x.referencePriceIn*x.num);
+            var sumPrice = priceList.Sum(x => x.referencePriceIn * x.num);
             
-            foreach (var item in orderList)
-            {
-                item.orderNo = order.orderNo;
-                item.createdBy = order.createdBy;
-            }
-            var orderResult = await Orderservice.addAsync(order);
+            var orderResult = await Orderservice.addOrder(orderList, User.Identity.Name, sumPrice);
             var detailResult = await detailService.addRange(orderList);
             if (detailResult.result)
             {
-                ViewBag.Msg = "订单生成成功:"+order.orderNo;
+                ViewBag.Msg = "订单生成成功:" + order.orderNo;
                 return View("Success");
             }
             return View("Error", new string[] { detailResult.message });
         }
     }
     #endregion
-   public class PriceCount
+    public class PriceCount
     {
         public int num { get; set; }
-        public double referencePriceIn { get; set; }
+        public float referencePriceIn { get; set; }
     }
 }

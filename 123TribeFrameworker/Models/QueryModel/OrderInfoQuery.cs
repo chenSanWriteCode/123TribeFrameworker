@@ -15,7 +15,7 @@ namespace _123TribeFrameworker.Models.QueryModel
         /// <summary>
         /// 合计进货价格
         /// </summary>
-        public double sumPrice { get; set; }
+        public float sumPrice { get; set; }
         /// <summary>
         /// 是否打印
         /// </summary>
