@@ -58,11 +58,6 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             result = result.Skip(start).Take(pager.recPerPage);
             return result.ToList();
         }
-
-        public Task<OrderDetailInfo> searchById(int id)
-        {
-            throw new NotImplementedException();
-        }
         /// <summary>
         /// 查询数量
         /// </summary>
@@ -83,20 +78,6 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             result = !t.receivedDateBegin.HasValue ? result : result.Where(x => x.orderInfo.receivedDate >= t.receivedDateBegin);
             result = !t.receivedDateEnd.HasValue ? result : result.Where(x => x.orderInfo.receivedDateEnd <= t.receivedDateEnd);
             return result.Count();
-        }
-
-
-        public Task<Result<int>> add(OrderDetailInfo t)
-        {
-            throw new NotImplementedException();
-        }
-        public Task<Result<int>> deleteById(int id)
-        {
-            throw new NotImplementedException();
-        }
-        public Task<Result<int>> update(OrderDetailInfo t)
-        {
-            throw new NotImplementedException();
         }
         /// <summary>
         /// 收货订单
@@ -123,15 +104,28 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
                     }
                     else
                     {
+                        //订单状态
                         model.status = status.ToString();
                         model.receivedDate = DateTime.Now;
                         model.receivedBy = userName;
-
+                        //入库记录
                         context.inStorageRecord.AddRange(list);
-
-
+                        //库存
+                        List<Inventory> inventoryList = new List<Inventory>();
+                        Inventory model1 = null;
+                        foreach (var item in list)
+                        {
+                            model1 = new Inventory()
+                            {
+                                count = item.countReal,
+                                materialId = item.materialId,
+                                priceIn = item.priceIn
+                            };
+                            inventoryList.Add(model1);
+                        }
+                        context.inventory.AddRange(inventoryList);
+                        
                         await context.SaveChangesAsync();
-
                     }
                 }
                 catch (Exception err)
@@ -139,6 +133,23 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
                     result.addError(err.Message);
                 }
             }
+            return result;
+        }
+        public Task<OrderDetailInfo> searchById(int id)
+        {
+            throw new NotImplementedException();
+        }
+        public Task<Result<int>> add(OrderDetailInfo t)
+        {
+            throw new NotImplementedException();
+        }
+        public Task<Result<int>> deleteById(int id)
+        {
+            throw new NotImplementedException();
+        }
+        public Task<Result<int>> update(OrderDetailInfo t)
+        {
+            throw new NotImplementedException();
         }
     }
 }

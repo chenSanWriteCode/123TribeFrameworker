@@ -14,37 +14,6 @@ namespace _123TribeFrameworker.Services.Layer
     {
         [Dependency]
         public IInStorageRecordDAO dao { get; set; }
-        [Dependency]
-        public IInventoryDAO inventoryDao { get; set; }
         
-        /// <summary>
-        /// 增加入库记录
-        /// </summary>
-        /// <param name="list"></param>
-        /// <returns></returns>
-        public async Task<Result<int>> addRangeAsync(List<InStorageRecord> list)
-        {
-            Result<int> result = new Result<int>();
-            //增加入库记录
-            result = await dao.addRange(list);
-            if (result.result)
-            {
-                List<Inventory> inventoryList = new List<Inventory>();
-                Inventory model = null;
-                foreach (var item in list)
-                {
-                    model = new Inventory()
-                    {
-                        count = item.countReal,
-                        materialId = item.materialId,
-                        priceIn = item.priceIn
-                    };
-                    inventoryList.Add(model);
-                }
-                //增加库存
-                result = await inventoryDao.addRange(inventoryList);
-            }
-            return result;
-        }
     }
 }

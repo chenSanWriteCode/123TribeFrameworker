@@ -15,38 +15,24 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
         /// </summary>
         /// <param name="t"></param>
         /// <returns></returns>
-        public async Task<int> add(Inventory t)
-        {
-            LayerDbContext context = new LayerDbContext();
-            context.inventory.Add(t);
-            var result = await context.SaveChangesAsync();
-            return result;
-        }
-        /// <summary>
-        /// 增加物料list库存
-        /// </summary>
-        /// <param name="list"></param>
-        /// <returns></returns>
-        public async Task<Result<int>> addRange(List<Inventory> list)
+        public async Task<Result<int>> add(Inventory t)
         {
             Result<int> result = new Result<int>();
-            try
+            using (LayerDbContext context = new LayerDbContext())
             {
-                LayerDbContext context = new LayerDbContext();
-                if (list.Count > 0)
+                try
                 {
-                    context.inventory.AddRange(list);
+                    context.inventory.Add(t);
+                    await context.SaveChangesAsync();
                 }
-                result.data = await context.SaveChangesAsync();
-            }
-            catch (Exception err)
-            {
-                result.addError(err.Message);
+                catch (Exception err)
+                {
+                    result.addError(err.Message);
+                }
             }
             return result;
         }
-
-        public Task<int> deleteById(int id)
+        public Task<Result<int>> deleteById(int id)
         {
             return null;
         }
@@ -102,7 +88,7 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             return result.Count();
         }
 
-        public Task<int> update(Inventory t)
+        public Task<Result<int>> update(Inventory t)
         {
             throw new NotImplementedException();
         }

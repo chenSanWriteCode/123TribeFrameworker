@@ -320,7 +320,6 @@
     <Compile Include="Models\QueryModel\ProfitRecordQuery.cs" />
     <Compile Include="Models\QueryModel\TradingRecordQuery.cs" />
     <Compile Include="Models\RoleMenuDbContext.cs" />
-    <Compile Include="Services\ICommonService.cs" />
     <Compile Include="Services\IDirLayerService.cs" />
     <Compile Include="Services\IFirstLevelDirService.cs" />
     <Compile Include="Services\IInStorageRecordService.cs" />

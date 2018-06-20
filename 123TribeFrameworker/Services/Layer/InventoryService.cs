@@ -14,48 +14,23 @@ namespace _123TribeFrameworker.Services.Layer
     {
         [Dependency]
         public IInventoryDAO dao { get; set; }
-        public Task<Result<Inventory>> addAsync(Inventory model)
-        {
-            throw new NotImplementedException();
-        }
-        /// <summary>
-        /// 增加库存list
-        /// </summary>
-        /// <param name="list"></param>
-        /// <returns></returns>
-        public async Task<Result<int>> addRangeAsync(List<Inventory> list)
-        {
-            return await dao.addRange(list);
-        }
-
-        public Task<Result<int>> deleteByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public Pager<List<Inventory>> searchByCondition(Pager<List<Inventory>> pager, InventoryQuery condition)
         {
             pager.data = dao.searchByCondition(pager, condition);
             pager.recTotal = dao.searchCountByCondition(condition);
             return pager;
         }
-
-        public Task<Inventory> searchByid(int id)
-        {
-            throw new NotImplementedException();
-        }
-
+        /// <summary>
+        /// 根据库存数量倒序查询
+        /// </summary>
+        /// <param name="pager"></param>
+        /// <returns></returns>
         public Pager<List<Inventory>> searchByNumOrder(Pager<List<Inventory>> pager)
         {
             InventoryQuery condition = new InventoryQuery();
             pager.data = dao.searchByCountOrder(pager);
             pager.recTotal = dao.searchCountByCondition(condition);
             return pager;
-        }
-
-        public Task<Result<int>> update(Inventory model)
-        {
-            throw new NotImplementedException();
         }
     }
 }

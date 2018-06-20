@@ -10,8 +10,6 @@ namespace _123TribeFrameworker.DAO
 {
     public interface IInventoryDAO:ICommonDAO<Inventory>
     {
-        Task<Result<int>> addRange(List<Inventory> list);
-
         List<Inventory> searchByCountOrder(Pager<List<Inventory>> pager);
 
         List<Inventory> searchByCondition(Pager<List<Inventory>> pager, InventoryQuery t);

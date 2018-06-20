@@ -8,11 +8,10 @@ using _123TribeFrameworker.Models.QueryModel;
 
 namespace _123TribeFrameworker.Services
 {
-    public interface IInventoryService:ICommonService<Inventory>
+    public interface IInventoryService
     {
         Pager<List<Inventory>> searchByNumOrder(Pager<List<Inventory>> pager);
         Pager<List<Inventory>> searchByCondition(Pager<List<Inventory>> pager, InventoryQuery condition);
 
-        Task<Result<int>> addRangeAsync(List<Inventory> list);
     }
 }

@@ -9,11 +9,5 @@ namespace _123TribeFrameworker.DAO
 {
     public interface IInStorageRecordDAO:ICommonDAO<InStorageRecord>
     {
-        /// <summary>
-        /// 增加多行
-        /// </summary>
-        /// <param name="list"></param>
-        /// <returns></returns>
-        Task<Result<int>> addRange(List<InStorageRecord> list);
     }
 }

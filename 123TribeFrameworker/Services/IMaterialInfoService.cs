@@ -8,8 +8,13 @@ using _123TribeFrameworker.Models.QueryModel;
 
 namespace _123TribeFrameworker.Services
 {
-    public interface IMaterialInfoService: ICommonService<MaterialInfo>
+    public interface IMaterialInfoService
     {
         Pager<List<MaterialInfo>> searchByCondition(Pager<List<MaterialInfo>> pager, MaterialInfoQuery condition);
+        Task<Result<MaterialInfo>> addAsync(MaterialInfo model);
+        Task<MaterialInfo> searchByid(int id);
+        Task<Result<int>> deleteByIdAsync(int id);
+        Task<Result<int>> update(MaterialInfo model);
+
     }
 }

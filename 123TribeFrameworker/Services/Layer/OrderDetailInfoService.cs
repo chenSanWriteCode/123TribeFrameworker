@@ -15,11 +15,6 @@ namespace _123TribeFrameworker.Services.Layer
     {
         [Dependency]
         public IOrderDetailInfoDAO dao { get; set; }
-        [Dependency]
-        public IInStorageRecordService InStorageservice { get; set; }
-        [Dependency]
-        public IOrderInfoService Orderservice { get; set; }
-
         /// <summary>
         /// 查询页
         /// </summary>
@@ -46,42 +41,14 @@ namespace _123TribeFrameworker.Services.Layer
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public async Task<Result<int>> receiveOrder(List<InStorageRecord> list,string userName)
+        public async Task<Result<int>> receiveOrder(List<InStorageRecord> list, string userName)
         {
-            Result<int> result = new Result<int>();
             OrderStatusEnum status = OrderStatusEnum.completed;
             if (list.Where(x => x.countReference != x.countReal).Count() > 0)
             {
                 status = OrderStatusEnum.excepted;
             }
-                return await dao.receiveOrder(list, userName, status);
-            //增加入库记录与库存
-            if (list.Count > 0)
-            {
-                var resultPart1 = await InStorageservice.addRangeAsync(list);
-                if (!resultPart1.result)
-                {
-                    result.addError(result.message);
-                }
-                else
-                {
-                    Result<int> resultPart2 = new Result<int>();
-                    //判断是否存在收货异常  应收！=实收  更改订单状态
-                    if (list.Where(x => x.countReference != x.countReal).Count() > 0)
-                    {
-                        resultPart2 =await Orderservice.changeOrderStatus(list[0].orderNo,userName, OrderStatusEnum.excepted);
-                    }
-                    else
-                    {
-                        resultPart2 = await Orderservice.changeOrderStatus(list[0].orderNo,userName, OrderStatusEnum.completed);
-                    }
-                    if (!resultPart2.result)
-                    {
-                        result.addError(resultPart2.message);
-                    }
-                }
-            }
-            return result;
+            return await dao.receiveOrder(list, userName, status);
         }
         public Task<Result<int>> deleteByOrderNo(string orderNo)
         {

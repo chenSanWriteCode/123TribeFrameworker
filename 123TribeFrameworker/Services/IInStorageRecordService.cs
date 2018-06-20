@@ -9,11 +9,6 @@ namespace _123TribeFrameworker.Services
 {
     public interface IInStorageRecordService
     {
-        /// <summary>
-        /// 增加list
-        /// </summary>
-        /// <param name="list"></param>
-        /// <returns></returns>
-        Task<Result<int>> addRangeAsync(List<InStorageRecord> list);
+        
     }
 }
