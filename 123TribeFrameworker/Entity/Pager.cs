@@ -39,7 +39,7 @@ namespace _123TribeFrameworker.Entity
         /// <summary>
         /// 每页记录数
         /// </summary>
-        public int recPerPage { get; set; } = 5;
+        public int recPerPage { get; set; } = 10;
         /// <summary>
         /// 结果集
         /// </summary>

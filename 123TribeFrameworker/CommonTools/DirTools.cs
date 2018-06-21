@@ -7,9 +7,9 @@ namespace _123TribeFrameworker.CommonTools
 {
     public class DirTools
     {
-        public string afterContent { get;  }  = "</h1></a></li>";
+        public string afterContent { get;  }  = "</h3></a></li>";
 
-        public string beforContent { get; } = "<li><a href=\"#\"><h1>";
+        public string beforContent { get; } = "<li><a href=\"#\"><h3>";
         
     }
     /// <summary>

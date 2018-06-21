@@ -1,1 +1,51 @@
-﻿
+﻿@using _123TribeFrameworker.Entity
+@model List<OrderDetailInfo>
+
+@{
+    ViewBag.Title = "订单修改";
+}
+<script type="text/javascript">
+    function addDetail() {
+
+    }
+    function updateDetail() {
+
+    }
+</script>
+<div class="panel panel-primary">
+    <div class="panel-heading" style="text-align:center">
+        @Model.First().orderNo
+    </div>
+    <div class="panel-body">
+        @Html.ActionLink("新增明细", "addDetail",new { orderNo= @Model.First().orderNo },new { @class = "btn btn-warning" })
+        <table id="menu" class="table table-striped table-condensed">
+            <tr>
+                <th>产品名称</th>
+                <th>规格</th>
+                <th>数量</th>
+                <th>单位</th>
+                <th>成本</th>
+                <th>操作</th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.materialName</td>
+                    <td>@item.materialInfo.mat_size</td>
+                    <td>@item.num</td>
+                    <td>@item.materialInfo.unit</td>
+                    <td>@item.materialInfo.referencePriceIn</td>
+                    <td>
+                        @using (Html.BeginForm("deleteDetail", "OrderDetailInfo", new { id = item.id }))
+                        {
+                            <button type="submit" class="btn btn-danger">删除</button>
+                            @Html.ActionLink("修改", "updateDetail", new { id = @item.id }, new { @class = "btn btn-warning" })
+                        }
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+
+

@@ -50,6 +50,7 @@ namespace _123TribeFrameworker.Controllers
             return View("Index", pager);
         }
 
+        #region 订单修改
         public ActionResult update(string orderNo)
         {
             OrderDetailInfoQuery condition = new OrderDetailInfoQuery()
@@ -60,11 +61,32 @@ namespace _123TribeFrameworker.Controllers
             var list = detailService.searchAllByCondition(condition);
             if (list.Count==0)
             {
-                ViewBag.returnUrl = "/OrderInfo/Index";
+                ViewBag.returnUrl = "/OrderInfo/search?orderNo="+orderNo;
                 return View("Error", new string[] { "未收货订单中查询不到" + orderNo + "，请检查订单是否已收货完成或取消" });
             }
             return View(list);
         }
+        /// <summary>
+        /// 删除详细
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public Task<ActionResult> deleteDetail(int id)
+        {
+            var result = detailService.deleteById(id);
+
+            return RedirectToAction("update");
+        }
+        public ActionResult updateDetail(int id)
+        {
+            return View();
+        }
+        public ActionResult addDetail(string orderNo)
+        {
+            return View()
+        }
+        #endregion
 
         #region 订单收货
         /// <summary>
@@ -150,7 +172,7 @@ namespace _123TribeFrameworker.Controllers
             var instorageRecords = inStroageService.searchAllByCondition(condition);
             if (instorageRecords.Count==0)
             {
-                ViewBag.returnUrl = "/OrderInfo/Index?orderNo=" + orderNo;
+                ViewBag.returnUrl = "/OrderInfo/search?orderNo=" + orderNo;
                 return View("Error", new string[] { "订单已被处理" });
             }
             return View(instorageRecords);

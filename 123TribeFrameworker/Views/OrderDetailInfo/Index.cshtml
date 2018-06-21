@@ -37,16 +37,16 @@
             format: "yyyy-mm-dd hh:ii"
         });
     })
-    function updateOrder(){
-        if (checkCondition()) {
-            var myTable = $('#myDataGrid').data('zui.datagrid');
-            var data = myTable.getCheckItems();
-            var orderNo = data[0][0];
-            if (confirm("确定修改订单"+orderNo+"？")) {
-                location.href="/OrderDetailInfo/update?orderNo="+orderNo;
-            }
-        }
-    }
+    //function updateOrder(){
+    //    if (checkCondition()) {
+    //        var myTable = $('#myDataGrid').data('zui.datagrid');
+    //        var data = myTable.getCheckItems();
+    //        var orderNo = data[0][0];
+    //        if (confirm("确定修改订单"+orderNo+"？")) {
+    //            location.href="/OrderDetailInfo/update?orderNo="+orderNo;
+    //        }
+    //    }
+    //}
     function checkCondition(){
         var myTable = $('#myDataGrid').data('zui.datagrid');
         var data = myTable.getCheckItems();
@@ -136,7 +136,6 @@
             </div>
         </div>
         <button class="btn btn-primary" type="submit">查询</button>
-        <button class="btn btn-primary" type="button" onclick="updateOrder()">修改</button>
     </div>
 </form>
 <table class="table datatable table-striped" id="myDataGrid">

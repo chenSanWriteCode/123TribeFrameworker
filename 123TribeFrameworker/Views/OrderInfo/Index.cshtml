@@ -69,6 +69,7 @@
         var flag = true;
         if (data.length==0) {
             alert('请选中一个订单')
+            return;
         }
         else if (data.length>1) {
             alert('每次只能处理一个订单')
@@ -76,6 +77,11 @@
         else {
             var myTable = $('#myDataTable').data('zui.datagrid');
             var data = myTable.getCheckItems();
+            var status = data[0][1];
+            if (status!="收货异常") {
+                alert("订单正常，无需异常处理")
+                return;
+            }
             var orderNo = data[0][0];
             if (confirm("确定订单"+orderNo+"补发货物已到货？")) {
                 location.href="/OrderDetailInfo/dealReceivedOrder?orderNo="+orderNo;
@@ -154,6 +160,7 @@
     <button class="btn btn-primary" type="submit">查询</button>
     <button class="btn btn-primary" type="button" onclick="receiveOrder()">收货</button>
     <button class="btn btn-danger" type="button" onclick="deleteByOrderNo()">删除</button>
+    <button class="btn btn-danger" type="button" onclick="updateOrder()">修改</button>
     <button class="btn btn-danger" type="button" onclick="updateExceptedOrderNo()">处理异常</button>
     @Html.ActionLink("创建进货单", "add", "OrderDetailInfo", null, new { @class = "btn btn-primary" })
 </form>
