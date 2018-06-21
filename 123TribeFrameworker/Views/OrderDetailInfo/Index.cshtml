@@ -8,7 +8,8 @@
     $(function () {
         $('#myDataGrid').datagrid({
             sortable: true,
-            checkable:true
+            checkable:true,
+            selectable:false
         });
         $('#myPager').pager({
             page: @Model.page,

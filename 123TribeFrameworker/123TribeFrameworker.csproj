@@ -592,6 +592,7 @@
     <Content Include="Views\OrderDetailInfo\Index.cshtml" />
     <Content Include="Views\OrderDetailInfo\receive.cshtml" />
     <Content Include="Views\OrderDetailInfo\update.cshtml" />
+    <Content Include="Views\OrderDetailInfo\dealReceivedOrder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

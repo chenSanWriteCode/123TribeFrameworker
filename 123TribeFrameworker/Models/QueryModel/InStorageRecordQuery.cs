@@ -8,6 +8,10 @@ namespace _123TribeFrameworker.Models.QueryModel
     public class InStorageRecordQuery
     {
         /// <summary>
+        /// 进货单号
+        /// </summary>
+        public string orderNo { get; set; }
+        /// <summary>
         /// 回执单编号
         /// </summary>
         public string receivedOrder { get; set; }

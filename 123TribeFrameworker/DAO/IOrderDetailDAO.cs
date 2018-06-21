@@ -12,7 +12,6 @@ namespace _123TribeFrameworker.DAO
     {
         List<OrderDetailInfo> searchByCondition(Pager<List<OrderDetailInfo>> pager, OrderDetailInfoQuery t);
         List<OrderDetailInfo> searchAllByCondition(OrderDetailInfoQuery t);
-
         int searchCountByCondition(OrderDetailInfoQuery t);
         /// <summary>
         /// 收货订单
@@ -22,5 +21,14 @@ namespace _123TribeFrameworker.DAO
         /// <param name="status">订单状态</param>
         /// <returns></returns>
         Task<Result<int>> receiveOrder(List<InStorageRecord> list, string userName, OrderStatusEnum status);
+        /// <summary>
+        /// 处理异常，补充收货
+        /// </summary>
+        /// <param name="supplementList">补充产品list</param>
+        /// <param name="userName">操作人</param>
+        /// <returns></returns>
+        Task<Result<int>> supplementReceiveOrder(List<InStorageRecord> supplementList, string userName);
+
+
     }
 }

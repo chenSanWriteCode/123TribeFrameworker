@@ -30,32 +30,8 @@ namespace _123TribeFrameworker.Services.Layer
         }
         public async Task<Result<int>> deleteByOrderNo(string orderNo)
         {
-            Result<int> result = new Result<int>();
-            var resultPart1 = await detailService.deleteByOrderNo(orderNo);
-            if (!resultPart1.result)
-            {
-                result.addError(resultPart1.message);
-                return result;
-            }
-            var model = await dao.searchByOrder(orderNo);
-            if (model==null)
-            {
-                result.addError("订单已被删除");
-            }
-            else
-            {
-                if (model.status!="generated")
-                {
-                    result.addError("订单状态已改变，无法删除");
-                }
-                else
-                {
-                    var count = await dao.deleteByOrderNo(orderNo);
-                }
-            }
-            return result;
+            return await dao.deleteByOrderNo(orderNo); 
         }
-
         public Task<OrderInfo> searchByOrder(string orderNo)
         {
             return dao.searchByOrder(orderNo);

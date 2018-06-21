@@ -24,11 +24,16 @@ namespace _123TribeFrameworker.Entity
         /// 订单状态
         /// </summary>
         [Required]
+        [MaxLength(20)]
         public string status { get; set; }
         /// <summary>
         /// 合计进货价格
         /// </summary>
         public float sumPrice { get; set; }
+        /// <summary>
+        /// 真实进价总和
+        /// </summary>
+        public float sumPriceReal { get; set; }
         /// <summary>
         /// 是否打印
         /// </summary>
@@ -49,10 +54,7 @@ namespace _123TribeFrameworker.Entity
         /// 进货单下发时间
         /// </summary>
         public DateTime createdDate { get; set; } = DateTime.Now;
-        [NotMapped]
-        public DateTime? createdDateBegin { get; set; }
-        [NotMapped]
-        public DateTime? createdDateEnd { get; set; }
+
         public DateTime? lastUpdatedDate { get; set; }
         [MaxLength(20)]
         public string lastUpdatedBy { get; set; }
@@ -60,11 +62,8 @@ namespace _123TribeFrameworker.Entity
         /// 收货时间
         /// </summary>
         public DateTime? receivedDate { get; set; }
+        [MaxLength(20)]
         public string receivedBy { get; set; }
-        [NotMapped]
-        public DateTime? receivedDateBegin { get; set; }
-        [NotMapped]
-        public DateTime? receivedDateEnd { get; set; }
         [Timestamp]
         public byte[] RowVersion { get; set; }
         [ForeignKey("status")]
@@ -104,8 +103,10 @@ namespace _123TribeFrameworker.Entity
         public string factory { get; set; }
 
         public DateTime createdDate { get; set; } = DateTime.Now;
+        [MaxLength(20)]
         public string createdBy { get; set; }
         public DateTime? lastUpdatedDate { get; set; }
+        [MaxLength(20)]
         public string lastUpdatedBy { get; set; }
         [Timestamp]
         public byte[] RowVersion { get; set; }
@@ -170,6 +171,7 @@ namespace _123TribeFrameworker.Entity
         /// <summary>
         /// 交易人
         /// </summary>
+        [MaxLength(20)]
         public string createdBy { get; set; }
         [Timestamp]
         public byte[] RowVersion { get; set; }
@@ -228,6 +230,7 @@ namespace _123TribeFrameworker.Entity
         /// 进货单号
         /// </summary>
         [Required]
+        [MaxLength(50)]
         public string orderNo { get; set; }
         /// <summary>
         /// 成本价
@@ -253,6 +256,11 @@ namespace _123TribeFrameworker.Entity
         /// </summary>
         [Index]
         public DateTime createdDate { get; set; } = DateTime.Now;
+        /// <summary>
+        /// 入库人
+        /// </summary>
+        [MaxLength(20)]
+        public string createdBy { get; set; }
         [Timestamp]
         public byte[] RowVersion { get; set; }
         [ForeignKey("materialId")]

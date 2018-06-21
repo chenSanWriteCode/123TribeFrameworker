@@ -87,10 +87,49 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
         {
             throw new NotImplementedException();
         }
-
-        public Task<int> deleteByOrderNo(string orderNo)
+        /// <summary>
+        /// 根据订单号删除订单
+        /// 删除订单主表订单
+        /// 删除订单附表订单内容
+        /// </summary>
+        /// <param name="orderNo"></param>
+        /// <returns></returns>
+        public async Task<Result<int>> deleteByOrderNo(string orderNo)
         {
-            throw new NotImplementedException();
+            Result<int> result = new Result<int>();
+            using (LayerDbContext context = new LayerDbContext())
+            {
+                try
+                {
+                    //根据订单与订单状态查询是否存在订单
+                    var modelList = context.orderInfo.Where(x => x.orderNo == orderNo).ToList();
+                    if (modelList.Count==0)
+                    {
+                        result.addError("订单已被删除");
+                    }
+                    else
+                    {
+                        var model = modelList[0];
+                        if (model.status != "generated")
+                        {
+                            result.addError("订单状态已改变，无法删除");
+                        }
+                        else
+                        {
+                            // 删除订单主表订单
+                            context.orderInfo.Remove(model);
+                            // 删除订单附表订单内容
+                            var sql = context.orderDetailInfo.RemoveRange(context.orderDetailInfo.Where(x => x.orderNo == orderNo));
+                        }
+                    }
+                    var count = await context.SaveChangesAsync();
+                }
+                catch (Exception err)
+                {
+                    result.addError(err.Message);
+                }
+            }
+            return result;
         }
         /// <summary>
         /// 创建订单
@@ -112,9 +151,9 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
                 catch (Exception err)
                 {
                     result.addError(err.Message);
-                    result.data = orderList;
                 }
             }
+            result.data = orderList;
             return result;
         }
 

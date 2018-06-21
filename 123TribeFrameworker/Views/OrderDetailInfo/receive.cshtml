@@ -6,11 +6,14 @@
 <script type="text/javascript">
     function receiveOrder() {
         var receiveOrder = prompt("请输入回执单号")
-        if (receiveOrder != null && receiveOrder != "") {
+        if (receiveOrder == null) {
+            return;
+        }
+        else if (receiveOrder == "") {
+            alert("回执单号不能为空");
+        } else {
             $('input[name="receivedOrder"]').val(receiveOrder)
             $('#myForm').submit();
-        } else {
-            alert("回执单号不能为空");
         }
     }
 </script>

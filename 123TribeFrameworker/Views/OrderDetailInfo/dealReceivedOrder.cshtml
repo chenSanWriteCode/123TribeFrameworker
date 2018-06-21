@@ -1,0 +1,77 @@
+﻿@using _123TribeFrameworker.Entity
+@model List<InStorageRecord>
+@{
+    ViewBag.title = "异常订单处理";
+}
+<script type="text/javascript">
+    function receiveOrder() {
+        var receiveOrder = prompt("请输入回执单号")
+        if (receiveOrder == null) {
+            return;
+        }
+        else if (receiveOrder == "") {
+            alert("回执单号不能为空");
+        } else {
+            $('input[name="receivedOrder"]').val(receiveOrder)
+            $('#myForm').submit();
+        }
+    }
+</script>
+<div style="color:red">
+    @Html.ValidationSummary(false)
+</div>
+<div class="panel panel-primary">
+    <div class="panel-heading" style="text-align:center">
+        <h3>订单入库</h3>
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal" action="/OrderDetailInfo/dealReceivedOrder" method="post" id="myForm">
+            <input hidden="hidden" name="receivedOrder" />
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                @Html.HiddenFor(x => x[i].materialId)
+                @Html.HiddenFor(x => x[i].orderNo)
+                @Html.HiddenFor(x => x[i].receivedOrder)
+                <div class="form-group">
+                    <label class="col-md-1">产品名称:</label>
+                    <div class="col-md-2">
+                        <input class="form-control" readonly="readonly" type="text" value="@Model[i].materialInfo.materialName" />
+                    </div>
+                    <label for="countReference" class="col-md-1">应收数量:</label>
+                    <div class="col-md-1">
+                        @Html.TextBoxFor(x => x[i].countReference, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+                    <label for="count" class="col-md-1">实收数量:</label>
+                    <div class="col-md-1">
+                        <input class="form-control" readonly="readonly" type="number" value="@Model[i].countReal" />
+                    </div>
+                    <label for="priceIn" class="col-md-1">实际进价:</label>
+                    <div class="col-md-1">
+                        @Html.TextBoxFor(x => x[i].priceIn, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+                    <label for="count" class="col-md-1">补充数量:</label>
+                    <div class="col-md-1">
+                        @{
+                            var supplementCount = Model[i].countReference - Model[i].countReal;
+                            if (supplementCount == 0)
+                            {
+                                <input class="form-control" type="number" readonly="readonly" value="@supplementCount" name="[@i].countReal" />
+                            }
+                            else
+                            {
+                                <input class="form-control" type="number" value="@supplementCount" name="[@i].countReal" />
+                            }
+                        }
+                    </div>
+                </div>
+                <hr>
+            }
+            <div class="col-md-6">
+                @Html.ActionLink("返回", "Index", "OrderInfo", null, new { @class = "btn btn-primary btn-block" })
+            </div>
+            <div class="col-md-6">
+                <button type="submit" class="btn btn-primary btn-block">补充收货</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -18,7 +18,14 @@ namespace _123TribeFrameworker.Services
         /// <param name="list">订单详情</param>
         /// <param name="userName">收货人</param>
         /// <returns></returns>
-        Task<Result<int>> receiveOrder(List<InStorageRecord> list,string userName);
-        Task<Result<int>> deleteByOrderNo(string orderNo);
+        Task<Result<int>> receiveOrder(List<InStorageRecord> list, string receivedOrder,string userName);
+        /// <summary>
+        /// 处理收货异常
+        /// </summary>
+        /// <param name="list">补发的产品</param>
+        /// <param name="receivedOrder">回执单号</param>
+        /// <param name="userName">操作人</param>
+        /// <returns></returns>
+        Task<Result<int>> dealReceivedOrder(List<InStorageRecord> list, string userName);
     }
 }

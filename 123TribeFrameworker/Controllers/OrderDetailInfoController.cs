@@ -22,6 +22,8 @@ namespace _123TribeFrameworker.Controllers
         public IInventoryService invnetoryService { get; set; }
         [Dependency]
         public IOrderDetailInfoService detailService { get; set; }
+        [Dependency]
+        public IInStorageRecordService inStroageService { get; set; }
 
         // GET: OrderDetailInfo
         /// <summary>
@@ -63,6 +65,7 @@ namespace _123TribeFrameworker.Controllers
             }
             return View(list);
         }
+
         #region 订单收货
         /// <summary>
         /// 订单收货
@@ -101,8 +104,8 @@ namespace _123TribeFrameworker.Controllers
             {
                 return View("Error", new string[] { "实际进价必须为正数" });
             }
-            list.ForEach(x => x.receivedOrder = receivedOrder);
-            Result<int> result = await detailService.receiveOrder(list, User.Identity.Name);
+            
+            Result<int> result = await detailService.receiveOrder(list, receivedOrder, User.Identity.Name);
             if (result.result)
             {
                 ViewBag.returnUrl = "/OrderInfo/Index";
@@ -137,8 +140,44 @@ namespace _123TribeFrameworker.Controllers
             }
             return View("Error", new string[] { orderResult.message });
         }
+        #endregion
+
+        #region 处理异常订单
+        public ActionResult dealReceivedOrder(string orderNo)
+        {
+            InStorageRecordQuery condition = new InStorageRecordQuery();
+            condition.orderNo = orderNo;
+            var instorageRecords = inStroageService.searchAllByCondition(condition);
+            if (instorageRecords.Count==0)
+            {
+                ViewBag.returnUrl = "/OrderInfo/Index?orderNo=" + orderNo;
+                return View("Error", new string[] { "订单已被处理" });
+            }
+            return View(instorageRecords);
+        }
+        [HttpPost]
+        public async Task<ActionResult> dealReceivedOrder(List<InStorageRecord> list)
+        {
+            var orderNo = list.First().orderNo;
+            ViewBag.returnUrl = "/OrderDetailInfo/dealReceivedOrder?orderNo=" + orderNo;
+            var countCheck = list.Where(x => x.countReal < 0).Count();
+            if (countCheck > 0)
+            {
+                return View("Error", new string[] { "实收数量必须为正数" });
+            }
+            Result<int> result = await detailService.dealReceivedOrder(list, User.Identity.Name);
+            if (result.result)
+            {
+                ViewBag.returnUrl = "/OrderInfo/Index?orderNo=" + orderNo;
+                ViewBag.Msg = "订单异常处理成功！";
+                return View("Success");
+            }
+            return View("Error", new string[] { result.message });
+        }
+        #endregion
     }
-    #endregion
+
+
     public class PriceCount
     {
         public int num { get; set; }

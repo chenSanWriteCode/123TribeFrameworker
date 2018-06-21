@@ -30,15 +30,25 @@ namespace _123TribeFrameworker.Controllers
             pager = service.searchByCondition(pager, condition);
             return View("Index",pager);
         }
-
+        /// <summary>
+        /// 删除订单
+        /// </summary>
+        /// <param name="orderNo"></param>
+        /// <returns></returns>
         public async Task<ActionResult> delete(string orderNo)
         {
             var result = await service.deleteByOrderNo(orderNo);
             if (!result.result)
             {
+                ViewBag.returnUrl = "/OrderInfo/search?orderNo="+orderNo;
                 return View("Error", new string[] { result.message });
             }
-            return RedirectToAction("search", orderNo);
+            else
+            {
+                ViewBag.returnUrl = "/OrderInfo/Index";
+                ViewBag.Msg = "订单删除成功";
+                return View("Success");
+            }
         }
 
 

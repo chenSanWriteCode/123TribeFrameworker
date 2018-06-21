@@ -41,8 +41,9 @@ namespace _123TribeFrameworker.Services.Layer
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public async Task<Result<int>> receiveOrder(List<InStorageRecord> list, string userName)
+        public async Task<Result<int>> receiveOrder(List<InStorageRecord> list,string receivedOrder, string userName)
         {
+            list.ForEach(x => { x.receivedOrder = receivedOrder; x.createdBy = userName; });
             OrderStatusEnum status = OrderStatusEnum.completed;
             if (list.Where(x => x.countReference != x.countReal).Count() > 0)
             {
@@ -50,9 +51,18 @@ namespace _123TribeFrameworker.Services.Layer
             }
             return await dao.receiveOrder(list, userName, status);
         }
-        public Task<Result<int>> deleteByOrderNo(string orderNo)
+        /// <summary>
+        /// 处理收货异常
+        /// </summary>
+        /// <param name="list">补发的产品</param>
+        /// <param name="receivedOrder">回执单号</param>
+        /// <param name="userName">操作人</param>
+        /// <returns></returns>
+        public Task<Result<int>> dealReceivedOrder(List<InStorageRecord> list, string userName)
         {
-            throw new NotImplementedException();
+            list = list.Where(x => x.countReal != 0).ToList();
+            list.ForEach(x => x.createdBy = userName);
+            return dao.supplementReceiveOrder(list, userName);
         }
     }
 }
