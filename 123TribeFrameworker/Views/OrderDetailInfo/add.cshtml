@@ -1,5 +1,6 @@
 ﻿@using _123TribeFrameworker.Entity
-@model Pager<List<Inventory>>
+@using _123TribeFrameworker.Models.BussinessModels
+@model Pager<List<InventorySimpleModel>>
     @{ 
         ViewBag.title = "创建订单";
     }
@@ -150,8 +151,8 @@
                 for (int i = 0; i < Model.data.Count; i++)
                 {
                     <tr>
-                        <td>@Model.data[i].materialInfo.materialName</td>
-                        <td>@Model.data[i].materialInfo.mat_size</td>
+                        <td>@Model.data[i].materialName</td>
+                        <td>@Model.data[i].mat_size</td>
                         <td>@Model.data[i].count</td>
                         <td>
                             <button type="button" class="btn btn-primary" onclick="setForm(@Model.data[i].materialId)">添加</button>

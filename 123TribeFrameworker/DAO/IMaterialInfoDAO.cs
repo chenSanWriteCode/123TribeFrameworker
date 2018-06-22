@@ -16,5 +16,7 @@ namespace _123TribeFrameworker.DAO
         List<MaterialInfo> searchByCondition(Pager<List<MaterialInfo>> pager, MaterialInfoQuery t);
 
         int searchCountByCondition(MaterialInfoQuery t);
+
+        Task<List<MaterialInfo>> searchByIds(int[] ids);
     }
 }

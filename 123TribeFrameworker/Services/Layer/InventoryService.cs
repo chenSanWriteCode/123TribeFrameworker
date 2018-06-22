@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web;
 using _123TribeFrameworker.DAO;
 using _123TribeFrameworker.Entity;
+using _123TribeFrameworker.Models.BussinessModels;
 using _123TribeFrameworker.Models.QueryModel;
 using Unity.Attributes;
 
@@ -14,6 +15,8 @@ namespace _123TribeFrameworker.Services.Layer
     {
         [Dependency]
         public IInventoryDAO dao { get; set; }
+        [Dependency]
+        public IMaterialInfoDAO materialDao { get; set; }
         public Pager<List<Inventory>> searchByCondition(Pager<List<Inventory>> pager, InventoryQuery condition)
         {
             pager.data = dao.searchByCondition(pager, condition);
@@ -25,10 +28,24 @@ namespace _123TribeFrameworker.Services.Layer
         /// </summary>
         /// <param name="pager"></param>
         /// <returns></returns>
-        public Pager<List<Inventory>> searchByNumOrder(Pager<List<Inventory>> pager)
+        public async Task<Pager<List<InventorySimpleModel>>> searchByNumOrder(Pager<List<InventorySimpleModel>> pager)
         {
             InventoryQuery condition = new InventoryQuery();
-            pager.data = dao.searchByCountOrder(pager);
+            Pager<List<Inventory>> pagerCopy = new Pager<List<Inventory>>();
+            pagerCopy.page = pager.page;
+            pagerCopy.recPerPage = pager.recPerPage;
+            var fackData = dao.searchByCountOrder(pagerCopy);
+            var materialData = await materialDao.searchByIds(fackData.Select(x => x.materialId).ToArray());
+            var returnData = from x in fackData
+                             join y in materialData on x.materialId equals y.id
+                             select new InventorySimpleModel
+                             {
+                                 materialId=x.materialId,
+                                 count=x.count,
+                                 materialName=y.materialName,
+                                 mat_size=y.mat_size
+                             };
+            pager.data = returnData.ToList();
             pager.recTotal = dao.searchCountByCondition(condition);
             return pager;
         }

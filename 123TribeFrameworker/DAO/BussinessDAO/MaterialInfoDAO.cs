@@ -154,6 +154,12 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             return result.Count();
         }
 
+        public async Task<List<MaterialInfo>> searchByIds(int[] ids)
+        {
+            LayerDbContext context = new LayerDbContext();
+            var materials = context.materialInfos.Where(x => true);
+            return await Task.Factory.StartNew(() => (from x in materials where (ids.Contains(x.id)) select x).ToList());
+        }
 
         /// <summary>
         /// 根据物料查询记录

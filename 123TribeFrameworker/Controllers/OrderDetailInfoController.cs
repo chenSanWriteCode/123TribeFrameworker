@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using _123TribeFrameworker.Entity;
+using _123TribeFrameworker.Models.BussinessModels;
 using _123TribeFrameworker.Models.QueryModel;
 using _123TribeFrameworker.Services;
 using _123TribeFrameworker.Services.Layer;
@@ -199,10 +200,10 @@ namespace _123TribeFrameworker.Controllers
 
         #region 创建订单
 
-        public ActionResult add(Pager<List<Inventory>> pager)
+        public async Task<ActionResult> add(Pager<List<InventorySimpleModel>> pager)
         {
-            pager = new Pager<List<Inventory>>(50);
-            pager = invnetoryService.searchByNumOrder(pager);
+            pager = new Pager<List<InventorySimpleModel>>(50);
+            pager = await invnetoryService.searchByNumOrder(pager);
             return View(pager);
         }
         [HttpPost]

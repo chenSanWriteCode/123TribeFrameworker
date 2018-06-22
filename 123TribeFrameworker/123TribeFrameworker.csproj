@@ -305,6 +305,7 @@
     <Compile Include="Migrations\ApplicationsMigrations\Configuration.cs" />
     <Compile Include="Migrations\LayerMigrations\Configuration.cs" />
     <Compile Include="Migrations\RoleMenuMigrations\Configuration.cs" />
+    <Compile Include="Models\BussinessModels\InventorySimpleModel.cs" />
     <Compile Include="Models\DirModels\FirstLevelDirModel_update.cs" />
     <Compile Include="Models\DirModels\RoleMenuEdit.cs" />
     <Compile Include="Models\DirModels\SecondLevelDirModel.cs" />
