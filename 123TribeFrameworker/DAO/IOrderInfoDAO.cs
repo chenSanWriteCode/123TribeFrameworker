@@ -15,7 +15,6 @@ namespace _123TribeFrameworker.DAO
         List<OrderInfo> searchByCondition(Pager<List<OrderInfo>> pager, OrderInfoQuery t);
 
         int searchCountByCondition(OrderInfoQuery t);
-        Task<Result<int>> changeOrderStatus(string orderNo, string userName, OrderStatusEnum status);
 
         Task<Result<int>> deleteByOrderNo(string orderNo);
         /// <summary>

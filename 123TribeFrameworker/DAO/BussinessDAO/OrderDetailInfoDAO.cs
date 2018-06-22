@@ -11,7 +11,7 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
 {
     public class OrderDetailInfoDAO : IOrderDetailInfoDAO
     {
-        
+
         /// <summary>
         /// 查询所有
         /// </summary>
@@ -80,6 +80,25 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             return result.Count();
         }
         /// <summary>
+        /// 根据id查询订单一条详情
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<OrderDetailInfo> searchById(int id)
+        {
+            OrderDetailInfo result = new OrderDetailInfo();
+            LayerDbContext context = new LayerDbContext();
+            try
+            {
+                result = await Task.Factory.StartNew(() => context.orderDetailInfo.Where(x => x.id == id).Single());
+            }
+            catch (Exception)
+            {
+                result = null;
+            }
+            return result;
+        }
+        /// <summary>
         /// 收货订单
         /// </summary>
         /// <param name="list"></param>
@@ -93,9 +112,9 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
         {
             Result<int> result = new Result<int>();
             string orderNo = list.First().orderNo;
-            using (LayerDbContext context = new LayerDbContext())
+            try
             {
-                try
+                using (LayerDbContext context = new LayerDbContext())
                 {
                     var model = context.orderInfo.Where(x => x.orderNo == orderNo).Single();
                     if (model.status == status.ToString())
@@ -125,15 +144,16 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
                             inventoryList.Add(model1);
                         }
                         context.inventory.AddRange(inventoryList);
-                        
+
                         await context.SaveChangesAsync();
                     }
                 }
-                catch (Exception err)
-                {
-                    result.addError(err.Message);
-                }
             }
+            catch (Exception err)
+            {
+                result.addError(err.Message);
+            }
+
             return result;
         }
         /// <summary>
@@ -146,9 +166,9 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
         {
             Result<int> result = new Result<int>();
             string orderNo = supplementList.First().orderNo;
-            using (LayerDbContext context = new LayerDbContext())
+            try
             {
-                try
+                using (LayerDbContext context = new LayerDbContext())
                 {
                     //1.插入入库记录  2.查询本订单下 根据物料group by  应收与实收是否相等，修改订单状态与订单实际总成本   3. 增加库存
                     var orderModel = context.orderInfo.Where(x => x.orderNo == orderNo).Single();
@@ -202,30 +222,119 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
 
                     await context.SaveChangesAsync();
                 }
-                catch (Exception err)
-                {
-                    result.addError(err.Message);
-                }
+            }
+            catch (Exception err)
+            {
+                result.addError(err.Message);
             }
             return result;
         }
-        public Task<OrderDetailInfo> searchById(int id)
+       
+        /// <summary>
+        /// 增加一条
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public async Task<Result<int>> add(OrderDetailInfo t)
         {
-            throw new NotImplementedException();
+            Result<int> result = new Result<int>();
+            try
+            {
+                using (LayerDbContext context = new LayerDbContext())
+                {
+                    var containFlag = context.orderDetailInfo.Where(x => x.orderNo == t.orderNo).Select(x => x.materialId).Contains(t.materialId);
+                    if (containFlag)
+                    {
+                        result.addError("订单中已包含本产品");
+                    }
+                    else
+                    {
+                        context.orderDetailInfo.Add(t);
+                        var materialModel = await Task.Factory.StartNew(() => context.materialInfos.Where(x => x.id == t.materialId).Single());
+                        var orderInfoModel = await context.orderInfo.FindAsync(t.orderNo);
+                        orderInfoModel.sumPrice += t.num * materialModel.referencePriceIn;
+                        orderInfoModel.lastUpdatedBy = t.createdBy;
+                        orderInfoModel.lastUpdatedDate = t.createdDate;
+
+                        await context.SaveChangesAsync();
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                result.addError(err.Message);
+            }
+            return result;
         }
-        public Task<Result<int>> add(OrderDetailInfo t)
+        /// <summary>
+        /// 修改某条订单明细
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public async Task<Result<int>> update(OrderDetailInfo t)
         {
-            throw new NotImplementedException();
+            Result<int> result = new Result<int>();
+            try
+            {
+                using (LayerDbContext context = new LayerDbContext())
+                {
+                    var model = await Task.Factory.StartNew(() => context.orderDetailInfo.Where(x => x.id == t.id).Single());
+                    float supplementCount = t.num - model.num;
+                    model.factory = t.factory;
+                    model.lastUpdatedDate = t.lastUpdatedDate;
+                    model.lastUpdatedBy = t.lastUpdatedBy;
+                    model.num = t.num;
+
+                    var orderInfoModel = await context.orderInfo.FindAsync(model.orderNo);
+                    orderInfoModel.lastUpdatedBy = model.lastUpdatedBy;
+                    orderInfoModel.lastUpdatedDate = model.lastUpdatedDate;
+                    orderInfoModel.sumPrice += model.materialInfo.referencePriceIn * supplementCount;
+
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception err)
+            {
+                result.addError(err.Message);
+            }
+            return result;
+        }
+        /// <summary>
+        /// 根据id删除订单一条详情
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<Result<int>> deleteOrderDetailById(int id, string userName)
+        {
+            Result<int> result = new Result<int>();
+            try
+            {
+                using (LayerDbContext context = new LayerDbContext())
+                {
+                    var model = await Task.Factory.StartNew(() => context.orderDetailInfo.Where(x => x.id == id).Single());
+                    var orderNo = model.orderNo;
+                    
+                    //减少总成本
+                    var orderInfoModel = await context.orderInfo.FindAsync(orderNo);
+                    orderInfoModel.sumPrice += model.num * model.materialInfo.referencePriceIn;
+                    orderInfoModel.lastUpdatedBy = userName;
+                    orderInfoModel.lastUpdatedDate = DateTime.Now;
+                    //删除记录
+                    context.orderDetailInfo.Remove(model);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception err)
+            {
+                result.addError(err.Message);
+            }
+
+            return result;
+
         }
         public Task<Result<int>> deleteById(int id)
         {
             throw new NotImplementedException();
         }
-        public Task<Result<int>> update(OrderDetailInfo t)
-        {
-            throw new NotImplementedException();
-        }
-
-        
     }
 }

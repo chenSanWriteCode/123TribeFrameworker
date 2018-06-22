@@ -28,7 +28,6 @@ namespace _123TribeFrameworker.DAO
         /// <param name="userName">操作人</param>
         /// <returns></returns>
         Task<Result<int>> supplementReceiveOrder(List<InStorageRecord> supplementList, string userName);
-
-
+        Task<Result<int>> deleteOrderDetailById(int id, string userName);
     }
 }

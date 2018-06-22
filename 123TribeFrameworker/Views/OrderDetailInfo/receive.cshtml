@@ -61,10 +61,10 @@
                 <hr>
             }
             <div class="col-md-6">
-                @Html.ActionLink("返回", "Index", "OrderInfo", null, new { @class = "btn btn-primary btn-block" })
+                <button type="button" class="btn btn-primary btn-block" onclick="receiveOrder()">收货</button>
             </div>
             <div class="col-md-6">
-                <button type="button" class="btn btn-primary btn-block" onclick="receiveOrder()">收货</button>
+               @Html.ActionLink("返回", "Index", "OrderInfo", null, new { @class = "btn btn-default btn-block" })
             </div>
         </form>
     </div>

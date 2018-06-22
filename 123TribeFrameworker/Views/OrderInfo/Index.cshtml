@@ -120,12 +120,20 @@
         </div>
         <div class="col-md-3">
             <div class="input-control has-label-left-lg">
-                <select id="status" name="status" value="@ViewBag.condition.status" class="chosen-select form-control">
+                <select id="status" name="status" class="chosen-select form-control">
                     <option value=""></option>
                     @foreach (var item in Html.orderStatus())
                     {
-                        <option value="@item.Key">@item.Value</option>
+                        if (ViewBag.condition.status == item.Key)
+                        {
+                            <option value="@item.Key" selected="selected">@item.Value</option>
+                        }
+                        else
+                        {
+                            <option value="@item.Key">@item.Value</option>
+                        }
                     }
+                    
                 </select>
                 <label for="status" class="input-control-label-left"> 单据状态:</label>
             </div>
@@ -161,7 +169,7 @@
     <button class="btn btn-primary" type="button" onclick="receiveOrder()">收货</button>
     <button class="btn btn-danger" type="button" onclick="deleteByOrderNo()">删除</button>
     <button class="btn btn-danger" type="button" onclick="updateOrder()">修改</button>
-    <button class="btn btn-danger" type="button" onclick="updateExceptedOrderNo()">处理异常</button>
+    <button class="btn btn-primary" type="button" onclick="updateExceptedOrderNo()">处理异常</button>
     @Html.ActionLink("创建进货单", "add", "OrderDetailInfo", null, new { @class = "btn btn-primary" })
 </form>
 <table id="myDataTable" class="table">
@@ -171,7 +179,11 @@
             <th>单据状态</th>
             <th>进货总价</th>
             <th>创建时间</th>
+            <th>创建人</th>
             <th>收货时间</th>
+            <th>收货人</th>
+            <th>最后修改时间</th>
+            <th>最后修改人</th>
     </thead>
     <tbody>
         @if (Model.data.Count > 0)
@@ -183,7 +195,11 @@
                     <td>@Model.data[i].orderStatus.status</td>
                     <td>@Model.data[i].sumPrice</td>
                     <td>@Model.data[i].createdDate</td>
+                    <td>@Model.data[i].createdBy</td>
                     <td>@Model.data[i].receivedDate</td>
+                    <td>@Model.data[i].receivedBy</td>
+                    <td>@Model.data[i].lastUpdatedDate</td>
+                    <td>@Model.data[i].lastUpdatedBy</td>
                 </tr>
             }
         }

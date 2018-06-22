@@ -1,0 +1,71 @@
+﻿@using _123TribeFrameworker.Entity
+@model OrderDetailInfo
+
+@{
+    ViewBag.title = "订单明细修改";
+}
+<div style="color:red">
+    @Html.ValidationSummary(false)
+</div>
+<div class="panel panel-primary">
+    <div class="panel-heading" style="text-align:center">
+        订单明细修改
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal" action="/OrderDetailInfo/updateDetail" method="post">
+            @Html.HiddenFor(x => x.id)
+            @Html.HiddenFor(x => x.orderNo)
+            @*@Html.HiddenFor(x => x.materialId)*@
+            @*@Html.HiddenFor(x=>x.createdBy)
+            @Html.HiddenFor(x=>x.createdDate)*@
+            <div class="form-group">
+                <label for="materialName" class="col-md-2">商品名称</label>
+                <div class="col-md-4">
+                    @Html.TextBoxFor(x => x.materialName, new { @class = "form-control", @readonly = "readonly" })
+                </div>
+                @*<div class="col-md-1">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">选择</button>
+                    </div>*@
+                <label for="mat_size" class="col-md-2">规格</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" readonly="readonly" value="@Model.materialInfo.mat_size" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="num" class="col-md-2">数量</label>
+                <div class="col-md-4">
+                    @Html.TextBoxFor(x => x.num, new { @class = "form-control", type = "number" })
+                </div>
+                <label for="unit" class="col-md-2">单位</label>
+                <div class="col-md-4">
+                    <input type="text" readonly="readonly" class="form-control" value="@Model.materialInfo.unit" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="alias" class="col-md-2">别名</label>
+                <div class="col-md-4">
+                    <input type="text" readonly="readonly" class="form-control" value="@Model.materialInfo.alias" />
+                </div>
+                <label for="referencePriceIn" class="col-md-2">成本</label>
+                <div class="col-md-4">
+                    <input type="text" readonly="readonly" class="form-control" value="@Model.materialInfo.referencePriceIn" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="remark" class="col-md-2">备注</label>
+                <div class="col-md-10">
+                    <input type="text" readonly="readonly" class="form-control" value="@Model.materialInfo.remark" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2"></label>
+                <div class="col-md-5">
+                    <button type="submit" class="btn btn-primary btn-block">保存</button>
+                </div>
+                <div class="col-md-5">
+                    @Html.ActionLink("返回", "update", new { orderNo = Model.orderNo }, new { @class = "btn btn-default btn-block" })
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

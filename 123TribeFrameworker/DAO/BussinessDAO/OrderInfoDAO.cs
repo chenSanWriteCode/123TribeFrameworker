@@ -10,42 +10,6 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
 {
     public class OrderInfoDAO : IOrderInfoDAO
     {
-        
-        /// <summary>
-        /// 修改订单状态
-        /// </summary>
-        /// <param name="orderNo"></param>
-        /// <param name="status"></param>
-        /// <returns></returns>
-        public async Task<Result<int>> changeOrderStatus(string orderNo,string userName, OrderStatusEnum status)
-        {
-            LayerDbContext context = new LayerDbContext();
-            Result<int> result = new Result<int>();
-            try
-            {
-                var model = context.orderInfo.Where(x => x.orderNo == orderNo).Single();
-                if (model.status==status.ToString())
-                {
-                    result.addError("进货单已被"+model.receivedBy+"收货");
-                }
-                else
-                {
-                    model.status = status.ToString();
-                    model.receivedDate = DateTime.Now;
-                    model.receivedBy = userName;
-                    var count = await context.SaveChangesAsync();
-                    if (count == 0)
-                    {
-                        result.addError("修改进货单状态失败，请稍后操作");
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                result.addError("未找到进货单号");
-            }
-            return result;
-        }
 
         public List<OrderInfo> searchByCondition(Pager<List<OrderInfo>> pager, OrderInfoQuery t)
         {
@@ -62,7 +26,7 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             result = result.Skip(start).Take(pager.recPerPage);
             return result.ToList();
         }
-        
+
         public async Task<OrderInfo> searchByOrder(string orderNo)
         {
             LayerDbContext context = new LayerDbContext();
@@ -97,13 +61,13 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
         public async Task<Result<int>> deleteByOrderNo(string orderNo)
         {
             Result<int> result = new Result<int>();
-            using (LayerDbContext context = new LayerDbContext())
+            try
             {
-                try
+                using (LayerDbContext context = new LayerDbContext())
                 {
                     //根据订单与订单状态查询是否存在订单
                     var modelList = context.orderInfo.Where(x => x.orderNo == orderNo).ToList();
-                    if (modelList.Count==0)
+                    if (modelList.Count == 0)
                     {
                         result.addError("订单已被删除");
                     }
@@ -124,10 +88,10 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
                     }
                     var count = await context.SaveChangesAsync();
                 }
-                catch (Exception err)
-                {
-                    result.addError(err.Message);
-                }
+            }
+            catch (Exception err)
+            {
+                result.addError(err.Message);
             }
             return result;
         }
@@ -140,18 +104,18 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
         public async Task<Result<List<OrderDetailInfo>>> addOrder(OrderInfo order, List<OrderDetailInfo> orderList)
         {
             Result<List<OrderDetailInfo>> result = new Result<List<OrderDetailInfo>>();
-            using (LayerDbContext context = new LayerDbContext())
+            try
             {
-                try
+                using (LayerDbContext context = new LayerDbContext())
                 {
                     context.orderInfo.Add(order);
                     context.orderDetailInfo.AddRange(orderList);
                     await context.SaveChangesAsync();
                 }
-                catch (Exception err)
-                {
-                    result.addError(err.Message);
-                }
+            }
+            catch (Exception err)
+            {
+                result.addError(err.Message);
             }
             result.data = orderList;
             return result;
@@ -171,6 +135,6 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
         {
             throw new NotImplementedException();
         }
-        
+
     }
 }

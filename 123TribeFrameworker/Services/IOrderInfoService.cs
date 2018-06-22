@@ -13,8 +13,6 @@ namespace _123TribeFrameworker.Services
         Task<OrderInfo> searchByOrder(string orderNo);
         Pager<List<OrderInfo>> searchByCondition(Pager<List<OrderInfo>> pager, OrderInfoQuery condition);
 
-        Task<Result<int>> changeOrderStatus(string orderNo,string userName, OrderStatusEnum status);
-
         Task<Result<int>> deleteByOrderNo(string orderNo);
         /// <summary>
         /// 创建订单

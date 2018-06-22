@@ -16,10 +16,7 @@ namespace _123TribeFrameworker.Services.Layer
         public IOrderInfoDAO dao { get; set; }
         [Dependency]
         public IOrderDetailInfoService detailService { get; set; }
-        public async Task<Result<int>> changeOrderStatus(string orderNo, string userName, OrderStatusEnum status)
-        {
-            return await dao.changeOrderStatus(orderNo, userName, status);
-        }
+        
         public Pager<List<OrderInfo>> searchByCondition(Pager<List<OrderInfo>> pager, OrderInfoQuery condition)
         {
             Task<List<OrderInfo>> task = Task.Factory.StartNew(() => dao.searchByCondition(pager, condition));

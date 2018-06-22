@@ -72,19 +72,78 @@ namespace _123TribeFrameworker.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPost]
-        public Task<ActionResult> deleteDetail(int id)
+        public async Task<ActionResult> deleteDetail(int id)
         {
-            var result = detailService.deleteById(id);
-
-            return RedirectToAction("update");
+            var result = await detailService.deleteById(id,User.Identity.Name);
+            ViewBag.returnUrl = "/OrderDetailInfo/update?orderNo=" + result.data.orderNo;
+            if (result.result)
+            {
+                ViewBag.Msg = "删除成功";
+                return View("Success");
+            }
+            return View("Error", new string[] { result.message });
         }
-        public ActionResult updateDetail(int id)
+        /// <summary>
+        ///修改详细
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="orderNo"></param>
+        /// <returns></returns>
+        public async Task<ActionResult> updateDetail(int id,string orderNo)
         {
+            var model = await detailService.searchById(id);
+            if (model==null)
+            {
+                ViewBag.returnUrl = "/OrderDetailInfo/update?orderNo="+ orderNo;
+                return View("Error", new string[] { "订单已被删除" });
+            }
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<ActionResult> updateDetail(OrderDetailInfo model)
+        {
+            model.lastUpdatedBy = User.Identity.Name;
+            model.lastUpdatedDate = DateTime.Now;
+            var result = await detailService.updateDetail(model);
+            if (!result.result)
+            {
+                ViewBag.returnUrl = "/OrderDetailInfo/updateDetail?id=" + model.id+"&orderNo="+model.orderNo;
+                return View("Error",new string[] { "操作失败："+result.message});
+            }
+            ViewBag.returnUrl = "/OrderDetailInfo/update?orderNo=" + model.orderNo;
+            ViewBag.Msg = "修改成功";
+            return View("Success");
+        }
+        /// <summary>
+        /// 增加详细
+        /// </summary>
+        /// <param name="orderNo"></param>
+        /// <returns></returns>
+        public ActionResult addDetail([Required]string orderNo)
+        {
+            ViewBag.orderNo = orderNo;
             return View();
         }
-        public ActionResult addDetail(string orderNo)
+        [HttpPost]
+        public async Task<ActionResult> addDetail(OrderDetailInfo model)
         {
-            return View()
+            model.createdBy = User.Identity.Name;
+            if (model.num <= 0)
+            {
+                ModelState.AddModelError("", "数量必须为正数");
+                ViewBag.orderNo = model.orderNo;
+                return View();
+            }
+            var result = await detailService.addDetail(model);
+            if (!result.result)
+            {
+                ModelState.AddModelError("",result.message);
+                ViewBag.orderNo = model.orderNo;
+                return View();
+            }
+            ViewBag.returnUrl = "/OrderDetailInfo/update?orderNo="+model.orderNo;
+            ViewBag.Msg = "增加成功";
+            return View("Success");
         }
         #endregion
 
@@ -116,7 +175,7 @@ namespace _123TribeFrameworker.Controllers
         {
             var orderNo = list.First().orderNo;
             ViewBag.returnUrl = "/OrderDetailInfo/receive?orderNo="+orderNo;
-            var countCheck = list.Where(x => x.countReal < 0 ).Count();
+            var countCheck = list.Where(x => x.countReal <= 0 ).Count();
             if (countCheck > 0)
             {
                 return View("Error",new string[] { "实收数量必须为正数" });
@@ -130,7 +189,7 @@ namespace _123TribeFrameworker.Controllers
             Result<int> result = await detailService.receiveOrder(list, receivedOrder, User.Identity.Name);
             if (result.result)
             {
-                ViewBag.returnUrl = "/OrderInfo/Index";
+                ViewBag.returnUrl = "/OrderInfo/search?orderNo="+orderNo;
                 ViewBag.Msg = "订单收货成功！";
                 return View("Success");
             }

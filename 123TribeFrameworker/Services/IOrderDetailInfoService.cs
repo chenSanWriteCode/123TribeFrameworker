@@ -27,5 +27,9 @@ namespace _123TribeFrameworker.Services
         /// <param name="userName">操作人</param>
         /// <returns></returns>
         Task<Result<int>> dealReceivedOrder(List<InStorageRecord> list, string userName);
+        Task<Result<OrderDetailInfo>> deleteById(int id,string userName);
+        Task<OrderDetailInfo> searchById(int id);
+        Task<Result<int>> updateDetail(OrderDetailInfo model);
+        Task<Result<int>> addDetail(OrderDetailInfo model);
     }
 }

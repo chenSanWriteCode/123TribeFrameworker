@@ -18,17 +18,17 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
         public async Task<Result<int>> add(Inventory t)
         {
             Result<int> result = new Result<int>();
-            using (LayerDbContext context = new LayerDbContext())
+            try
             {
-                try
+                using (LayerDbContext context = new LayerDbContext())
                 {
                     context.inventory.Add(t);
                     await context.SaveChangesAsync();
                 }
-                catch (Exception err)
-                {
-                    result.addError(err.Message);
-                }
+            }
+            catch (Exception err)
+            {
+                result.addError(err.Message);
             }
             return result;
         }

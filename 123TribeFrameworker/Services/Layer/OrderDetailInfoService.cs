@@ -64,5 +64,44 @@ namespace _123TribeFrameworker.Services.Layer
             list.ForEach(x => x.createdBy = userName);
             return dao.supplementReceiveOrder(list, userName);
         }
+        /// <summary>
+        /// 根据id删除订单某一条
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<Result<OrderDetailInfo>> deleteById(int id, string userName)
+        {
+            Result<OrderDetailInfo> result = new Result<OrderDetailInfo>();
+            OrderDetailInfo model = await dao.searchById(id);
+            if (model==null)
+            {
+                result.data = new OrderDetailInfo();
+            }
+            else
+            {
+                result.data = model;
+            }
+            var result_dao = await dao.deleteOrderDetailById(id,userName);
+            if (!result_dao.result)
+            {
+                result.addError(result_dao.message);
+            }
+            return result;
+        }
+
+        public async Task<OrderDetailInfo> searchById(int id)
+        {
+            return await dao.searchById(id);
+        }
+
+        public async Task<Result<int>> updateDetail(OrderDetailInfo model)
+        {
+            return await dao.update(model);
+        }
+
+        public async Task<Result<int>> addDetail(OrderDetailInfo model)
+        {
+            return await dao.add(model);
+        }
     }
 }
