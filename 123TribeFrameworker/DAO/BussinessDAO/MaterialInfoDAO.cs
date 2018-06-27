@@ -9,7 +9,7 @@ using _123TribeFrameworker.Models.QueryModel;
 
 namespace _123TribeFrameworker.DAO.BussinessDAO
 {
-    public class MaterialInfoDAO : IMaterialInfoDAO
+    public class MaterialInfoDAO : IMaterialInfoDAO 
     {
         /// <summary>
         /// 增加
@@ -81,6 +81,7 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
                         model.referencePriceOut = t.referencePriceOut;
                         model.remark = t.remark;
                         model.weight = t.weight;
+                        model.alarmCount = t.alarmCount;
                     }
                     await context.SaveChangesAsync();
                 }

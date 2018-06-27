@@ -4,15 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using _123TribeFrameworker.Entity;
+using _123TribeFrameworker.Models.BussinessModels;
 using _123TribeFrameworker.Models.QueryModel;
 
 namespace _123TribeFrameworker.DAO
 {
     public interface IInventoryDAO:ICommonDAO<Inventory>
     {
-        List<Inventory> searchByCountOrder(Pager<List<Inventory>> pager);
+        Task<List<InventorySimpleModel>> searchByCountOrder(Pager<List<InventorySimpleModel>> pager);
 
-        List<Inventory> searchByCondition(Pager<List<Inventory>> pager, InventoryQuery t);
+        Task<List<InventorySimpleModel>> searchByCondition(Pager<List<InventorySimpleModel>> pager, InventoryQuery t);
 
         int searchCountByCondition(InventoryQuery t);
     }

@@ -13,18 +13,22 @@
     {
         @Html.HiddenFor(x => x.id)
         <div class="panel-body">
-            <label for="material">别名：</label>
-            @Html.TextBoxFor(x => x.alias, new { @class = "form-control" });
-            <label for="material">单位：</label>
-            @Html.TextBoxFor(x => x.unit, new { @class = "form-control" });
-            <label for="material">规格：</label>
-            @Html.TextBoxFor(x => x.mat_size, new { @class = "form-control" });
-            <label for="material" class="required">采购价：</label>
-            @Html.TextBoxFor(x => x.referencePriceIn, new { @class = "form-control" });
-            <label for="material">建议零售价：</label>
-            @Html.TextBoxFor(x => x.referencePriceOut, new { @class = "form-control" });
-            <label for="material">备注：</label>
-            @Html.TextBoxFor(x => x.remark, new { @class = "form-control" });
+            <label for="materialName">产品名称：</label>
+            @Html.TextBoxFor(x => x.materialName, new { @class = "form-control" })
+            <label for="alias">别名：</label>
+            @Html.TextBoxFor(x => x.alias, new { @class = "form-control" })
+            <label for="unit">单位：</label>
+            @Html.TextBoxFor(x => x.unit, new { @class = "form-control" })
+            <label for="mat_size">规格：</label>
+            @Html.TextBoxFor(x => x.mat_size, new { @class = "form-control" })
+            <label for="referencePriceIn" class="required">采购价：</label>
+            @Html.TextBoxFor(x => x.referencePriceIn, new { @class = "form-control" })
+            <label for="referencePriceOut">建议零售价：</label>
+            @Html.TextBoxFor(x => x.referencePriceOut, new { @class = "form-control" })
+            <label for="referencePriceOut">库存警报值：</label>
+            @Html.TextBoxFor(x => x.alarmCount, new { @class = "form-control" })
+            <label for="remark">备注：</label>
+            @Html.TextBoxFor(x => x.remark, new { @class = "form-control" })
             <div>
                 <button type="submit" class="btn btn-primary">保存</button>
                 @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-primary" })

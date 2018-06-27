@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using _123TribeFrameworker.Entity;
+using _123TribeFrameworker.Models.BussinessModels;
 using _123TribeFrameworker.Models.QueryModel;
 using _123TribeFrameworker.Services;
 using Unity.Attributes;
@@ -15,24 +17,17 @@ namespace _123TribeFrameworker.Controllers
         [Dependency]
         public IInventoryService service { get; set; }
         // GET: Inventory
-        public ActionResult Index(Pager<List<Inventory>> pager,MaterialInfoQuery condition)
+        public ActionResult Index(Pager<List<InventorySimpleModel>> pager, InventoryQuery condition)
         {
             ViewBag.condition = condition;
-            var data = Json(pager.data);
-            Pager<JsonResult> pager1 = new Pager<JsonResult>();
-            pager1.page = pager.page;
-            pager1.recPerPage = pager.recPerPage;
-            pager1.recTotal = pager.recTotal;
-            pager1.data = data;
-            return View(pager1);
+            return View(pager);
         }
-        public JsonResult search(Pager<List<Inventory>> pager, MaterialInfo condition)
+        [HttpPost]
+        public async Task<ActionResult> search(Pager<List<InventorySimpleModel>> pager, InventoryQuery condition)
         {
-            InventoryQuery model = new InventoryQuery();
-            pager = service.searchByCondition(pager, model);
+            pager = await service.searchByCondition(pager, condition);
             ViewBag.condition = condition;
-            var data = Json(pager.data);
-            return data;
+            return View("Index", pager);
         }
     }
 }

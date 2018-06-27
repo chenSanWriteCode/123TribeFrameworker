@@ -10,7 +10,12 @@ namespace _123TribeFrameworker.Models.BussinessModels
         public int materialId { get; set; }
 
         public string materialName { get; set; }
+        public string alais { get; set; }
         public string mat_size { get; set; }
-        public float count { get; set; }
+        public float? count { get; set; }
+
+        public string unit { get; set; }
+
+        public float  alarmCount { get; set; }
     }
 }

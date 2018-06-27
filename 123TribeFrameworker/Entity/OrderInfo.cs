@@ -326,6 +326,10 @@ namespace _123TribeFrameworker.Entity
         /// </summary>
         public float referencePriceOut { get; set; }
         /// <summary>
+        /// 警报值 出发警报最低数量
+        /// </summary>
+        public float alarmCount { get; set; } = 10;
+        /// <summary>
         /// 备注
         /// </summary>
         [MaxLength(200)]

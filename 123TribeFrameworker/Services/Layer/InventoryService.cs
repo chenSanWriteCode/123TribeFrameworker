@@ -17,9 +17,9 @@ namespace _123TribeFrameworker.Services.Layer
         public IInventoryDAO dao { get; set; }
         [Dependency]
         public IMaterialInfoDAO materialDao { get; set; }
-        public Pager<List<Inventory>> searchByCondition(Pager<List<Inventory>> pager, InventoryQuery condition)
+        public async Task<Pager<List<InventorySimpleModel>>> searchByCondition(Pager<List<InventorySimpleModel>> pager, InventoryQuery condition)
         {
-            pager.data = dao.searchByCondition(pager, condition);
+            pager.data = await dao.searchByCondition(pager, condition);
             pager.recTotal = dao.searchCountByCondition(condition);
             return pager;
         }
@@ -31,21 +31,7 @@ namespace _123TribeFrameworker.Services.Layer
         public async Task<Pager<List<InventorySimpleModel>>> searchByNumOrder(Pager<List<InventorySimpleModel>> pager)
         {
             InventoryQuery condition = new InventoryQuery();
-            Pager<List<Inventory>> pagerCopy = new Pager<List<Inventory>>();
-            pagerCopy.page = pager.page;
-            pagerCopy.recPerPage = pager.recPerPage;
-            var fackData = dao.searchByCountOrder(pagerCopy);
-            var materialData = await materialDao.searchByIds(fackData.Select(x => x.materialId).ToArray());
-            var returnData = from x in fackData
-                             join y in materialData on x.materialId equals y.id
-                             select new InventorySimpleModel
-                             {
-                                 materialId=x.materialId,
-                                 count=x.count,
-                                 materialName=y.materialName,
-                                 mat_size=y.mat_size
-                             };
-            pager.data = returnData.ToList();
+            pager.data = await dao.searchByCondition(pager, condition);
             pager.recTotal = dao.searchCountByCondition(condition);
             return pager;
         }
