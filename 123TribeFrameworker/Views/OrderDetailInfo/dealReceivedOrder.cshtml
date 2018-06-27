@@ -1,5 +1,6 @@
 ﻿@using _123TribeFrameworker.Entity
-@model List<InStorageRecord>
+@using _123TribeFrameworker.Models.BussinessModels
+@model List<InStorageRecordModel>
 @{
     ViewBag.title = "异常订单处理";
 }
@@ -35,11 +36,11 @@
                 <div class="form-group">
                     <label class="col-md-1">产品名称:</label>
                     <div class="col-md-2">
-                        <input class="form-control" readonly="readonly" type="text" value="@Model[i].materialInfo.materialName" />
+                        <input class="form-control" readonly="readonly" type="text" value="@Model[i].materialName" />
                     </div>
                     <label for="countReference" class="col-md-1">应收数量:</label>
                     <div class="col-md-1">
-                        @Html.TextBoxFor(x => x[i].countReference, new { @class = "form-control", @readonly = "readonly" })
+                        <input class="form-control" readonly="readonly" type="text" value="@Model[i].countReference" />
                     </div>
                     <label for="count" class="col-md-1">实收数量:</label>
                     <div class="col-md-1">

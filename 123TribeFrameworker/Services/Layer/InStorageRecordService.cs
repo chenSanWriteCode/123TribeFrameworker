@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web;
 using _123TribeFrameworker.DAO;
 using _123TribeFrameworker.Entity;
+using _123TribeFrameworker.Models.BussinessModels;
 using _123TribeFrameworker.Models.QueryModel;
 using _123TribeFrameworker.Services;
 using Unity.Attributes;
@@ -16,15 +17,28 @@ namespace _123TribeFrameworker.Services.Layer
         [Dependency]
         public IInStorageRecordDAO dao { get; set; }
 
-        public List<InStorageRecord> searchAllByCondition(InStorageRecordQuery condition)
+        public List<InStorageRecordModel> searchAllByCondition(InStorageRecordQuery condition)
         {
-            List<InStorageRecord> result = new List<InStorageRecord>();
+            List<InStorageRecordModel> result = new List<InStorageRecordModel>();
             if (condition!=null)
             {
-                Task<List<InStorageRecord>> task = Task.Factory.StartNew(() => dao.searchAllByCondition(condition));
+                Task<List<InStorageRecordModel>> task = Task.Factory.StartNew(() => dao.searchAllByCondition(condition));
                 result = task.Result;
             }
             return result;
+        }
+        public async Task<Pager<List<InStorageRecord>>> searchByCondition(Pager<List<InStorageRecord>> pager, InStorageRecordQuery t)
+        {
+            pager.data = await Task.Factory.StartNew(() => dao.searchByCondition(pager, t));
+            pager.recTotal = await Task.Factory.StartNew(() => dao.searchCountByCondition(t));
+            return pager;
+        }
+
+        public async Task<Pager<List<InStorageRecordModel>>> searchSumByCondition(Pager<List<InStorageRecordModel>> pager, InStorageRecordQuery t)
+        {
+            pager.data = await Task.Factory.StartNew(() => dao.searchSumByCondition(pager, t));
+            pager.recTotal = await Task.Factory.StartNew(() => dao.searchSumCountByCondition(t));
+            return pager;
         }
     }
 }

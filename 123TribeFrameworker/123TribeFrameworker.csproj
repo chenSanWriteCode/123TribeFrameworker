@@ -305,6 +305,7 @@
     <Compile Include="Migrations\ApplicationsMigrations\Configuration.cs" />
     <Compile Include="Migrations\LayerMigrations\Configuration.cs" />
     <Compile Include="Migrations\RoleMenuMigrations\Configuration.cs" />
+    <Compile Include="Models\BussinessModels\InStorageRecordModel.cs" />
     <Compile Include="Models\BussinessModels\InventorySimpleModel.cs" />
     <Compile Include="Models\DirModels\FirstLevelDirModel_update.cs" />
     <Compile Include="Models\DirModels\RoleMenuEdit.cs" />
@@ -596,11 +597,12 @@
     <Content Include="Views\OrderDetailInfo\dealReceivedOrder.cshtml" />
     <Content Include="Views\OrderDetailInfo\updateDetail.cshtml" />
     <Content Include="Views\OrderDetailInfo\addDetail.cshtml" />
+    <Content Include="Views\InStorageRecord\Index.cshtml" />
+    <Content Include="Views\InStorageRecord\SumIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Directory\" />
-    <Folder Include="Views\InStorageRecord\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

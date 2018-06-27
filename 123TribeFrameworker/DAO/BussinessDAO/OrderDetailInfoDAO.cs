@@ -175,10 +175,21 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
                     context.inStorageRecord.AddRange(supplementList);
 
                     //入库记录中 本订单 各物料的应收实收数量
-                    var inStorageRecodes = context.inStorageRecord.Where(x => x.orderNo == orderNo).GroupBy(x => x.materialId).Select(x => new { materialId = x.Key, countReference = x.Max(item => item.countReference), countReal = x.Sum(item => item.countReal), priceIn = x.Max(item => item.priceIn) }).ToList();
+                    //DONE: 验证此时的入库记录是否包含补录的记录  不包含
+                    //TODO: left join orderdetailinfo
+                    var inStorageRecodes = context.inStorageRecord.Where(x => x.orderNo == orderNo).GroupBy(x => x.materialId).Select(x => new { materialId = x.Key, countReal = x.Sum(item => item.countReal), priceIn = x.Max(item => item.priceIn) });
+                    var inStorageRecodesEntities = (from x in inStorageRecodes
+                                                    join y in context.orderDetailInfo.Where(x => x.orderNo == orderNo) on x.materialId equals y.materialId
+                                                    select new
+                                                    {
+                                                        materialId = x.materialId,
+                                                        priceIn = x.priceIn,
+                                                        countReal = x.countReal,
+                                                        countReference = y.num,
+                                                    }).ToList();
                     List<InStorageRecord> inStorageRecodeCopy = new List<InStorageRecord>();
                     InStorageRecord model = null;
-                    foreach (var item in inStorageRecodes)
+                    foreach (var item in inStorageRecodesEntities)
                     {
                         model = new InStorageRecord();
                         model.materialId = item.materialId;
@@ -229,7 +240,7 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             }
             return result;
         }
-       
+
         /// <summary>
         /// 增加一条
         /// </summary>
@@ -313,7 +324,7 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
                 {
                     var model = await Task.Factory.StartNew(() => context.orderDetailInfo.Where(x => x.id == id).Single());
                     var orderNo = model.orderNo;
-                    
+
                     //减少总成本
                     var orderInfoModel = await context.orderInfo.FindAsync(orderNo);
                     orderInfoModel.sumPrice += model.num * model.materialInfo.referencePriceIn;

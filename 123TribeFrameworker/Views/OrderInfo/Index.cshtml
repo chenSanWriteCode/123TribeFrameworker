@@ -140,13 +140,13 @@
         </div>
         <div class="col-md-3">
             <div class="input-control has-label-left-lg">
-                <input id="createdDateBegin" name="createdDateBegin" value="@ViewBag.condition.createdDateBegin" type="text" class="form-control form-datetime">
+                <input id="createdDateBegin"  autocomplete="off" name="createdDateBegin" value="@ViewBag.condition.createdDateBegin" type="text" class="form-control form-datetime">
                 <label for="createdDateBegin" class="input-control-label-left"> 创建时间1:</label>
             </div>
         </div>
         <div class="col-md-3">
             <div class="input-control has-label-left-lg">
-                <input id="createdDateEnd" name="createdDateEnd" value="@ViewBag.condition.createdDateEnd" type="text" class="form-control form-datetime">
+                <input id="createdDateEnd" autocomplete="off" name="createdDateEnd" value="@ViewBag.condition.createdDateEnd" type="text" class="form-control form-datetime">
                 <label for="createdDateEnd" class="input-control-label-left"> 创建时间2:</label>
             </div>
         </div>
@@ -154,13 +154,13 @@
     <div class="form-group">
         <div class="col-md-3">
             <div class="input-control has-label-left-lg">
-                <input id="receivedDateBegin" name="receivedDateBegin" value="@ViewBag.condition.receivedDateBegin" type="text" class="form-control form-datetime">
+                <input id="receivedDateBegin" autocomplete="off" name="receivedDateBegin" value="@ViewBag.condition.receivedDateBegin" type="text" class="form-control form-datetime">
                 <label for="receivedDateBegin" class="input-control-label-left"> 收货时间1:</label>
             </div>
         </div>
         <div class="col-md-3">
             <div class="input-control has-label-left-lg">
-                <input id="receivedDateEnd" name="receivedDateEnd" value="@ViewBag.condition.receivedDateEnd" type="text" class="form-control form-datetime">
+                <input id="receivedDateEnd" autocomplete="off" name="receivedDateEnd" value="@ViewBag.condition.receivedDateEnd" type="text" class="form-control form-datetime">
                 <label for="receivedDateEnd" class="input-control-label-left"> 收货时间2:</label>
             </div>
         </div>
@@ -178,6 +178,7 @@
             <th>进货单号</th>
             <th>单据状态</th>
             <th>进货总价</th>
+            <th>实际进货总价</th>
             <th>创建时间</th>
             <th>创建人</th>
             <th>收货时间</th>
@@ -194,6 +195,7 @@
                     <td>@Model.data[i].orderNo</td>
                     <td>@Model.data[i].orderStatus.status</td>
                     <td>@Model.data[i].sumPrice</td>
+                    <td>@Model.data[i].sumPriceReal</td>
                     <td>@Model.data[i].createdDate</td>
                     <td>@Model.data[i].createdBy</td>
                     <td>@Model.data[i].receivedDate</td>

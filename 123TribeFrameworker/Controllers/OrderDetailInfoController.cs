@@ -176,7 +176,8 @@ namespace _123TribeFrameworker.Controllers
         {
             var orderNo = list.First().orderNo;
             ViewBag.returnUrl = "/OrderDetailInfo/receive?orderNo="+orderNo;
-            var countCheck = list.Where(x => x.countReal <= 0 ).Count();
+            //有可能存在本产品没发过来的情况 也就是为0的情况
+            var countCheck = list.Where(x => x.countReal < 0 ).Count();
             if (countCheck > 0)
             {
                 return View("Error",new string[] { "实收数量必须为正数" });
@@ -230,7 +231,7 @@ namespace _123TribeFrameworker.Controllers
             InStorageRecordQuery condition = new InStorageRecordQuery();
             condition.orderNo = orderNo;
             var instorageRecords = inStroageService.searchAllByCondition(condition);
-            if (instorageRecords.Count==0)
+            if (instorageRecords.Where(x=>x.countReal!=x.countReference).Count()==0)
             {
                 ViewBag.returnUrl = "/OrderInfo/search?orderNo=" + orderNo;
                 return View("Error", new string[] { "订单已被处理" });
