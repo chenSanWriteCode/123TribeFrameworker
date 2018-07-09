@@ -162,6 +162,20 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             return await Task.Factory.StartNew(() => (from x in materials where (ids.Contains(x.id)) select x).ToList());
         }
 
+        public List<MaterialInfo> searchListByCondition(MaterialInfoQuery t)
+        {
+            LayerDbContext context = new LayerDbContext();
+            var result = context.materialInfos.Where(x => x.id > 0);
+            result = string.IsNullOrEmpty(t.material) ? result : result.Where(x => x.material.Contains(t.material));
+            result = string.IsNullOrEmpty(t.materialName) ? result : result.Where(x => x.materialName.Contains(t.materialName));
+            result = string.IsNullOrEmpty(t.mat_color) ? result : result.Where(x => x.mat_color == t.mat_color);
+            result = string.IsNullOrEmpty(t.mat_size) ? result : result.Where(x => x.mat_size == t.mat_size);
+            result = string.IsNullOrEmpty(t.mat_type) ? result : result.Where(x => x.mat_type == t.mat_type);
+            result = string.IsNullOrEmpty(t.alias) ? result : result.Where(x => x.alias.Contains(t.alias));
+            result = string.IsNullOrEmpty(t.remark) ? result : result.Where(x => x.remark.Contains(t.remark));
+            return result.ToList();
+        }
+
         /// <summary>
         /// 根据物料查询记录
         /// </summary>

@@ -115,7 +115,7 @@
             return;
         }
         var data = myDataGrid.getData();
-        if (confirm("确定要删除本条订单？")) {
+        if (confirm("确定要删除订单？")) {
             $.each(checkedData,function(){
                 var index = data.indexOf(this)
                 data.splice(index,1)

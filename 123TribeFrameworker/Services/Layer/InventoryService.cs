@@ -20,7 +20,7 @@ namespace _123TribeFrameworker.Services.Layer
         public async Task<Pager<List<InventorySimpleModel>>> searchByCondition(Pager<List<InventorySimpleModel>> pager, InventoryQuery condition)
         {
             pager.data = await dao.searchByCondition(pager, condition);
-            pager.recTotal = dao.searchCountByCondition(condition);
+            pager.recTotal = dao.searchCountByCondition();
             return pager;
         }
         /// <summary>
@@ -30,9 +30,8 @@ namespace _123TribeFrameworker.Services.Layer
         /// <returns></returns>
         public async Task<Pager<List<InventorySimpleModel>>> searchByNumOrder(Pager<List<InventorySimpleModel>> pager)
         {
-            InventoryQuery condition = new InventoryQuery();
-            pager.data = await dao.searchByCondition(pager, condition);
-            pager.recTotal = dao.searchCountByCondition(condition);
+            pager.data = await dao.searchByCountOrder(pager);
+            pager.recTotal = dao.searchCountByCondition();
             return pager;
         }
     }

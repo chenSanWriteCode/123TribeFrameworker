@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web;
 using _123TribeFrameworker.DAO;
 using _123TribeFrameworker.Entity;
+using _123TribeFrameworker.Infrastructrue;
 using _123TribeFrameworker.Models.QueryModel;
 using Unity.Attributes;
 
@@ -30,6 +31,7 @@ namespace _123TribeFrameworker.Services.Layer
             }
             else
             {
+                model.findIndx = BeanHelper.getFistCharUpper(model.materialName);
                 var resultDAO = await dao.add(model);
                 if (resultDAO.result)
                 {
@@ -84,7 +86,13 @@ namespace _123TribeFrameworker.Services.Layer
         /// <returns></returns>
         public async Task<Result<int>> update(MaterialInfo model)
         {
+            model.findIndx = BeanHelper.getFistCharUpper(model.materialName);
             return await dao.update(model);
+        }
+        public async Task<List<MaterialInfo>> searchListByCondition(MaterialInfoQuery condition)
+        {
+            Task<List<MaterialInfo>> result =  Task.Factory.StartNew(() => dao.searchListByCondition(condition));
+            return  await result;
         }
     }
 }

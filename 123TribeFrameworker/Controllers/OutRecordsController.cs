@@ -13,7 +13,7 @@ namespace _123TribeFrameworker.Controllers
     public class OutRecordsController : Controller
     {
         [Dependency]
-        public IOutRecordsLayer layer { get; set; }
+        public IOutRecordService layer { get; set; }
         public OutRecordsController()
         {
         }

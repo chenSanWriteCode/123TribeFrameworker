@@ -238,12 +238,14 @@
     <Compile Include="Controllers\OutRecordsController.cs" />
     <Compile Include="Controllers\RoleMenuController.cs" />
     <Compile Include="Controllers\RoleUsersController.cs" />
+    <Compile Include="Controllers\SaleController.cs" />
     <Compile Include="Controllers\SecondLevelDirController.cs" />
     <Compile Include="Controllers\ThirdLevelDirController.cs" />
     <Compile Include="DAO\BussinessDAO\InStorageRecordDAO.cs" />
     <Compile Include="DAO\BussinessDAO\InventoryDAO.cs" />
     <Compile Include="DAO\BussinessDAO\OrderDetailInfoDAO.cs" />
     <Compile Include="DAO\BussinessDAO\OrderInfoDAO.cs" />
+    <Compile Include="DAO\BussinessDAO\SaleDAO.cs" />
     <Compile Include="DAO\DirDAO\FirstLevelDirDAO.cs" />
     <Compile Include="DAO\BussinessDAO\MaterialInfoDAO.cs" />
     <Compile Include="DAO\IInStorageRecordDAO.cs" />
@@ -255,6 +257,7 @@
     <Compile Include="DAO\IInventoryDAO.cs" />
     <Compile Include="DAO\IMaterialInfoDAO.cs" />
     <Compile Include="DAO\IOrderInfoDAO.cs" />
+    <Compile Include="DAO\ISaleDAO.cs" />
     <Compile Include="Entity\DataGridResult.cs" />
     <Compile Include="Entity\FirstLevel.cs">
       <DependentUpon>Model1.tt</DependentUpon>
@@ -307,6 +310,7 @@
     <Compile Include="Migrations\RoleMenuMigrations\Configuration.cs" />
     <Compile Include="Models\BussinessModels\InStorageRecordModel.cs" />
     <Compile Include="Models\BussinessModels\InventorySimpleModel.cs" />
+    <Compile Include="Models\BussinessModels\SaleModel.cs" />
     <Compile Include="Models\DirModels\FirstLevelDirModel_update.cs" />
     <Compile Include="Models\DirModels\RoleMenuEdit.cs" />
     <Compile Include="Models\DirModels\SecondLevelDirModel.cs" />
@@ -329,8 +333,9 @@
     <Compile Include="Services\IMaterialInfoService.cs" />
     <Compile Include="Services\IOrderDetailInfoService.cs" />
     <Compile Include="Services\IOrderInfoService.cs" />
-    <Compile Include="Services\IOutRecordsLayer.cs" />
+    <Compile Include="Services\IOutRecordService.cs" />
     <Compile Include="Services\IRoleMenuLayerService.cs" />
+    <Compile Include="Services\ISaleService.cs" />
     <Compile Include="Services\ISecondLevelDirService.cs" />
     <Compile Include="Services\IThirdLevelDirService.cs" />
     <Compile Include="Services\Layer\DirLayer.cs" />
@@ -345,8 +350,9 @@
     <Compile Include="Services\Layer\MaterialInfoService.cs" />
     <Compile Include="Services\Layer\OrderDetailInfoService.cs" />
     <Compile Include="Services\Layer\OrderInfoService.cs" />
-    <Compile Include="Services\Layer\OutRecordsLayer.cs" />
+    <Compile Include="Services\Layer\OutRecordService.cs" />
     <Compile Include="Services\Layer\RoleMenuLayer.cs" />
+    <Compile Include="Services\Layer\SaleService.cs" />
     <Compile Include="Services\Layer\SecondLevelDir.cs" />
     <Compile Include="Services\Layer\ThirdLevelDir.cs" />
     <Compile Include="Startup.cs" />
@@ -599,6 +605,7 @@
     <Content Include="Views\OrderDetailInfo\addDetail.cshtml" />
     <Content Include="Views\InStorageRecord\Index.cshtml" />
     <Content Include="Views\InStorageRecord\SumIndex.cshtml" />
+    <Content Include="Views\Sale\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

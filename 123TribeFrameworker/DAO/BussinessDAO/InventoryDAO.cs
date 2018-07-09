@@ -74,8 +74,11 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             returnData = returnData.OrderBy(x => x.count).Skip(start).Take(pager.recPerPage);
             return await Task.Factory.StartNew(() => returnData.ToList());
         }
-
-        public int searchCountByCondition(InventoryQuery t)
+        /// <summary>
+        /// 总数
+        /// </summary>
+        /// <returns></returns>
+        public int searchCountByCondition()
         {
             LayerDbContext context = new LayerDbContext();
             //var result = context.inventory.Where(x => x.id > 0);
@@ -85,6 +88,22 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             //result = string.IsNullOrEmpty(t.remark) ? result : result.Where(x => x.materialInfo.remark.Contains(t.remark));
             //result.GroupBy(x => x.materialId).Select(x => new { materialId = x.Key });
             return context.materialInfos.Count();
+        }
+        /// <summary>
+        /// 通过查询条件查询库存个数
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public float searchInventoryCountByCondition(InventoryQuery t)
+        {
+            LayerDbContext context = new LayerDbContext();
+            var result = context.inventory.Where(x => x.id > 0);
+            result = string.IsNullOrEmpty(t.materialName) ? result : result.Where(x => x.materialInfo.materialName.Contains(t.materialName));
+            result = !t.materialId.HasValue ? result : result.Where(x => x.materialId==t.materialId);
+            result = string.IsNullOrEmpty(t.mat_size) ? result : result.Where(x => x.materialInfo.mat_size == t.mat_size);
+            result = string.IsNullOrEmpty(t.alias) ? result : result.Where(x => x.materialInfo.alias.Contains(t.alias));
+            result = string.IsNullOrEmpty(t.remark) ? result : result.Where(x => x.materialInfo.remark.Contains(t.remark));
+            return result.Select(x => x.count).Sum();
         }
         /// <summary>
         /// 根据库存量倒序查询
@@ -121,16 +140,14 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
         {
             throw new NotImplementedException();
         }
-        /// <summary>
-        /// 总数
-        /// </summary>
-        /// <param name="t"></param>
-        /// <returns></returns>
+
 
 
         public Task<Result<int>> update(Inventory t)
         {
             throw new NotImplementedException();
         }
+
+        
     }
 }

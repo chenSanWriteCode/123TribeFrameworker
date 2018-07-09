@@ -15,6 +15,7 @@ namespace _123TribeFrameworker.Services
         Task<MaterialInfo> searchByid(int id);
         Task<Result<int>> deleteByIdAsync(int id);
         Task<Result<int>> update(MaterialInfo model);
+        Task<List<MaterialInfo>> searchListByCondition(MaterialInfoQuery condition);
 
     }
 }

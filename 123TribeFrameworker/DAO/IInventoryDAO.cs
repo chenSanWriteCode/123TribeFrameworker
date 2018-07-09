@@ -14,7 +14,17 @@ namespace _123TribeFrameworker.DAO
         Task<List<InventorySimpleModel>> searchByCountOrder(Pager<List<InventorySimpleModel>> pager);
 
         Task<List<InventorySimpleModel>> searchByCondition(Pager<List<InventorySimpleModel>> pager, InventoryQuery t);
-
-        int searchCountByCondition(InventoryQuery t);
+        /// <summary>
+        /// 物料个数,查询pager的总条目
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        int searchCountByCondition();
+        /// <summary>
+        /// 通过查询条件查询库存个数
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        float searchInventoryCountByCondition(InventoryQuery t);
     }
 }

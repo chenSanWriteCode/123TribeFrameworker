@@ -124,9 +124,14 @@ namespace _123TribeFrameworker.Entity
         [Key]
         public int id { get; set; }
         /// <summary>
-        /// 交易记录id
+        /// 售出订单号 标记哪些货物是一起被卖出的
         /// </summary>
-        public int recordId { get; set; }
+        [MaxLength(20)]
+        public string cashOrder { get; set; }
+        /// <summary>
+        /// 物料id
+        /// </summary>
+        public int materialId { get; set; }
         /// <summary>
         /// 成本价
         /// </summary>
@@ -145,8 +150,9 @@ namespace _123TribeFrameworker.Entity
         public DateTime createdDate { get; set; } = DateTime.Now;
         [Timestamp]
         public byte[] RowVersion { get; set; }
-        [ForeignKey("recordId")]
-        public virtual TradingRecord record { get; set; }
+        [ForeignKey("materialId")]
+        public virtual MaterialInfo materialInfo { get; set; }
+
     }
     /// <summary>
     /// 交易记录
@@ -156,6 +162,11 @@ namespace _123TribeFrameworker.Entity
     {
         [Key]
         public int id { get; set; }
+        /// <summary>
+        /// 售出订单号 标记哪些货物是一起被卖出的
+        /// </summary>
+        [MaxLength(20)]
+        public string cashOrder { get; set; }
         /// <summary>
         /// 物料id
         /// </summary>
@@ -287,6 +298,10 @@ namespace _123TribeFrameworker.Entity
         [Required]
         [Index(IsUnique = true)]
         public string materialName { get; set; }
+        /// <summary>
+        /// A-Z
+        /// </summary>
+        public string findIndx { get; set; }
         /// <summary>
         /// 别名
         /// </summary>

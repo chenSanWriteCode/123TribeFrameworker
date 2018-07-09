@@ -9,7 +9,7 @@ using Unity.Attributes;
 
 namespace _123TribeFrameworker.Services.Layer
 {
-    public class OutRecordsLayer : IOutRecordsLayer
+    public class OutRecordService : IOutRecordService
     {
         [Dependency]
         public IMaterialInfoDAO dao { get; set; }

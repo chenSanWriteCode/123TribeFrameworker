@@ -52,7 +52,7 @@ namespace _123TribeFrameworker
             // container.RegisterType<IProductRepository, ProductRepository>();
             container.RegisterType<AccountController>(new InjectionConstructor());
             container.RegisterType<ManageController>(new InjectionConstructor());
-            container.RegisterType<IOutRecordsLayer, OutRecordsLayer>();
+            container.RegisterType<IOutRecordService, OutRecordService>();
             container.RegisterType<IFirstLevelDirService, FirstLevelDir>();
             container.RegisterType<ISecondLevelDirService, SecondLevelDir>();
             container.RegisterType<IThirdLevelDirService, ThirdLevelDir>();
@@ -73,6 +73,9 @@ namespace _123TribeFrameworker
 
             container.RegisterType<IInStorageRecordService, InStorageRecordService>();
             container.RegisterType<IInStorageRecordDAO, InStorageRecordDAO>();
+
+            container.RegisterType<ISaleDAO, SaleDAO>();
+            container.RegisterType<ISaleService, SaleService>();
         }
     }
 }

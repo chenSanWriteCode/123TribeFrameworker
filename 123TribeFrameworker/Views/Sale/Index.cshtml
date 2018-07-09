@@ -1,0 +1,319 @@
+﻿@{
+    ViewBag.title = "收银";
+}
+@using _123TribeFrameworker.Entity
+@model List<MaterialInfo>
+<script type="text/javascript">
+    var cols = [
+            { name: 'id', width: 1 },
+            { name: 'materialId', width: 1 },
+            { name: 'materialName', width: 80, label: '产品' },
+            { name: 'mat_size', width: 80, label: '规格' },
+            { name: 'count', width: 70, label: '数量' },
+            { name: 'priceOut', width: 70, label: '单价' },
+            { name: 'discount', width: 1, label: '折扣' }
+
+    ]
+    $(function () {
+        $("#orders").datagrid({
+            dataSource: {
+                cols: cols
+            }, states: {
+                pager: { page: 1, recPerPage: 15 }
+            },
+            sortable: false,
+            checkable: true,
+            hoverCell: true,
+            height: 'page'
+        })
+        initDataGrid();
+    })
+    function initDataGrid() {
+        var jsonStr = '@Html.Raw(ViewBag.orderData)';
+        if (jsonStr != 'empty') {
+            var data = $.parseJSON(jsonStr);
+            var myDataGrid = $('#orders').data('zui.datagrid');
+            myDataGrid.setDataSource(data)
+            myDataGrid.render();
+            var sumPrice = 0;
+            $.each(data, function () {
+                sumPrice += parseFloat((this.count * this.priceOut).toFixed(1))
+            });
+            $('#sumPrice').val(sumPrice)
+        };
+    }
+    //删除
+    function deleteFormOrder() {
+        var myDataGrid = $('#orders').data('zui.datagrid');
+        var checkedData = myDataGrid.getCheckItems();
+        if (checkedData.length == 0) {
+            alert("请选中需要删除的订单")
+            return;
+        }
+        var data = myDataGrid.getData();
+        if (confirm("确定要删除订单？")) {
+            $.each(checkedData, function () {
+                var index = data.indexOf(this)
+                myDataGrid.checkRow(index + 1)
+                var sumPrice = parseFloat($('#sumPrice').val());;
+                sumPrice -= parseFloat((this.count * this.priceOut).toFixed(1))
+                $('#sumPrice').val(sumPrice)
+                data.splice(index, 1)
+            })
+            myDataGrid.setDataSource(data);
+            myDataGrid.render();
+            var checkedData1 = myDataGrid.getCheckItems();
+        }
+    }
+    function updateFormOrder() {
+        var myDataGrid = $('#orders').data('zui.datagrid');
+        var data = myDataGrid.getData();
+        var checkedData = myDataGrid.getCheckItems();
+        if (checkedData.length == 0) {
+            alert("请选中需要删除的订单")
+            return;
+        }
+        if (checkedData.length > 1) {
+            alert("每次只能修改一条订单")
+            return;
+        }
+        var data = myDataGrid.getData();
+        var index = data.indexOf(checkedData[0])
+        myDataGrid.checkRow(index + 1)
+        data.splice(index, 1)
+        myDataGrid.setDataSource(data);
+        myDataGrid.render();
+
+        var sumPrice = parseFloat($('#sumPrice').val());
+        sumPrice -= parseFloat((checkedData[0].count * checkedData[0].priceOut).toFixed(1))
+        $('#sumPrice').val(sumPrice)
+
+        setInput(checkedData[0])
+        $('#materialId').val(checkedData[0].materialId);
+        $('#count').val(checkedData[0].count);
+        $('#discount').val(checkedData[0].discount)
+        $('#myModal').modal({
+            keyboard: true,
+            show: true,
+            backdrop: 'static',
+            moveable: 'inside'
+        })
+        $('#btn_cancle').attr('disabled', true)
+    }
+    function saleDetail(id) {
+        $.post("/MaterialInfo/searchModel", { id }, function (data) {
+            setInput(data);
+            $('#discount').val(10)
+            $('#materialId').val(data.id);
+            $('#count').val(1);
+        })
+        $('#myModal').modal({
+            keyboard: true,
+            show: true,
+            backdrop: 'static',
+            moveable: 'inside'
+        })
+        $('#btn_cancle').attr('disabled', false)
+    }
+    function addToOrder() {
+        if ($('#materialId').val() == "") {
+            alert("无效的产品，请重新选择");
+            return;
+        }
+        if ($('#materialName').val() == "") {
+            alert("无效的产品，请重新选择");
+            return;
+        }
+        if ($.trim($('#count').val()) == "") {
+            alert("请输入数量");
+            return;
+        }
+        if (parseInt($('#count').val()) <= 0) {
+            alert("数量需要大于0");
+            return;
+        }
+        var myDataGrid = $('#orders').data('zui.datagrid');
+        var context = myDataGrid.getData()
+        var data = $('#orderDetailForm').serializeArray();
+        var obj = {};
+        $.each(data, function (i, v) {
+            obj[v.name] = v.value;
+        })
+        if (typeof (context) == "undefined") {
+            context = new Array();
+        } else {
+            var falg = true;
+            $.each(context, function () {
+                if (this.materialId == $('#materialId').val()) {
+                    alert("本产品已添加过");
+                    falg = false;
+                    return false;
+                }
+            })
+            if (!falg) {
+                return;
+            }
+        }
+        var sumPrice = (obj.count * obj.priceOut).toFixed(1)
+        sumPrice = parseFloat(sumPrice) + parseFloat($('#sumPrice').val());
+        $('#sumPrice').val(sumPrice)
+
+        context.push(obj)
+        myDataGrid.setDataSource(context)
+        myDataGrid.render()
+    }
+    function setInput(data) {
+        var mat_size = '<span style="font-size:large" class="label label-badge label-warning">' + data.mat_size + '</span>'
+        $('#modalTitle').html(data.materialName + mat_size)
+
+        $('#materialName').val(data.materialName);
+        $('#mat_size').val(data.mat_size)
+        $('#referencePriceOut').val(data.referencePriceOut);
+        $('#priceOut').val(data.referencePriceOut);
+
+    }
+    //根据折扣改变实际价格
+    function changePrice(discount) {
+        if (discount <= 0) {
+            alert("折扣必须为正数");
+            $('#referencePriceOut').val(10)
+            return;
+        }
+        $('#priceOut').val(($('#referencePriceOut').val() * discount / 10).toFixed(1));
+    }
+    //改变折扣
+    function discountPrice(discount) {
+        $('#discount').val(discount).change();
+    }
+    function saleOver() {
+        var myDataGrid = $('#orders').data('zui.datagrid');
+        var data = myDataGrid.getData();
+        if (data.length == 0) {
+            alert("请先添加订单")
+            return;
+        }
+        $('#jsonStr').val(JSON.stringify(data));
+        $('#saleFinallyForm').submit()
+    }
+</script>
+<div style="float:left;width:30%">
+    <form class="form-horizontal" id="saleFinallyForm" action="/Sale/sale">
+        <input hidden="hidden" name="jsonStr" id="jsonStr" />
+        <div class="form-group">
+            <label for="sumPrice" class="col-md-2">总价:</label>
+            <div class="col-md-4">
+                <input class="form-control" id="sumPrice" readonly="readonly" value="0" type="number" />
+            </div>
+            <div class="col-md-6">
+                <button class="btn btn-primary btn-block" type="button" onclick="saleOver()">结账</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-6">
+                <button type="button" class="btn btn-danger btn-block" onclick="deleteFormOrder()">删除</button>
+            </div>
+            <div class="col-md-6">
+                <button type="button" class="btn btn-danger btn-block" onclick="updateFormOrder()">修改</button>
+            </div>
+        </div>
+    </form>
+    <div style="width:350px">
+        <div class="datagrid" id="orders">
+            <div class="datagrid-container"></div>
+            <div class="pager"></div>
+        </div>
+    </div>
+</div>
+<div style="float:right;width:69%" id="saleProduction">
+    <div class="panel-group" id="accordionPanels" aria-multiselectable="true">
+        @if (Model.Count > 0)
+        {
+            foreach (var item in ViewBag.Indexs)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading" id="headingOne">
+                        <h4 class="panel-title">
+                            <button type="button" style="color:red;font-weight:700" class="btn btn-default btn-block" data-toggle="collapse" data-target="#@item">@item</button>
+                        </h4>
+                    </div>
+                    <div id="@item" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                @foreach (var item1 in Model.Where(x => x.findIndx == item))
+                                {
+                                    <div class="col-md-4">
+                                        <button type="button" class="btn btn-default btn-block btn-lg" onclick="saleDetail(@item1.id)">@item1.materialName<span style="font-size:large" class="label label-badge label-warning">@item1.mat_size</span><span class="label label-badge label-primary">@item1.referencePriceOut 元</span></button>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<!--对话框-->
+<div class="modal fade" data-moveable="true" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle" style="text-align:center"></h3>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="orderDetailForm">
+                    <input hidden="hidden" name="materialId" id="materialId" />
+                    <input hidden="hidden" name="materialName" id="materialName" />
+                    <input hidden="hidden" name="mat_size" id="mat_size" />
+                    <div class="form-group">
+                        <label for="count" class="col-md-2">数量</label>
+                        <div class="col-md-3">
+                            <input type="number" name="count" id="count" class="form-control" />
+                        </div>
+                        <label for="discount" class="col-md-2">折扣(折)</label>
+                        <div class="col-md-2">
+                            <input type="number" id="discount" name="discount" class="form-control" onchange="changePrice(this.value)" />
+                        </div>
+                        <div class="col-md-2">
+                            <div class="dropdown">
+                                <button class="btn btn-danger" type="button" data-toggle="dropdown">折<span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <button type="button" class="btn btn-danger" onclick="discountPrice(9)">9折</button>
+                                        <button type="button" class="btn btn-danger" onclick="discountPrice(8)">8折</button>
+                                        <button type="button" class="btn btn-danger" onclick="discountPrice(7)">7折</button>
+                                    </li>
+                                    <li>
+                                        <button type="button" class="btn btn-danger" onclick="discountPrice(6)">6折</button>
+                                        <button type="button" class="btn btn-danger" onclick="discountPrice(5)">5折</button>
+                                        <button type="button" class="btn btn-danger" onclick="discountPrice(4)">4折</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="referencePriceOut" class="col-md-2">建议售价</label>
+                        <div class="col-md-3"><input type="number" id="referencePriceOut" name="referencePriceOut" readonly="readonly" class="form-control" /></div>
+
+                        <label for="priceOut" class="col-md-2">实际售价</label>
+                        <div class="col-md-3"><input type="number" id="priceOut" name="priceOut" class="form-control" /></div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer" >
+                <div class="col-md-6">
+                    <button id="btn_cancle" type="button" class="btn btn-default btn-block" data-dismiss="modal">取消</button>
+                </div>
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal" onclick="addToOrder()">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

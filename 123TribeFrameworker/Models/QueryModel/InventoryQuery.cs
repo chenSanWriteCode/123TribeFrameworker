@@ -14,7 +14,7 @@ namespace _123TribeFrameworker.Models.QueryModel
         public DateTime? createdDateBegin { get; set; }
         public DateTime? createdDateEnd { get; set; }
 
-
+        public int? materialId { get; set; }
         /// <summary>
         /// 物料名称
         /// </summary>

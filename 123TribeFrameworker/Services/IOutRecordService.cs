@@ -1,6 +1,6 @@
 ﻿namespace _123TribeFrameworker.Services
 {
-    public interface IOutRecordsLayer
+    public interface IOutRecordService
     {
         int getRecordsCount();
     }
