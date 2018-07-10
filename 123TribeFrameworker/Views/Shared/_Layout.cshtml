@@ -9,7 +9,16 @@
     @Scripts.Render("~/bundles/zuiJS")
     @RenderSection("scripts", required: false)
     <script type="text/javascript">
+        
         $(function () {
+            var stateObject = {};
+            var newUrl = "/Home/Index/";
+            history.pushState(stateObject, null, newUrl);
+            window.addEventListener('popstate', function (event) {
+                history.pushState(stateObject, null, newUrl);
+            });
+
+            $('input').attr('autocomplete','off')
             $('#mainMenu').on('click', 'a', function () {
                 $('#mainMenu li.active').removeClass('active');
                 $(this).closest('li').addClass('active');

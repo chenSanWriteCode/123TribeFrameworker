@@ -35,7 +35,7 @@
             startView: 2,
             forceParse: 0,
             showMeridian: 1,
-            format: "yyyy-mm-dd hh:ii"
+            format: "yyyy/mm/dd hh:ii:ss"
         })
     })
 </script>
@@ -69,13 +69,13 @@
     <div class="form-group">
         <div class="col-md-3">
             <div class="input-control has-label-left-lg">
-                <input name="createdDateBegin" autocomplete="off" value="@ViewBag.condition.createdDateBegin" type="text" class="form-control form-datetime">
+                <input name="createdDateBegin"value="@ViewBag.condition.createdDateBegin" type="text" class="form-control form-datetime">
                 <label for="createdDateBegin" class="input-control-label-left"> 收货时间1:</label>
             </div>
         </div>
         <div class="col-md-3">
             <div class="input-control has-label-left-lg">
-                <input name="createdDateEnd" autocomplete="off" value="@ViewBag.condition.createdDateEnd" type="text" class="form-control form-datetime">
+                <input name="createdDateEnd"value="@ViewBag.condition.createdDateEnd" type="text" class="form-control form-datetime">
                 <label for="createdDateEnd" class="input-control-label-left"> 收货时间2:</label>
             </div>
         </div>

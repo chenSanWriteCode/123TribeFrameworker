@@ -74,7 +74,7 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
                             createdDate = trade.createdDate,
                             priceIn = sumPriceIn,
                             priceOut = item.priceOut,
-                            profit = item.priceOut - sumPriceIn,
+                            profit = item.priceOut*item.count - sumPriceIn,
                             cashOrder=item.cashOrder,
                             materialId=item.materialId
                         };

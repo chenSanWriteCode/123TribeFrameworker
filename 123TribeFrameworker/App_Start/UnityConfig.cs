@@ -76,6 +76,9 @@ namespace _123TribeFrameworker
 
             container.RegisterType<ISaleDAO, SaleDAO>();
             container.RegisterType<ISaleService, SaleService>();
+
+            container.RegisterType<IOutRecordDAO, OutRecordDAO>();
+            container.RegisterType<IOutRecordService, OutRecordService>();
         }
     }
 }

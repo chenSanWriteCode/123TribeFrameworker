@@ -245,6 +245,7 @@
     <Compile Include="DAO\BussinessDAO\InventoryDAO.cs" />
     <Compile Include="DAO\BussinessDAO\OrderDetailInfoDAO.cs" />
     <Compile Include="DAO\BussinessDAO\OrderInfoDAO.cs" />
+    <Compile Include="DAO\BussinessDAO\OutRecordDAO.cs" />
     <Compile Include="DAO\BussinessDAO\SaleDAO.cs" />
     <Compile Include="DAO\DirDAO\FirstLevelDirDAO.cs" />
     <Compile Include="DAO\BussinessDAO\MaterialInfoDAO.cs" />
@@ -257,6 +258,7 @@
     <Compile Include="DAO\IInventoryDAO.cs" />
     <Compile Include="DAO\IMaterialInfoDAO.cs" />
     <Compile Include="DAO\IOrderInfoDAO.cs" />
+    <Compile Include="DAO\IOutRecordDAO.cs" />
     <Compile Include="DAO\ISaleDAO.cs" />
     <Compile Include="Entity\DataGridResult.cs" />
     <Compile Include="Entity\FirstLevel.cs">
@@ -310,6 +312,7 @@
     <Compile Include="Migrations\RoleMenuMigrations\Configuration.cs" />
     <Compile Include="Models\BussinessModels\InStorageRecordModel.cs" />
     <Compile Include="Models\BussinessModels\InventorySimpleModel.cs" />
+    <Compile Include="Models\BussinessModels\OutRecordModel.cs" />
     <Compile Include="Models\BussinessModels\SaleModel.cs" />
     <Compile Include="Models\DirModels\FirstLevelDirModel_update.cs" />
     <Compile Include="Models\DirModels\RoleMenuEdit.cs" />
@@ -323,6 +326,7 @@
     <Compile Include="Models\QueryModel\MaterialInfoQuery.cs" />
     <Compile Include="Models\QueryModel\OrderDetailInfoQuery.cs" />
     <Compile Include="Models\QueryModel\OrderInfoQuery.cs" />
+    <Compile Include="Models\QueryModel\OutRecordQuery.cs" />
     <Compile Include="Models\QueryModel\ProfitRecordQuery.cs" />
     <Compile Include="Models\QueryModel\TradingRecordQuery.cs" />
     <Compile Include="Models\RoleMenuDbContext.cs" />

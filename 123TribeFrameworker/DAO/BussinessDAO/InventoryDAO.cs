@@ -53,9 +53,9 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             var inventoryResult = context.inventory.GroupBy(x => x.materialId).Select(x => new { materialId = x.Key, count = x.Sum(item => item.count) });
 
             var materialResult = context.materialInfos.Where(x=>x.id>0);
-            materialResult = string.IsNullOrEmpty(t.materialName) ? materialResult : materialResult.Where(x => x.materialName.Contains(t.materialName));
+            materialResult = string.IsNullOrEmpty(t.materialName) ? materialResult : materialResult.Where(x => x.materialName==(t.materialName));
             materialResult = string.IsNullOrEmpty(t.mat_size) ? materialResult : materialResult.Where(x => x.mat_size == t.mat_size);
-            materialResult = string.IsNullOrEmpty(t.alias) ? materialResult : materialResult.Where(x => x.alias.Contains(t.alias));
+            materialResult = string.IsNullOrEmpty(t.alias) ? materialResult : materialResult.Where(x => x.alias==(t.alias));
             materialResult = string.IsNullOrEmpty(t.remark) ? materialResult : materialResult.Where(x => x.remark.Contains(t.remark));
 
             var returnData = from x in materialResult
@@ -98,10 +98,10 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
         {
             LayerDbContext context = new LayerDbContext();
             var result = context.inventory.Where(x => x.id > 0);
-            result = string.IsNullOrEmpty(t.materialName) ? result : result.Where(x => x.materialInfo.materialName.Contains(t.materialName));
+            result = string.IsNullOrEmpty(t.materialName) ? result : result.Where(x => x.materialInfo.materialName==(t.materialName));
             result = !t.materialId.HasValue ? result : result.Where(x => x.materialId==t.materialId);
             result = string.IsNullOrEmpty(t.mat_size) ? result : result.Where(x => x.materialInfo.mat_size == t.mat_size);
-            result = string.IsNullOrEmpty(t.alias) ? result : result.Where(x => x.materialInfo.alias.Contains(t.alias));
+            result = string.IsNullOrEmpty(t.alias) ? result : result.Where(x => x.materialInfo.alias==(t.alias));
             result = string.IsNullOrEmpty(t.remark) ? result : result.Where(x => x.materialInfo.remark.Contains(t.remark));
             return result.Select(x => x.count).Sum();
         }
