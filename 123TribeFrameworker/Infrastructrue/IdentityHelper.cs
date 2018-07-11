@@ -45,17 +45,14 @@ namespace _123TribeFrameworker.Infrastructrue
         public static MvcHtmlString getMenuName(this HtmlHelper html,int menuId,int menuLevel)
         {
             string menuName = "";
-            practiceEntities entities = new practiceEntities();
+            DirDbContext entities = new DirDbContext();
             switch (menuLevel)
             {
                 case 1:
-                    menuName=entities.FirstLevel.Where(x => x.id == menuId).Select(x => x.midContent).First();
+                    menuName=entities.firstLevels.Where(x => x.id == menuId).Select(x => x.midContent).First();
                     break;
                 case 2:
-                    menuName = entities.SecondLevel.Where(x => x.id == menuId).Select(x => x.title).First();
-                    break;
-                case 3:
-                    menuName = entities.ThirdLevel.Where(x => x.id == menuId).Select(x => x.title).First();
+                    menuName = entities.secondLevels.Where(x => x.id == menuId).Select(x => x.title).First();
                     break;
                 default:
                     break;

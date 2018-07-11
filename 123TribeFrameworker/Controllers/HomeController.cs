@@ -44,28 +44,14 @@ namespace _123TribeFrameworker.Controllers
             return View();
         }
         [OutputCache(Duration =120,VaryByParam ="ID")]
-        public string getSecondDirs(string ID)
+        public JsonResult getSecondDirs(string ID)
         {
-            JObject result = new JObject();
-            string secondsDirs;
             if (string.IsNullOrEmpty(ID))
             {
                 ID = "1";
             }
-            try
-            {
-                secondsDirs = JsonConvert.SerializeObject(dirLayer.searchSecondDir(getCurrentRoleId(), Convert.ToInt32(ID)));
-                result.Add("menu", secondsDirs);
-                result.Add("success", "true");
-            }
-            catch (Exception err)
-            {
-                result.Add("err", err.Message);
-                result.Add("success", "false");
-
-            }
-            //string strResult = result.ToString();
-            return result.ToString();
+            var result  = Json(dirLayer.searchSecondDir(getCurrentRoleId(), Convert.ToInt32(ID)));
+            return result;
         }
         [ChildActionOnly]
         [OutputCache(Duration = 120 ,VaryByParam = "none")]

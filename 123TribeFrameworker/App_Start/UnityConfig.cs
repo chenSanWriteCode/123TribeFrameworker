@@ -55,7 +55,6 @@ namespace _123TribeFrameworker
             container.RegisterType<IOutRecordService, OutRecordService>();
             container.RegisterType<IFirstLevelDirService, FirstLevelDir>();
             container.RegisterType<ISecondLevelDirService, SecondLevelDir>();
-            container.RegisterType<IThirdLevelDirService, ThirdLevelDir>();
             container.RegisterType<IRoleMenuLayerService, RoleMenuLayer>();
             container.RegisterType<IDirLayerService, DirLayer>();
 

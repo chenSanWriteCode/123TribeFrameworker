@@ -71,41 +71,10 @@
         </div>
     </div>
     <br />
-    <div class="panel panel-primary">
-        <div class="panel-heading">三级目录</div>
-        <div>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Menu</th>
-                        <th>ADD</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model.thirdDirs.Count() == 0)
-                    {
-                        <tr>
-                            <td style="text-align:center" colspan="2">角色拥有所有权限</td>
-                        </tr>
-                    }
-                    else
-                    {
-                        foreach (var item in Model.thirdDirs)
-                        {
-                            <tr>
-                                <td>@item.menuName</td>
-                                <td>
-                                    <input type="checkbox" value="@item.menuId" name="thirdDirIds" />
-                                </td>
-                            </tr>
-                        }
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
+    
     <button class="btn btn-primary" type="submit">增加</button>
+    @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
 }
-@Html.ActionLink("返回", "Index", null,new { @class="btn btn-default"})
+
 
 

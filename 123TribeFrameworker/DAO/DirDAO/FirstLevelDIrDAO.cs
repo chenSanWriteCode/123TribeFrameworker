@@ -17,8 +17,8 @@ namespace _123TribeFrameworker.DAO.DirDAO
         /// <returns></returns>
         public List<FirstLevel> getFirstLevelDir(Pager<FirstLevelDirModel> pager)
         {
-            practiceEntities entities = new practiceEntities();
-            var result = entities.FirstLevel.Where(x => x.id > 0 && x.activityFlag == 1);
+            DirDbContext context = new DirDbContext();
+            var result = context.firstLevels.Where(x => x.id > 0 && x.activityFlag == 1);
             int start = (pager.page - 1) * pager.recPerPage;
             if (pager.data.id.HasValue)
             {
@@ -42,8 +42,8 @@ namespace _123TribeFrameworker.DAO.DirDAO
         /// <returns></returns>
         public List<FirstLevel> getFirstLevelDirList()
         {
-            practiceEntities entities = new practiceEntities();
-            var result = entities.FirstLevel.Where(x => x.id > 0 && x.activityFlag == 1);
+            DirDbContext context = new DirDbContext();
+            var result = context.firstLevels.Where(x => x.id > 0 && x.activityFlag == 1);
             result = result.OrderBy(x => x.orderId).ThenBy(x => x.id);
             return result.ToList();
         }
@@ -54,8 +54,8 @@ namespace _123TribeFrameworker.DAO.DirDAO
         /// <returns></returns>
         public int getFirstLevelDirCount(FirstLevelDirModel model)
         {
-            practiceEntities entities = new practiceEntities();
-            var result = entities.FirstLevel.Where(x => x.id > 0 && x.activityFlag == 1);
+            DirDbContext context = new DirDbContext();
+            var result = context.firstLevels.Where(x => x.id > 0 && x.activityFlag == 1);
             if (model.id.HasValue)
             {
                 result = result.Where(x => x.id == model.id.Value);
@@ -78,15 +78,16 @@ namespace _123TribeFrameworker.DAO.DirDAO
         /// <returns></returns>
         public int deleteFirstlevelDir(int id)
         {
-            practiceEntities entities = new practiceEntities();
-            var result = entities.FirstLevel.Where(x => x.id > 0 && x.id == id);
+            //TODO: delete from roleMenu
+            DirDbContext context = new DirDbContext();
+            var result = context.firstLevels.Where(x => x.id > 0 && x.id == id);
             FirstLevel entity = result.First();
             if (entity!=null)
             {
                 entity.activityFlag = 0;
             }
-            entities.FirstLevel.Remove(entity);
-            return entities.SaveChanges();
+            context.firstLevels.Remove(entity);
+            return context.SaveChanges();
         }
         /// <summary>
         /// 修改
@@ -95,15 +96,15 @@ namespace _123TribeFrameworker.DAO.DirDAO
         /// <returns></returns>
         public int updateFirstLevelDir(FirstLevelDirModel model)
         {
-            practiceEntities entities = new practiceEntities();
-            var result = entities.FirstLevel.Where(x => x.id > 0 && x.activityFlag == 1);
+            DirDbContext context = new DirDbContext();
+            var result = context.firstLevels.Where(x => x.id > 0 && x.activityFlag == 1);
             result = model.id.HasValue ? result.Where(x => x.id == model.id.Value) : null;
             if (result != null)
             {
                 FirstLevel entity = result.First();
                 modelToEntity(model, ref entity);
             }
-            return entities.SaveChanges();
+            return context.SaveChanges();
         }
         /// <summary>
         /// 增加
@@ -112,7 +113,7 @@ namespace _123TribeFrameworker.DAO.DirDAO
         /// <returns></returns>
         public int addFirstLevelDir(FirstLevelDirModel model)
         {
-            practiceEntities entities = new practiceEntities();
+            DirDbContext context = new DirDbContext();
             if (model != null)
             {
                 FirstLevel entity = new FirstLevel();
@@ -121,9 +122,9 @@ namespace _123TribeFrameworker.DAO.DirDAO
                 entity.afterContent = tools.afterContent;
                 entity.beforContent = tools.beforContent;
                 entity.activityFlag = 1;
-                var result =entities.FirstLevel.Add(entity);
+                var result =context.firstLevels.Add(entity);
             }
-            return entities.SaveChanges();
+            return context.SaveChanges();
         }
 
         #region 工具

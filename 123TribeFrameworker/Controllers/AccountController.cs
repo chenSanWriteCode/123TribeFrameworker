@@ -168,7 +168,7 @@ namespace _123TribeFrameworker.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl=null)
         {
-            ViewBag.ReturnUrl = returnUrl??"/Home/Index";
+            ViewBag.ReturnUrl = returnUrl??"/Sale/Index";
             return View();
         }
 

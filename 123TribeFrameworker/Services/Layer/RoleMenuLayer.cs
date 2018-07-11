@@ -67,17 +67,17 @@ namespace _123TribeFrameworker.Services.Layer
                                   menuName = x.title
                               }).ToList();
                     break;
-                case DirLevel.ThirdLLevel:
-                    ThirdLevelDirDAO daoT = new ThirdLevelDirDAO();
-                    List<ThirdLevel> thirdAll = daoT.getThirdLevelDirList();
-                    result = (from x in thirdAll
-                              where !(containsMenu.Where(y => y.menuLevel ==3 ).Select(y => y.menuId).Contains(x.id))
-                              select new RoleProp
-                              {
-                                  menuId = x.id,
-                                  menuName = x.title
-                              }).ToList();
-                    break;
+                //case DirLevel.ThirdLLevel:
+                //    ThirdLevelDirDAO daoT = new ThirdLevelDirDAO();
+                //    List<ThirdLevel> thirdAll = daoT.getThirdLevelDirList();
+                //    result = (from x in thirdAll
+                //              where !(containsMenu.Where(y => y.menuLevel ==3 ).Select(y => y.menuId).Contains(x.id))
+                //              select new RoleProp
+                //              {
+                //                  menuId = x.id,
+                //                  menuName = x.title
+                //              }).ToList();
+                //    break;
                 default:
                     break;
             }

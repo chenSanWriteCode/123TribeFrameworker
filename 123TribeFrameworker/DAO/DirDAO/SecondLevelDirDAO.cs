@@ -17,8 +17,8 @@ namespace _123TribeFrameworker.DAO.DirDAO
         /// <returns></returns>
         public List<SecondLevel> getSecondLevelDir(Pager<SecondLevelDirModel> pager)
         {
-            practiceEntities entities = new practiceEntities();
-            var result = entities.SecondLevel.Where(x => x.activityFlag == 1);
+            DirDbContext context = new DirDbContext();
+            var result = context.secondLevels.Where(x => x.activityFlag == 1);
             int start = (pager.page - 1) * pager.recPerPage;
             if (pager.data.id.HasValue)
             {
@@ -43,8 +43,8 @@ namespace _123TribeFrameworker.DAO.DirDAO
         /// <returns></returns>
         public List<SecondLevel> getSecondLevelDirList()
         {
-            practiceEntities entities = new practiceEntities();
-            var result = entities.SecondLevel.Where(x => x.activityFlag == 1);
+            DirDbContext context = new DirDbContext();
+            var result = context.secondLevels.Where(x => x.activityFlag == 1);
             result = result.OrderBy(x => x.orderId).ThenBy(x => x.id);
             return result.ToList();
         }
@@ -55,8 +55,8 @@ namespace _123TribeFrameworker.DAO.DirDAO
         /// <returns></returns>
         public SecondLevel getSingleSecondDir(int id)
         {
-            practiceEntities entities = new practiceEntities();
-            return entities.SecondLevel.FirstOrDefault(x => x.activityFlag == 1 && x.id == id);
+            DirDbContext context = new DirDbContext();
+            return context.secondLevels.FirstOrDefault(x => x.activityFlag == 1 && x.id == id);
         }
         /// <summary>
         /// 获取总条数
@@ -65,8 +65,8 @@ namespace _123TribeFrameworker.DAO.DirDAO
         /// <returns></returns>
         public int getSecondLevelDirCount(SecondLevelDirModel model)
         {
-            practiceEntities entities = new practiceEntities();
-            var result = entities.SecondLevel.Where(x => x.activityFlag == 1);
+            DirDbContext context = new DirDbContext();
+            var result = context.secondLevels.Where(x => x.activityFlag == 1);
             if (model.id.HasValue)
             {
                 result = result.Where(x => x.id == model.id.Value);
@@ -89,15 +89,16 @@ namespace _123TribeFrameworker.DAO.DirDAO
         /// <returns></returns>
         public int deleteSecondlevelDir(int id)
         {
-            practiceEntities entities = new practiceEntities();
-            var result = entities.SecondLevel.Where(x => x.id == id);
+            //TODO: delete from roleMenu
+            DirDbContext context = new DirDbContext();
+            var result = context.secondLevels.Where(x => x.id == id);
             SecondLevel entity = result.First();
             if (entity != null)
             {
                 entity.activityFlag = 0;
             }
-            entities.SecondLevel.Remove(entity);
-            return entities.SaveChanges();
+            context.secondLevels.Remove(entity);
+            return context.SaveChanges();
         }
         /// <summary>
         /// 修改
@@ -106,12 +107,12 @@ namespace _123TribeFrameworker.DAO.DirDAO
         /// <returns></returns>
         public int updateSecondLevelDir(SecondLevelDirModel model)
         {
-            practiceEntities entities = new practiceEntities();
-            var result = entities.SecondLevel.Where(x => x.activityFlag == 1);
+            DirDbContext context = new DirDbContext();
+            var result = context.secondLevels.Where(x => x.activityFlag == 1);
             result = model.id.HasValue ? result.Where(x => x.id == model.id.Value) : null;
             SecondLevel entity = result.First();
             modelToEntity(model, ref entity);
-            return entities.SaveChanges();
+            return context.SaveChanges();
         }
         /// <summary>
         /// 增加
@@ -120,16 +121,16 @@ namespace _123TribeFrameworker.DAO.DirDAO
         /// <returns></returns>
         public int addSecondLevelDir(SecondLevelDirModel model)
         {
-            practiceEntities entities = new practiceEntities();
+            DirDbContext context = new DirDbContext();
             if (model != null)
             {
                 SecondLevel entity = new SecondLevel();
                 modelToEntity(model, ref entity);
                 entity.activityFlag = 1;
                 entity.url = "#";
-                var result = entities.SecondLevel.Add(entity);
+                var result = context.secondLevels.Add(entity);
             }
-            return entities.SaveChanges();
+            return context.SaveChanges();
         }
 
         #region 工具
@@ -170,7 +171,7 @@ namespace _123TribeFrameworker.DAO.DirDAO
                 {
                     entity.title = model.title?.ToString();
                 }
-                entity.firstLevelId = model.firstLevelID;
+                entity.firstLevelId = model.firstLevelID.Value;
             }
         }
         #endregion

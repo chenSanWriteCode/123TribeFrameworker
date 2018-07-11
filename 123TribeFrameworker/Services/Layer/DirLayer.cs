@@ -1,35 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using _123TribeFrameworker.Entity;
+using _123TribeFrameworker.Models;
+using _123TribeFrameworker.Models.DirModels;
 using Newtonsoft.Json;
 
 namespace _123TribeFrameworker.Services.Layer
 {
     public class DirLayer: IDirLayerService
     {
-        private practiceEntities entities = new practiceEntities();
-        public List<searchSecondDir_Result> searchSecondDir(string roleId ,int ID)
+        
+        public List<SecondDirDisplayModel> searchSecondDir(string roleId ,int ID)
         {
-            List<searchSecondDir_Result> secondDirs = new List<searchSecondDir_Result>();
-            secondDirs = entities.searchSecondDir(roleId,ID).ToList();
-            for (int i = 0; i < secondDirs.Count; i++)
+            DirDbContext dirContext = new DirDbContext();
+            RoleMenuDbContext roleContext = new RoleMenuDbContext();
+            var menuIds = roleContext.roleMenus.Where(x => x.roleId == roleId && x.menuLevel == 2).Select(x => x.menuId).ToArray();
+            var secondDirs = dirContext.secondLevels.Where(x => x.firstLevelId == ID && menuIds.Contains(x.id) && x.activityFlag == 1).OrderBy(x => x.orderId).ToList(); 
+            List<SecondDirDisplayModel> result = new List<SecondDirDisplayModel>();
+            SecondDirDisplayModel model = null;
+            foreach (var item in secondDirs)
             {
-                string title = secondDirs[i].title;
-                int secondID = entities.SecondLevel.First(a => a.title == title).id;
-                var thirdDirs = entities.searchThirdDir(roleId,secondID ).ToList(); 
-                if (thirdDirs != null)
-                {
-                    secondDirs[i].children = thirdDirs;
-                }
+                model = new SecondDirDisplayModel();
+                model.Id = item.id;
+                model.open = item.open;
+                model.title = item.title;
+                model.url = item.url;
+                result.Add(model);
             }
-            return secondDirs;
+            return result;
         }
 
         public string searchMainDir(string roleId)
         {
-            string mainDir= entities.searchMainDir(roleId).ToList()[0];
-            return mainDir;
+            DirDbContext dirContext = new DirDbContext();
+            RoleMenuDbContext roleContext = new RoleMenuDbContext();
+            var menuIds = roleContext.roleMenus.Where(x => x.roleId == roleId && x.menuLevel==1).Select(x=>x.menuId).ToArray();
+            var mainDir = dirContext.firstLevels.Where(x=>menuIds.Contains(x.id) && x.activityFlag==1).OrderBy(x=>x.orderId).ToList();
+            StringBuilder htmlStr = new StringBuilder("");
+            foreach (var item in mainDir)
+            {
+                htmlStr.Append(item.beforContent).Append(item.midContent).Append(item.afterContent);
+            }
+            return htmlStr.ToString();
         }
     }
 }

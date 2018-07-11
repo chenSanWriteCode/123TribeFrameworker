@@ -47,7 +47,6 @@ namespace _123TribeFrameworker.migrations.ApplicationsMigrations
             AplicationRole role = roleManager.FindByName(roleName);
             var firstDirs = layer.searchRoleMenusNotInRoleId(role.Id, DirLevel.FirstLevel);
             var secondDirs = layer.searchRoleMenusNotInRoleId(role.Id, DirLevel.SecondLevel);
-            var thirdDirs = layer.searchRoleMenusNotInRoleId(role.Id, DirLevel.ThirdLLevel);
             if (firstDirs != null && firstDirs.Count() > 0)
             {
                 var resultF  = layer.addRoleMenuRangeAsync(role.Id, DirLevel.FirstLevel, firstDirs.Select(x=>x.menuId).ToArray());
@@ -55,10 +54,6 @@ namespace _123TribeFrameworker.migrations.ApplicationsMigrations
             if (secondDirs != null && secondDirs.Count() > 0)
             {
                 var resultS = layer.addRoleMenuRangeAsync(role.Id, DirLevel.SecondLevel, secondDirs.Select(x=>x.menuId).ToArray());
-            }
-            if (thirdDirs != null && thirdDirs.Count() > 0)
-            {
-                var resultT = layer.addRoleMenuRangeAsync(role.Id, DirLevel.ThirdLLevel, thirdDirs.Select(x=>x.menuId).ToArray());
             }
         }
 

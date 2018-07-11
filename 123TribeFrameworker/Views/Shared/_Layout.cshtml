@@ -9,21 +9,17 @@
     @Scripts.Render("~/bundles/zuiJS")
     @RenderSection("scripts", required: false)
     <script type="text/javascript">
-        
         $(function () {
-            var stateObject = {};
-            var newUrl = "/Home/Index/";
-            history.pushState(stateObject, null, newUrl);
-            window.addEventListener('popstate', function (event) {
-                history.pushState(stateObject, null, newUrl);
-            });
+            changeURL();
+            initControl();
 
-            $('input').attr('autocomplete','off')
             $('#mainMenu').on('click', 'a', function () {
                 $('#mainMenu li.active').removeClass('active');
                 $(this).closest('li').addClass('active');
                 var mainID = $(this).attr('href').split('#')[1];
+                //$.cookie("mainID", null, { path: '/' });
                 $.cookie("mainID", mainID);
+                console.log($.cookie('mainID')+"：:"+mainID)
                 getSecDir(mainID);
             });
             // 手动通过点击模拟高亮菜单项
@@ -32,18 +28,32 @@
                 $(this).closest('li').addClass('active');
                 var id = $(this).parent().parent().parent('li').attr("data-id");
                 if (id != undefined) {
-                    $.cookie('openli', null, { path: '/' });
-                    $.cookie('openli', id, {path:'/'});
                     $.cookie('activeli', null, { path: '/' });
                     $.cookie('activeli', $(this).parent('li').attr("data-id"), { path: '/' });
                 }
             });
-            activeMianDir();
+            //activeMianDir();
         })
+        function initControl() {
+            $('input').attr('autocomplete', 'off')
+            $('#treeMenu').tree();
+        }
+        function changeURL() {
+            var stateObject = {};
+            var newUrl = "/Sale/Index/";
+            history.pushState(stateObject, null, newUrl);
+            window.addEventListener('popstate', function (event) {
+                history.pushState(stateObject, null, newUrl);
+            });
+
+        }
         function activeMianDir() {
             if (typeof ($.cookie('mainID')) != "undefined") {
                 $('#mainMenu').children('li').each(function (index, e) {
-                    if (parseInt($.cookie('mainID')) == (index + 1)) {
+                    var href = $(this).children('a').attr('href')
+                    var index = href.split('#')[1];
+                    console.log($.cookie('mainID') + ":" + index)
+                    if (parseInt($.cookie('mainID')) == (index)) {
                         $('#mainMenu li.active').removeClass('active');
                         $(this).addClass('active');
                     }
@@ -57,28 +67,21 @@
         //通过mainID获取二级菜单
         function getSecDir(mainID) {
             $.post("/Home/getSecondDirs", { ID: mainID }, function (data) {
-                data = $.parseJSON(data);
-                if (data.success == "true") {
-                    var secondMenu = $.parseJSON(data.menu);
-                    if ($('#treeMenu').find("li").length == 0) {
-                        $('#treeMenu').tree({ data: secondMenu });
-                    }
-                    else {
-                        var secondTree = $('#treeMenu').data('zui.tree')
-                        secondTree.reload(secondMenu);
-                    }
-                    activeSecDir();
-                    activeThirdDir();
+                var secondTree = $('#treeMenu').data('zui.tree')
+                if (data.length != 0) {
+                    secondTree.reload(data);
+                    //activeSecDir();
+                    $("#treeMenu").attr("hidden", false)
+                    $("#tabsContent").css("width", "85%")
+                } else {
+                    $('#treeMenu').empty()
+                    $("#treeMenu").attr("hidden", true)
+                    $("#tabsContent").css("width", "100%")
+                    location.href = "/Sale/Index";
                 }
             })
         }
         function activeSecDir() {
-            var dataId = $.cookie('openli');
-            if (dataId != "") {
-                $('li[data-id=' + dataId + ']').attr('class', 'open');
-            }
-        }
-        function activeThirdDir() {
             var dataId = $.cookie('activeli');
             if (dataId != "") {
                 $('li[data-id=' + dataId + ']').attr('class', 'active');
@@ -91,12 +94,13 @@
         @Html.Action("getMainDirs", "Home")
     </div>
     <div class="panel">
-        <nav class="menu" data-ride="menu" style="width: 15%;float:left">
+        <nav class="menu" data-ride="menu" id="tabsMenu" style="width:15%;float:left">
             <ul id="treeMenu" class="tree tree-menu"></ul>
         </nav>
-        <div style="width: 85%;float:right" class="panel" id="tabsContent">
+        <div class="panel" id="tabsContent" style="width:85%;float:right">
             @RenderBody()
         </div>
     </div>
 </body>
+
 </html>

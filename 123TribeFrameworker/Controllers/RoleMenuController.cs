@@ -48,7 +48,6 @@ namespace _123TribeFrameworker.Controllers
                 role = await roleManager.FindByIdAsync(roleId),
                 firstDirs = layer.searchRoleMenusNotInRoleId(roleId, DirLevel.FirstLevel),
                 secondDirs = layer.searchRoleMenusNotInRoleId(roleId, DirLevel.SecondLevel),
-                thirdDirs = layer.searchRoleMenusNotInRoleId(roleId, DirLevel.ThirdLLevel)
             };
             return View(roleMenus);
         }
@@ -69,10 +68,6 @@ namespace _123TribeFrameworker.Controllers
                 if (model.secondDirIds != null && model.secondDirIds.Count() > 0)
                 {
                     resultS = await layer.addRoleMenuRangeAsync(model.roleId, DirLevel.SecondLevel, model.secondDirIds);
-                }
-                if (model.thirdDirIds != null && model.thirdDirIds.Count() > 0)
-                {
-                    resultT = await layer.addRoleMenuRangeAsync(model.roleId, DirLevel.ThirdLLevel, model.thirdDirIds);
                 }
                 var result = combineResults<RoleMenu>(resultF, resultS, resultT);
                 if (result.result)

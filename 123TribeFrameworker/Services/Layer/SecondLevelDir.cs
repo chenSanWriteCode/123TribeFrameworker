@@ -133,7 +133,9 @@ namespace _123TribeFrameworker.Services.Layer
                 entity.lastUpdatedBy = model.lastUpdatedBy;
                 entity.lastUpdatedDate = model.lastUpdatedDate;
                 entity.title = model.title;
-                entity.firstLevelID = model.firstLevelId.Value;
+                entity.url = model.url;
+                //TODO: int?
+                entity.firstLevelID =model.firstLevelId;
             }
             return entity;
         }

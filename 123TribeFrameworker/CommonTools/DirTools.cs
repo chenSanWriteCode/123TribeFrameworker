@@ -18,7 +18,6 @@ namespace _123TribeFrameworker.CommonTools
     public enum DirLevel
     {
         FirstLevel=1,
-        SecondLevel,
-        ThirdLLevel
+        SecondLevel
     }
 }
