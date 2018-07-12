@@ -11,7 +11,7 @@
             { name: 'mat_size', width: 80, label: '规格' },
             { name: 'count', width: 70, label: '数量' },
             { name: 'priceOut', width: 70, label: '单价' },
-            { name: 'discount', width: 1, label: '折扣' }
+            { name: 'discount', width: 70, label: '折扣' }
 
     ]
     $(function () {
@@ -19,12 +19,12 @@
             dataSource: {
                 cols: cols
             }, states: {
-                pager: { page: 1, recPerPage: 15 }
+                pager: { page: 1, recPerPage: 10 }
             },
             sortable: false,
             checkable: true,
-            hoverCell: true,
-            height: 'page'
+            hoverCell: false,
+            height: 410
         })
         initDataGrid();
     })
@@ -47,7 +47,7 @@
         var myDataGrid = $('#orders').data('zui.datagrid');
         var checkedData = myDataGrid.getCheckItems();
         if (checkedData.length == 0) {
-            alert("请选中需要删除的订单")
+            bootbox.alert("请选中需要删除的订单")
             return;
         }
         var data = myDataGrid.getData();
@@ -70,11 +70,11 @@
         var data = myDataGrid.getData();
         var checkedData = myDataGrid.getCheckItems();
         if (checkedData.length == 0) {
-            alert("请选中需要删除的订单")
+            bootbox.alert("请选中需要删除的订单")
             return;
         }
         if (checkedData.length > 1) {
-            alert("每次只能修改一条订单")
+            bootbox.alert("每次只能修改一条订单")
             return;
         }
         var data = myDataGrid.getData();
@@ -117,19 +117,19 @@
     }
     function addToOrder() {
         if ($('#materialId').val() == "") {
-            alert("无效的产品，请重新选择");
+            bootbox.alert("无效的产品，请重新选择");
             return;
         }
         if ($('#materialName').val() == "") {
-            alert("无效的产品，请重新选择");
+            bootbox.alert("无效的产品，请重新选择");
             return;
         }
         if ($.trim($('#count').val()) == "") {
-            alert("请输入数量");
+            bootbox.alert("请输入数量");
             return;
         }
         if (parseInt($('#count').val()) <= 0) {
-            alert("数量需要大于0");
+            bootbox.alert("数量需要大于0");
             return;
         }
         var myDataGrid = $('#orders').data('zui.datagrid');
@@ -145,7 +145,7 @@
             var falg = true;
             $.each(context, function () {
                 if (this.materialId == $('#materialId').val()) {
-                    alert("本产品已添加过");
+                    bootbox.alert("本产品已添加过");
                     falg = false;
                     return false;
                 }
@@ -175,7 +175,7 @@
     //根据折扣改变实际价格
     function changePrice(discount) {
         if (discount <= 0) {
-            alert("折扣必须为正数");
+            bootbox.alert("折扣必须为正数");
             $('#referencePriceOut').val(10)
             return;
         }
@@ -189,7 +189,7 @@
         var myDataGrid = $('#orders').data('zui.datagrid');
         var data = myDataGrid.getData();
         if (data.length == 0) {
-            alert("请先添加订单")
+            bootbox.alert("请先添加订单")
             return;
         }
         $('#jsonStr').val(JSON.stringify(data));
@@ -200,9 +200,11 @@
     <form class="form-horizontal" id="saleFinallyForm" action="/Sale/sale">
         <input hidden="hidden" name="jsonStr" id="jsonStr" />
         <div class="form-group">
-            <label for="sumPrice" class="col-md-2">总价:</label>
-            <div class="col-md-4">
-                <input class="form-control" id="sumPrice" readonly="readonly" value="0" type="number" />
+            <div class="col-md-6">
+                <div class="input-control has-label-left-lg">
+                    <input class="form-control" id="sumPrice" readonly="readonly" value="0" type="number" />
+                    <label for="sumPrice" class="input-control-label-left">总价:</label>
+                </div>
             </div>
             <div class="col-md-6">
                 <button class="btn btn-primary btn-block" type="button" onclick="saleOver()">结账</button>
@@ -217,12 +219,11 @@
             </div>
         </div>
     </form>
-    <div style="width:350px">
-        <div class="datagrid" id="orders">
-            <div class="datagrid-container"></div>
-            <div class="pager"></div>
-        </div>
+    <div class="datagrid" id="orders">
+        <div class="datagrid-container"></div>
+        <div class="pager"></div>
     </div>
+    
 </div>
 <div style="float:right;width:69%" id="saleProduction">
     <div class="panel-group" id="accordionPanels" aria-multiselectable="true">

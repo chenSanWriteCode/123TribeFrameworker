@@ -10,17 +10,27 @@
     @RenderSection("scripts", required: false)
     <script type="text/javascript">
         $(function () {
-            changeURL();
+            //changeURL();
             initControl();
 
             $('#mainMenu').on('click', 'a', function () {
-                $('#mainMenu li.active').removeClass('active');
-                $(this).closest('li').addClass('active');
-                var mainID = $(this).attr('href').split('#')[1];
-                //$.cookie("mainID", null, { path: '/' });
-                $.cookie("mainID", mainID);
-                console.log($.cookie('mainID')+"：:"+mainID)
-                getSecDir(mainID);
+                var secondTree = $('#treeMenu').data('zui.tree')
+                var arr = secondTree.toData();
+                if ($(this).parent().hasClass('active') && arr.length > 0) {
+                    $('#treeMenu').empty()
+                    $("#treeMenu").attr("hidden", true)
+                    $("#tabsContent").css("width", "100%")
+                } else {
+                    $('#mainMenu li.active').removeClass('active');
+                    $(this).closest('li').addClass('active');
+                    var arr = $(this).attr('href').split('#');
+                    if (arr.length > 1) {
+                        mainID = arr[1];
+                        //$.cookie("mainID", null, { path: '/' });
+                        $.cookie("mainID", mainID);
+                        getSecDir(mainID);
+                    }
+                }
             });
             // 手动通过点击模拟高亮菜单项
             $('#treeMenu').on('click', 'a', function () {
@@ -32,10 +42,22 @@
                     $.cookie('activeli', $(this).parent('li').attr("data-id"), { path: '/' });
                 }
             });
-            //activeMianDir();
+           // activeMianDir();
         })
         function initControl() {
             $('input').attr('autocomplete', 'off')
+            // 选择时间和日期
+            $(".form-datetime").datetimepicker(
+            {
+                weekStart: 1,
+                todayBtn: 1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                forceParse: 0,
+                showMeridian: 1,
+                format: "yyyy/mm/dd hh:ii:ss"
+            })
             $('#treeMenu').tree();
         }
         function changeURL() {
@@ -52,16 +74,16 @@
                 $('#mainMenu').children('li').each(function (index, e) {
                     var href = $(this).children('a').attr('href')
                     var index = href.split('#')[1];
-                    console.log($.cookie('mainID') + ":" + index)
                     if (parseInt($.cookie('mainID')) == (index)) {
                         $('#mainMenu li.active').removeClass('active');
                         $(this).addClass('active');
+                        return false;
                     }
                 })
                 getSecDir($.cookie('mainID'));
             }
             else {
-                getSecDir(1);
+                getSecDir(4);
             }
         }
         //通过mainID获取二级菜单
@@ -77,7 +99,7 @@
                     $('#treeMenu').empty()
                     $("#treeMenu").attr("hidden", true)
                     $("#tabsContent").css("width", "100%")
-                    location.href = "/Sale/Index";
+                    //location.href = "/Sale/Index";
                 }
             })
         }
@@ -95,9 +117,9 @@
     </div>
     <div class="panel">
         <nav class="menu" data-ride="menu" id="tabsMenu" style="width:15%;float:left">
-            <ul id="treeMenu" class="tree tree-menu"></ul>
+            <ul id="treeMenu" class="tree tree-menu" hidden="hidden"></ul>
         </nav>
-        <div class="panel" id="tabsContent" style="width:85%;float:right">
+        <div class="panel" id="tabsContent" style="width:100%;float:right">
             @RenderBody()
         </div>
     </div>

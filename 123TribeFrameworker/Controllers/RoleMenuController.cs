@@ -36,13 +36,13 @@ namespace _123TribeFrameworker.Controllers
         /// 4. thirdMenu in role
         /// </summary>
         /// <returns></returns>
-        public async Task<ActionResult> addMenu()
+        public async Task<ActionResult> addMenu(string roleId=null)
         {
             Dictionary<string, string> dic = roleManager.Roles.ToDictionary(x => x.Id, x => x.Name);
             SelectList selectList = new SelectList(dic, "Key", "Value", 0);
             ViewBag.DropDown = selectList;
 
-            string roleId = selectList.First().Value;
+            roleId = string.IsNullOrEmpty(roleId)? selectList.First().Value:roleId;
             RoleMenuEdit roleMenus = new RoleMenuEdit
             {
                 role = await roleManager.FindByIdAsync(roleId),

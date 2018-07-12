@@ -6,9 +6,10 @@
     @Html.ValidationSummary(false)
    @using (Html.BeginForm())
    {
-       <label for="name">Name</label>
+       <label for="name">角色名称</label>
        <input id="name" name="name" value="@Model" class="form-control">
-       <button type="submit" class="btn btn-primary">创建</button>
+       <button type="submit" class="btn btn-primary">创建角色</button>
+    @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
    }
-    @Html.ActionLink("返回", "Index", null, new { @class="btn btn-default"})
+    
 </div>

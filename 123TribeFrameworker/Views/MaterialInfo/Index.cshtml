@@ -10,11 +10,18 @@
             page: @Model.page,
             recTotal: @Model.recTotal,
             recPerPage:@Model.recPerPage,
+            onPageChange: function(state, oldState) {
+                if (typeof(oldState.page)!="undefined" && state.page !== oldState.page) {
+                    var href = $('#searchForm').attr("action");
+                    href = href + "?page=" + state.page;
+                    $('#searchForm').attr("action", href);
+                    $('#searchForm').submit();
+                }
+            }
         });
     })
 </script>
 <div>
-
     @using (Html.BeginForm())
     {
         <div class="col-md-3  form-group">
@@ -42,7 +49,7 @@
                 </div>
             </div>
             <button class="btn btn-primary" type="submit">查询</button>
-            @Html.ActionLink("新增", "add", null, new { @class = "btn btn-primary" })
+            @Html.ActionLink("新增", "add", null, new { @class = "btn btn-warning" })
     }
 
     <table id="materialTable" class="table datatable table-striped table-condensed">
@@ -85,7 +92,7 @@
                                 mat_size = ViewBag.condition.mat_size
                             }))
                             {
-                                @Html.ActionLink("修改", "edit", new { id = Model.data[i].id }, new { @class = "btn btn-primary" })
+                                @Html.ActionLink("修改", "edit", new { id = Model.data[i].id }, new { @class = "btn btn-warning" })
                                 <button class="btn btn-danger" type="submit">删除</button>
                             }
                         </td>

@@ -31,14 +31,12 @@
             </div>
             <div class="form-group">
                 <label for="phoneNumber" class="col-md-1">电话:</label>
-                @Html.TextBoxFor(x => x.phoneNumber, new { @class = "from-control col-md-3"  })
+                @Html.TextBoxFor(x => x.phoneNumber, new { @class = "from-control col-md-3" })
                 <br />
             </div>
-            <div class="col-md-1">
-                <button style="margin-left:10px" class="btn btn-primary btn-block" type="submit">提交</button>
-            </div>
-            @Html.ActionLink("修改我的密码", "updatePassword", "Account", new { id = Model.id }, new { @class = "btn btn-primary  col-md-1" })
-            @Html.ActionLink("返回", "Index", "Account", new { @class = "btn btn-primary" })
+            <button class="btn btn-primary" type="submit">提交</button>
+            @Html.ActionLink("修改我的密码", "updatePassword", "Account", new { id = Model.id }, new { @class = "btn btn-warning" })
+            @Html.ActionLink("返回", "Index", "Account", new { @class = "btn btn-default" })
         </div>
     }
 </div>

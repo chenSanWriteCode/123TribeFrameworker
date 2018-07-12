@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using _123TribeFrameworker.CommonTools;
 using _123TribeFrameworker.Entity;
+using _123TribeFrameworker.Models;
 using _123TribeFrameworker.Models.DirModels;
 
 namespace _123TribeFrameworker.DAO.DirDAO
@@ -89,15 +90,15 @@ namespace _123TribeFrameworker.DAO.DirDAO
         /// <returns></returns>
         public int deleteSecondlevelDir(int id)
         {
-            //TODO: delete from roleMenu
+            //DONE: delete from roleMenu
             DirDbContext context = new DirDbContext();
             var result = context.secondLevels.Where(x => x.id == id);
             SecondLevel entity = result.First();
-            if (entity != null)
-            {
-                entity.activityFlag = 0;
-            }
             context.secondLevels.Remove(entity);
+            RoleMenuDbContext roleContext = new RoleMenuDbContext();
+            var roleMenu = roleContext.roleMenus.Where(x => x.menuLevel == 2 && x.menuId == id).First();
+            roleContext.roleMenus.Remove(roleMenu);
+            roleContext.SaveChanges();
             return context.SaveChanges();
         }
         /// <summary>

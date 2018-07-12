@@ -1,7 +1,7 @@
 ﻿@using _123TribeFrameworker.Entity
 @model MaterialInfo
 @{
-    ViewBag.Title = "物料维护";
+    ViewBag.Title = "物料增加";
 }
 <div style="color:red">@Html.ValidationSummary(false)</div>
 <div class="panel panel-primary">
@@ -28,7 +28,7 @@
         @Html.TextBoxFor(x => x.remark, new { @class = "form-control" });
         <div>
             <button type="submit" class="btn btn-primary">保存</button>
-            @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-primary" })
+            @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
         </div>
     }
 </div>

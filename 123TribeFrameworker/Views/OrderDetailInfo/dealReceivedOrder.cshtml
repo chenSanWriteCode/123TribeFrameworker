@@ -6,16 +6,17 @@
 }
 <script type="text/javascript">
     function receiveOrder() {
-        var receiveOrder = prompt("请输入回执单号")
-        if (receiveOrder == null) {
-            return;
-        }
-        else if (receiveOrder == "") {
-            alert("回执单号不能为空");
-        } else {
-            $('input[name="receivedOrder"]').val(receiveOrder)
-            $('#myForm').submit();
-        }
+        bootbox.prompt("请输入回执单号", function (receiveOrder) {
+            if (receiveOrder == null) {
+                return;
+            }
+            else if (receiveOrder == "") {
+                bootbox.alert("回执单号不能为空");
+            } else {
+                $('input[name="receivedOrder"]').val(receiveOrder)
+                $('#myForm').submit();
+            }
+        })
     }
 </script>
 <div style="color:red">
@@ -68,7 +69,7 @@
                 <hr>
             }
             <div class="col-md-6">
-                @Html.ActionLink("返回", "Index", "OrderInfo", null, new { @class = "btn btn-primary btn-block" })
+                @Html.ActionLink("返回", "Index", "OrderInfo", null, new { @class = "btn btn-default btn-block" })
             </div>
             <div class="col-md-6">
                 <button type="submit" class="btn btn-primary btn-block">补充收货</button>

@@ -263,8 +263,6 @@
     <Compile Include="Entity\FirstLevel.cs" />
     <Compile Include="Entity\OrderInfo.cs" />
     <Compile Include="Entity\RoleMenu.cs" />
-    <Compile Include="Entity\searchSecondDir_Result.cs" />
-    <Compile Include="Entity\searchSecondDir_Result1.cs" />
     <Compile Include="Entity\Message.cs" />
     <Compile Include="Entity\Pager.cs" />
     <Compile Include="Entity\Result.cs" />

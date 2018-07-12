@@ -9,7 +9,8 @@
         $('#myDataGrid').datagrid({
             sortable: true,
             checkable:true,
-            selectable:false
+            selectable:false,
+            height:410
         });
         $('#myPager').pager({
             page: @Model.page,
@@ -23,18 +24,6 @@
                     $('#searchForm').submit();
                 }
             }
-        });
-        // 选择时间和日期
-        $(".form-datetime").datetimepicker(
-        {
-            weekStart: 1,
-            todayBtn:  1,
-            autoclose: 1,
-            todayHighlight: 1,
-            startView: 2,
-            forceParse: 0,
-            showMeridian: 1,
-            format: "yyyy/mm/dd hh:ii:ss"
         });
     })
     //function updateOrder(){
@@ -52,17 +41,17 @@
         var data = myTable.getCheckItems();
         var flag = true;
         if (data.length==0) {
-            alert('请选中一个订单')
+            bootbox.alert('请选中一个订单')
             flag = false;
         }
         else if (data.length>1) {
-            alert('每次只能处理一个订单')
+            bootbox.alert('每次只能处理一个订单')
             flag = false;
         }
         else{
             var status = data[0][5];
             if (status!="已下发") {
-                alert("订单已收货，无法重复操作")
+                bootbox.alert("订单已收货，无法重复操作")
                 flag = false;
             }
         }
@@ -186,5 +175,5 @@
         }
     </tbody>
 </table>
-<ul id="myPager" class="pager"  style="margin-top:0px"></ul>
+<ul id="myPager" class="pager"></ul>
 

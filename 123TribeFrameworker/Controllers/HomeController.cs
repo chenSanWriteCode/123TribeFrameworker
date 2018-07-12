@@ -48,7 +48,7 @@ namespace _123TribeFrameworker.Controllers
         {
             if (string.IsNullOrEmpty(ID))
             {
-                ID = "1";
+                ID = "4";
             }
             var result  = Json(dirLayer.searchSecondDir(getCurrentRoleId(), Convert.ToInt32(ID)));
             return result;

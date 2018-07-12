@@ -1,5 +1,16 @@
 ﻿@using _123TribeFrameworker.Models.DirModels
 @model RoleMenuEdit
+    @{ 
+        ViewBag.title = "权限增加";
+    }
+    <script type="text/javascript">
+        $(function () {
+            $("select[name='roleId']").change(function () {
+                var roleId = $("select[name='roleId']").val();
+                location.href = "/RoleMenu/addMenu?roleId=" + roleId;
+            })
+        })
+    </script>
 @using (Html.BeginForm())
 {
     @Html.DropDownList("roleId",ViewBag.DropDown as IEnumerable<SelectListItem>,new {@class= "chosen-select form-control"})
@@ -9,8 +20,8 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Menu</th>
-                        <th>ADD</th>
+                        <th>菜单</th>
+                        <th width="20%">选择</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -43,8 +54,8 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Menu</th>
-                        <th>ADD</th>
+                        <th>菜单</th>
+                        <th  width="20%">选择</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -70,8 +81,6 @@
             </table>
         </div>
     </div>
-    <br />
-    
     <button class="btn btn-primary" type="submit">增加</button>
     @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
 }

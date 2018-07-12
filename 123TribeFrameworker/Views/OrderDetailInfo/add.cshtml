@@ -35,19 +35,19 @@
 
     function addToOrder() {
         if ($('#materialId').val()=="") {
-            alert("无效的产品，请重新选择");
+            bootbox.alert("无效的产品，请重新选择");
             return;
         }
         if ($('#materialName').val()=="") {
-            alert("请选择商品");
+            bootbox.alert("请选择商品");
             return;
         }
         if ($('#num').val() == "") {
-            alert("请输入数量");
+            bootbox.alert("请输入数量");
             return;
         }
         if (parseInt($('#num').val())<=0) {
-            alert("数量需要大于0");
+            bootbox.alert("数量需要大于0");
             return;
         }
         var myDataGrid = $('#orders').data('zui.datagrid');
@@ -63,7 +63,7 @@
             var falg = true;
             $.each(context, function () {
                 if (this.materialId == $('#materialId').val()) {
-                    alert("本产品已添加过");
+                    bootbox.alert("本产品已添加过");
                     falg = false;
                     return false;
                 }
@@ -82,7 +82,7 @@
         if (data.length == 1) {
             setInput(data[0])
         } else {
-            alert("必须选择一条且仅能选择一条产品信息")
+            bootbox.alert("必须选择一条且仅能选择一条产品信息")
         }
         var context = myDataGrid.getData()
         for (var i = 0; i < context.length; i++) {
@@ -111,24 +111,34 @@
         var myDataGrid = $('#orders').data('zui.datagrid');
         var checkedData = myDataGrid.getCheckItems();
         if (checkedData.length==0) {
-            alert("请选中需要删除的订单")
+            bootbox.alert("请选中需要删除的订单")
             return;
         }
         var data = myDataGrid.getData();
-        if (confirm("确定要删除订单？")) {
-            $.each(checkedData,function(){
-                var index = data.indexOf(this)
-                data.splice(index,1)
-            })
-            myDataGrid.setDataSource(data);
-            myDataGrid.render();
-        }
+        bootbox.confirm("确定要删除订单？",function(result){
+            if (result) {
+                $.each(checkedData,function(){
+                    var index = data.indexOf(this)
+                    data.splice(index,1)
+                })
+                myDataGrid.setDataSource(data);
+                myDataGrid.render();
+            }
+        })
+        //if (confirm("确定要删除订单？")) {
+        //    $.each(checkedData,function(){
+        //        var index = data.indexOf(this)
+        //        data.splice(index,1)
+        //    })
+        //    myDataGrid.setDataSource(data);
+        //    myDataGrid.render();
+        //}
     }
     function generateOrder(){
         var myDataGrid = $('#orders').data('zui.datagrid');
         var data = myDataGrid.getData();
         if (data.length==0) {
-            alert("请先添加订单")
+            bootbox.alert("请先添加订单")
             return;
         }
         $('#jsonOrder').val(JSON.stringify(data));
@@ -212,7 +222,7 @@
                 <button type="button" class="btn btn-primary btn-block" onclick="addToOrder()">增加</button>
             </div>
             <div class="col-md-5">
-                <button type="button" class="btn btn-warning btn-block" onclick="deleteFormOrder()">删除</button>
+                <button type="button" class="btn btn-danger btn-block" onclick="deleteFormOrder()">删除</button>
             </div>
         </div>
     </form>

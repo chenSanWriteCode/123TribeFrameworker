@@ -210,7 +210,7 @@ namespace _123TribeFrameworker.Controllers
         [HttpPost]
         public async Task<ActionResult> generateOrder(string jsonOrder)
         {
-            ViewBag.returnUrl = "/OrderDetailInfo/Index";
+            
             var orderList = JsonConvert.DeserializeObject<List<OrderDetailInfo>>(jsonOrder);
             var priceList = JsonConvert.DeserializeObject<List<PriceCount>>(jsonOrder);
             var sumPrice = priceList.Sum(x => x.referencePriceIn * x.num);
@@ -218,10 +218,16 @@ namespace _123TribeFrameworker.Controllers
             var orderResult = await Orderservice.addOrder(orderList, User.Identity.Name, sumPrice);
             if (orderResult.result)
             {
+                ViewBag.returnUrl = "/OrderInfo/search?orderNo="+ orderResult.data.First().orderNo;
                 ViewBag.Msg = "订单生成成功:" + orderResult.data.First().orderNo;
                 return View("Success");
             }
-            return View("Error", new string[] { orderResult.message });
+            else
+            {
+                ViewBag.returnUrl = "/OrderDetailInfo/add";
+                return View("Error", new string[] { orderResult.message });
+            }
+            
         }
         #endregion
 

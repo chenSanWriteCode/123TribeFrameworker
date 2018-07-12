@@ -2,7 +2,7 @@
 @using _123TribeFrameworker.Entity
 @model Pager<List<FirstLevelDirModel>>
 @{
-    ViewBag.Title = "菜单设置-一级菜单";
+    ViewBag.Title = "一级菜单";
 }
 @section scripts{
     <script type="text/javascript">
@@ -79,15 +79,19 @@
             }
 
         }
-        <form id="searchCondition" action="/FirstLevelDir/searchFirstLevelDir" method="post" class="form-horizontal container">
-            <div class="form-group required container">
-                <label for="firstLevelID" class="col-md-1">顺序</label>
+        <form id="searchCondition" action="/FirstLevelDir/searchFirstLevelDir" method="post" class="form-horizontal">
+            <div class="form-group">
                 <div class="col-md-3">
-                    <input type="text" class="form-control" value="@ViewBag.condition.orderId" id="firstLevelID" name="orderId" placeholder="数字 1，2，3..." />
+                    <div class="input-control has-label-left-lg">
+                        <input type="text" class="form-control" value="@ViewBag.condition.orderId" id="firstLevelID" name="orderId" />
+                        <label for="firstLevelID" class="input-control-label-left">顺序:</label>
+                    </div>
                 </div>
-                <label for="firstLevelContent" class="col-md-1">内容</label>
                 <div class="col-md-3">
-                    <input type="text" class="form-control" value="@ViewBag.condition.content" id="firstLevelContent" name="content" placeholder="模块名称" />
+                    <div class="input-control has-label-left-lg">
+                        <input type="text" class="form-control" value="@ViewBag.condition.content" id="firstLevelContent" name="content" />
+                        <label for="firstLevelContent" class="input-control-label-left">内容:</label>
+                    </div>
                 </div>
                 <div class="col-md-1">
                     <input type="submit" class="btn btn-block btn-primary" value="查询" />

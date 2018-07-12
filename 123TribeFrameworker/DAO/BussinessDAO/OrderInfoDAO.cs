@@ -22,7 +22,7 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             result = !t.createdDateEnd.HasValue ? result : result.Where(x => x.createdDate <= t.createdDateEnd);
             result = !t.receivedDateBegin.HasValue ? result : result.Where(x => x.receivedDate >= t.receivedDateBegin);
             result = !t.receivedDateEnd.HasValue ? result : result.Where(x => x.receivedDate <= t.receivedDateEnd);
-            result = result.OrderBy(x => x.orderNo);
+            result = result.OrderByDescending(x => x.orderNo);
             result = result.Skip(start).Take(pager.recPerPage);
             return result.ToList();
         }

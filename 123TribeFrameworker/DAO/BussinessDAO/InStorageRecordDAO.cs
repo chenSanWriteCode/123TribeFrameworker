@@ -72,7 +72,7 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             result = string.IsNullOrEmpty(condition.mat_size) ? result : result.Where(x => x.materialInfo.mat_size == condition.mat_size);
             result = string.IsNullOrEmpty(condition.orderNo) ? result : result.Where(x => x.orderNo.Contains(condition.orderNo));
             result = string.IsNullOrEmpty(condition.receivedOrder) ? result : result.Where(x => x.receivedOrder == condition.receivedOrder);
-            result = result.OrderBy(x => x.materialInfo.materialName);
+            result = result.OrderByDescending(x => x.createdDate);
             return result.Skip(start).Take(pager.recPerPage).ToList();
         }
 
@@ -136,7 +136,7 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
                                    mat_size = y.materialInfo.mat_size
 
                                };
-            return returnResult.OrderBy(x => x.materialName).Skip(start).Take(pager.recPerPage).ToList();
+            return returnResult.OrderByDescending(x => x.orderNo).Skip(start).Take(pager.recPerPage).ToList();
         }
         /// <summary>
         /// 查询所有入库记录汇总条数 根据条件

@@ -1,10 +1,10 @@
 ﻿@using _123TribeFrameworker.Models
 @model IEnumerable<ApplicationUser>
 @{
-    ViewBag.title = "用户";
+    ViewBag.title = "用户管理";
 }
 <div class="panel panel-primary">
-    <div class="panel-heading" style="text-align:center">用户 </div>
+    <div class="panel-heading" style="text-align:center">用户管理 </div>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -32,8 +32,8 @@
                             <td>
                                 @using (Html.BeginForm("delete", "Account", new { id = item.Id }))
                                 {
-                                    @Html.ActionLink("修改","edit",new { userID = item.Id },new { @class="btn btn-primary"})
-                                    <button type="submit" class="btn btn-primary">删除</button>
+                                    @Html.ActionLink("修改","edit",new { userID = item.Id },new { @class="btn btn-warning"})
+                                    <button type="submit" class="btn btn-danger">删除</button>
                                 }
                             </td>
                         </tr>

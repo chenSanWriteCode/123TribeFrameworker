@@ -1,6 +1,9 @@
 ﻿
 @using _123TribeFrameworker.Models
 @model RoleEditModel
+    @{ 
+        ViewBag.title = "用户角色管理";
+    }
 @using (Html.BeginForm())
 {
     <input hidden="hidden" name="roleName" value="@Model.role.Name" />
@@ -10,11 +13,16 @@
             @if (Model.nonMembers.Count==0)
             {
                 <tr>
-                    <td>所有用户均具有 @Model.role.Name 的角色</td>
+                    <td  style="text-align:center">所有用户均具有 @Model.role.Name 的角色</td>
                 </tr>
             }
             else
             {
+                <tr>
+                    <th>用户名</th>
+                    <th width="40%">真实姓名</th>
+                    <th width="20%">选择</th>
+                </tr>
                 foreach (var item in Model.nonMembers)
                 {
                     <tr>
@@ -36,11 +44,16 @@
             @if (Model.members.Count==0)
             {
                 <tr>
-                    <td>@Model.role.Name 不存在任何用户</td>
+                    <td  style="text-align:center">@Model.role.Name 不存在任何用户</td>
                 </tr>
             }
             else
             {
+                <tr>
+                    <th>用户名</th>
+                    <th  width="40%">真实姓名</th>
+                    <th  width="20%">选择</th>
+                </tr>
                 foreach (var item in Model.members)
                 {
                     <tr>

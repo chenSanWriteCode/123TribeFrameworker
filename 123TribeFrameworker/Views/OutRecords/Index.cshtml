@@ -10,7 +10,8 @@
         $('#myDataGrid').datagrid({
             sortable: true,
             checkable: true,
-            selectable: false
+            selectable: false,
+            height:410
         });
         $('#myPager').pager({
             page: @Model.page,
@@ -24,18 +25,6 @@
                     $('#searchForm').submit();
                 }
             }
-        });
-        // 选择时间和日期
-        $(".form-datetime").datetimepicker(
-        {
-            weekStart: 1,
-            todayBtn:  1,
-            autoclose: 1,
-            todayHighlight: 1,
-            startView: 2,
-            forceParse: 0,
-            showMeridian: 1,
-            format: "yyyy/mm/dd hh:ii:ss"
         });
     })
     
@@ -56,7 +45,7 @@
         </div>
         <div class="col-md-3">
             <div class="input-control has-label-left">
-                <inputname="mat_size" value="@ViewBag.condition.mat_size" type="text" class="form-control">
+                <input name="mat_size" value="@ViewBag.condition.mat_size" type="text" class="form-control">
                 <label for="mat_size" class="input-control-label-left"> 规格:</label>
             </div>
         </div>
@@ -65,13 +54,13 @@
 
         <div class="col-md-3">
             <div class="input-control has-label-left-lg">
-                <inputname="createdDateBegin" value="@ViewBag.condition.createdDateBegin" type="text" class="form-control form-datetime">
+                <input name="createdDateBegin" value="@ViewBag.condition.createdDateBegin" type="text" class="form-control form-datetime">
                 <label for="createdDateBegin" class="input-control-label-left"> 创建时间1:</label>
             </div>
         </div>
         <div class="col-md-3">
             <div class="input-control has-label-left-lg">
-                <inputname="createdDateEnd" value="@ViewBag.condition.createdDateEnd" type="text" class="form-control form-datetime">
+                <input name="createdDateEnd" value="@ViewBag.condition.createdDateEnd" type="text" class="form-control form-datetime">
                 <label for="createdDateEnd" class="input-control-label-left"> 创建时间2:</label>
             </div>
         </div>
@@ -81,7 +70,7 @@
 <table class="table" id="myDataGrid">
     <thead>
         <tr>
-            <th data-width="200">
+            <th>
                 售出单号
             </th>
             <th>
@@ -140,4 +129,4 @@
         }
     </tbody>
 </table>
-<ul id="myPager" class="pager" style="margin-top:0px"></ul>
+<ul id="myPager" class="pager"></ul>
