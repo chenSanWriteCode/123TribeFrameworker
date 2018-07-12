@@ -11,5 +11,7 @@ namespace _123TribeFrameworker.DAO
         int searchCountByCondition(OutRecordQuery t);
         List<OutRecordModel> searchSumByCondition(Pager<List<OutRecordModel>> pager, OutRecordQuery t);
         int searchSumCountByCondition(OutRecordQuery t);
+
+        List<MaterialInfo> searchHotTen();
     }
 }

@@ -564,6 +564,7 @@
     <Content Include="Views\InStorageRecord\Index.cshtml" />
     <Content Include="Views\InStorageRecord\SumIndex.cshtml" />
     <Content Include="Views\Sale\Index.cshtml" />
+    <Content Include="Views\OutRecords\SumIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

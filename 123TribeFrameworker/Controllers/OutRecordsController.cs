@@ -28,5 +28,16 @@ namespace _123TribeFrameworker.Controllers
             pager = service.searchByCondition(pager, condition);
             return View("Index", pager);
         }
+        public ActionResult SumIndex(Pager<List<OutRecordModel>> pgaer, OutRecordQuery condition)
+        {
+            ViewBag.condition = condition;
+            return View(pgaer);
+        }
+        public ActionResult sumSearch(Pager<List<OutRecordModel>> pager, OutRecordQuery condition)
+        {
+            ViewBag.condition = condition;
+            pager = service.searchSumByCondition(pager, condition);
+            return View("SumIndex", pager);
+        }
     }
 }

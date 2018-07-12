@@ -24,11 +24,11 @@ namespace _123TribeFrameworker.Models.BussinessModels
         /// </summary>
         public DateTime createdDate { get; set; }
         /// <summary>
-        /// 成本价
+        /// 成本总价
         /// </summary>
         public float priceIn { get; set; }
         /// <summary>
-        /// 零售价
+        /// 零售单价
         /// </summary>
         public float priceOut { get; set; }
         /// <summary>

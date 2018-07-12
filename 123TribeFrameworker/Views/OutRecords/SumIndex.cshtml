@@ -1,0 +1,102 @@
+﻿
+
+@using _123TribeFrameworker.Models.BussinessModels
+@using _123TribeFrameworker.Entity
+@model Pager<List<OutRecordModel>>
+@{
+    ViewBag.Title = "售出汇总查询";
+}
+<script type="text/javascript">
+    $(function () {
+        $('#myDataGrid').datagrid({
+            sortable: true,
+            checkable: true,
+            selectable: false,
+            height:410
+        });
+        $('#myPager').pager({
+            page: @Model.page,
+            recTotal: @Model.recTotal,
+            recPerPage:@Model.recPerPage,
+            onPageChange: function(state, oldState) {
+                if (typeof(oldState.page)!="undefined" && state.page !== oldState.page) {
+                    var href = $('#searchForm').attr("action");
+                    href = href + "?page=" + state.page;
+                    $('#searchForm').attr("action", href);
+                    $('#searchForm').submit();
+                }
+            }
+        });
+    })
+
+</script>
+<form action="/OutRecords/sumSearch" method="post" id="searchForm" class="form-horizontal">
+    <div class="form-group">
+        <div class="col-md-3">
+            <div class="input-control has-label-left-lg">
+                <input name="materialName" value="@ViewBag.condition.materialName" type="text" class="form-control">
+                <label for="materialName" class="input-control-label-left"> 产品名称:</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-control has-label-left">
+                <input name="mat_size" value="@ViewBag.condition.mat_size" type="text" class="form-control">
+                <label for="mat_size" class="input-control-label-left"> 规格:</label>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="input-control has-label-left-lg">
+                <input name="createdDateBegin" value="@ViewBag.condition.createdDateBegin" type="text" class="form-control form-datetime">
+                <label for="createdDateBegin" class="input-control-label-left"> 创建时间1:</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-control has-label-left-lg">
+                <input name="createdDateEnd" value="@ViewBag.condition.createdDateEnd" type="text" class="form-control form-datetime">
+                <label for="createdDateEnd" class="input-control-label-left"> 创建时间2:</label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <button class="btn btn-primary" type="submit">查询</button>
+    </div>
+</form>
+<table class="table" id="myDataGrid">
+    <thead>
+        <tr>
+            <th>
+                产品名称
+            </th>
+            <th>
+                产品规格
+            </th>
+            <th>
+                数量
+            </th>
+            <th>
+                利润
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.data)
+        {
+            <tr>
+                <td>
+                    @item.materialName
+                </td>
+                <td>
+                    @item.mat_size
+                </td>
+                <td>
+                    @item.count
+                </td>
+                <td>
+                    @item.profit
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<ul id="myPager" class="pager"></ul>

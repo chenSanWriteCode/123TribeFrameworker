@@ -223,10 +223,29 @@
         <div class="datagrid-container"></div>
         <div class="pager"></div>
     </div>
-    
+
 </div>
 <div style="float:right;width:69%" id="saleProduction">
     <div class="panel-group" id="accordionPanels" aria-multiselectable="true">
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                <span class="label label-warning">热销榜<i class="icon icon-sun"></i></span>
+            </div>
+            <div class="panel-body">
+                @if (ViewBag.hotMaterial.Count > 0)
+                {
+                    <div class="form-group">
+                        @foreach (var item1 in ViewBag.hotMaterial)
+                        {
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-block" onclick="saleDetail(@item1.id)">@item1.materialName<span style="font-size:large" class="label label-warning label-badge">@item1.mat_size</span><span class="label label-primary label-badge">@item1.referencePriceOut 元</span></button>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
         @if (Model.Count > 0)
         {
             foreach (var item in ViewBag.Indexs)
@@ -242,8 +261,8 @@
                             <div class="form-group">
                                 @foreach (var item1 in Model.Where(x => x.findIndx == item))
                                 {
-                                    <div class="col-md-4">
-                                        <button type="button" class="btn btn-default btn-block btn-lg" onclick="saleDetail(@item1.id)">@item1.materialName<span style="font-size:large" class="label label-badge label-warning">@item1.mat_size</span><span class="label label-badge label-primary">@item1.referencePriceOut 元</span></button>
+                                    <div class="col-md-3">
+                                        <button type="button" class="btn btn-default btn-block" onclick="saleDetail(@item1.id)">@item1.materialName<span style="font-size:large" class="label label-badge label-warning">@item1.mat_size</span><span class="label label-badge label-primary">@item1.referencePriceOut 元</span></button>
                                     </div>
                                 }
                             </div>
@@ -305,7 +324,7 @@
 
                 </form>
             </div>
-            <div class="modal-footer" >
+            <div class="modal-footer">
                 <div class="col-md-6">
                     <button id="btn_cancle" type="button" class="btn btn-default btn-block" data-dismiss="modal">取消</button>
                 </div>

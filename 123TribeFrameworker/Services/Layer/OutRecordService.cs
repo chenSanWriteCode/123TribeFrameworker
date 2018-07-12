@@ -22,5 +22,15 @@ namespace _123TribeFrameworker.Services.Layer
             pager.recTotal = dao.searchCountByCondition(t);
             return pager;
         }
+        public List<MaterialInfo> searchHotTen()
+        {
+            return dao.searchHotTen();
+        }
+        public Pager<List<OutRecordModel>> searchSumByCondition(Pager<List<OutRecordModel>> pager, OutRecordQuery t)
+        {
+            pager.data = dao.searchSumByCondition(pager, t);
+            pager.recTotal = dao.searchSumCountByCondition(t);
+            return pager;
+        }
     }
 }

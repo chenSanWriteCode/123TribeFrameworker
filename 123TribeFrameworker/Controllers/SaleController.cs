@@ -19,6 +19,9 @@ namespace _123TribeFrameworker.Controllers
         public ISaleService service { get; set; }
         [Dependency]
         public IMaterialInfoService materialService { get; set; }
+        [Dependency]
+        public IOutRecordService outRecordService { get; set; }
+        
         // GET: Sale
         /// <summary>
         /// 
@@ -31,7 +34,9 @@ namespace _123TribeFrameworker.Controllers
             //客户选择的订单 or 空
             ViewBag.orderData = string.IsNullOrEmpty(jsonStr)?"empty":jsonStr;
             //前十热销榜
-            List<InStorageRecordModel> hotMaterial = new List<InStorageRecordModel>();
+            List<MaterialInfo> hotMaterial = new List<MaterialInfo>();
+            hotMaterial = outRecordService.searchHotTen();
+            ViewBag.hotMaterial = hotMaterial;
             //产品
             var list = await materialService.searchListByCondition(new MaterialInfoQuery());
             var findIndexs = list.Select(x => x.findIndx).Distinct().ToList();
