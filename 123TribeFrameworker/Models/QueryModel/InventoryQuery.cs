@@ -31,5 +31,12 @@ namespace _123TribeFrameworker.Models.QueryModel
         /// 备注
         /// </summary>
         public string remark { get; set; }
+        /// <summary>
+        /// 库存不足标志 
+        /// 1足够
+        /// 0不足
+        /// -1所有
+        /// </summary>
+        public int lackFlag { get; set; }
     }
 }

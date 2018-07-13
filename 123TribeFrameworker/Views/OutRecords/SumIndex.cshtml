@@ -44,7 +44,6 @@
                 <label for="mat_size" class="input-control-label-left"> 规格:</label>
             </div>
         </div>
-
         <div class="col-md-3">
             <div class="input-control has-label-left-lg">
                 <input name="createdDateBegin" value="@ViewBag.condition.createdDateBegin" type="text" class="form-control form-datetime">
@@ -99,4 +98,7 @@
         }
     </tbody>
 </table>
-<ul id="myPager" class="pager"></ul>
+<div>
+    <ul id="myPager" class="pager"></ul>
+    <div style="float:right"><span class="label label-info"><i class="icon icon-heart">总收益：@ViewBag.sumProfit 元</i></span></div>
+</div>

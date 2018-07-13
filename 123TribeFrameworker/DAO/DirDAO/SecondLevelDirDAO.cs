@@ -109,8 +109,7 @@ namespace _123TribeFrameworker.DAO.DirDAO
         public int updateSecondLevelDir(SecondLevelDirModel model)
         {
             DirDbContext context = new DirDbContext();
-            var result = context.secondLevels.Where(x => x.activityFlag == 1);
-            result = model.id.HasValue ? result.Where(x => x.id == model.id.Value) : null;
+            var result = context.secondLevels.Where(x => x.activityFlag == 1 &&  x.id == model.id.Value);
             SecondLevel entity = result.First();
             modelToEntity(model, ref entity);
             return context.SaveChanges();
@@ -171,6 +170,10 @@ namespace _123TribeFrameworker.DAO.DirDAO
                 if (!string.IsNullOrEmpty(model.title))
                 {
                     entity.title = model.title?.ToString();
+                }
+                if (!string.IsNullOrEmpty(model.url))
+                {
+                    entity.url = model.url;
                 }
                 entity.firstLevelId = model.firstLevelID.Value;
             }

@@ -59,6 +59,27 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             result = !condition.createdDateEnd.HasValue ? result : result.Where(x => x.createdDate <= condition.createdDateEnd);
             return result.Count();
         }
+        public float searchSumProfitByCondition(OutRecordQuery condition)
+        {
+            LayerDbContext context = new LayerDbContext();
+            var result = context.tradingRecord.Where(x=>x.id>0);
+            result = string.IsNullOrEmpty(condition.cashOrder) ? result : result.Where(t => t.cashOrder.Contains(condition.cashOrder));
+            result = string.IsNullOrEmpty(condition.materialName) ? result : result.Where(x => x.materialInfo.materialName == (condition.materialName));
+            result = string.IsNullOrEmpty(condition.mat_size) ? result : result.Where(x => x.materialInfo.mat_size == condition.mat_size);
+            result = !condition.createdDateBegin.HasValue ? result : result.Where(x => x.createdDate >= condition.createdDateBegin);
+            result = !condition.createdDateEnd.HasValue ? result : result.Where(x => x.createdDate <= condition.createdDateEnd);
+            var proResult = from t in result
+                         join p in context.profitRecord on new { cashOrder = t.cashOrder, materialId = t.materialId } equals new { cashOrder = p.cashOrder, materialId = p.materialId }
+                         select p.profit;
+            if (proResult.Count()==0)
+            {
+                return 0;
+            }
+            else
+            {
+                return proResult.Sum();
+            }
+        }
         /// <summary>
         /// 热销前十查询（根据频率）
         /// </summary>
@@ -67,7 +88,7 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
         {
             List<MaterialInfo> result = new List<MaterialInfo>();
             LayerDbContext context = new LayerDbContext();
-            var hotId = context.tradingRecord.GroupBy(x => x.materialId).Select(x => new { materialId = x.Key, count = x.Count() }).OrderByDescending(x => x.count).Take(9).ToList();
+            var hotId = context.tradingRecord.GroupBy(x => x.materialId).Select(x => new { materialId = x.Key, count = x.Count(),sumNum=x.Sum(item=>item.count) }).OrderByDescending(x => x.count).ThenByDescending(x=>x.sumNum).Take(9).ToList();
             result = (from x in hotId join y in context.materialInfos on x.materialId equals y.id select y).ToList();
             return result;
         }
@@ -166,6 +187,6 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             return result1;
         }
 
-
+       
     }
 }

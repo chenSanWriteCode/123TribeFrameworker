@@ -26,5 +26,7 @@ namespace _123TribeFrameworker.DAO
         /// <param name="t"></param>
         /// <returns></returns>
         float searchInventoryCountByCondition(InventoryQuery t);
+
+        List<InventorySimpleModel> searchTenLackInventory();
     }
 }

@@ -21,7 +21,9 @@ namespace _123TribeFrameworker.Controllers
         public IMaterialInfoService materialService { get; set; }
         [Dependency]
         public IOutRecordService outRecordService { get; set; }
-        
+        [Dependency]
+        public IInventoryService inventoryService { get; set; }
+
         // GET: Sale
         /// <summary>
         /// 
@@ -41,6 +43,8 @@ namespace _123TribeFrameworker.Controllers
             var list = await materialService.searchListByCondition(new MaterialInfoQuery());
             var findIndexs = list.Select(x => x.findIndx).Distinct().ToList();
             ViewBag.Indexs = findIndexs;
+            //库存报警
+            ViewBag.warningInventory = await inventoryService.searchTenLackInventory();
             return View(list);
         }
         public async Task<ActionResult> sale(string jsonStr)

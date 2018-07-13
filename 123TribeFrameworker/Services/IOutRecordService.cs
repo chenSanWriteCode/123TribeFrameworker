@@ -20,5 +20,11 @@ namespace _123TribeFrameworker.Services
         /// </summary>
         /// <returns></returns>
         List<MaterialInfo> searchHotTen();
+        /// <summary>
+        /// 利润总和
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        float searchSumProfitByCondition(OutRecordQuery t);
     }
 }

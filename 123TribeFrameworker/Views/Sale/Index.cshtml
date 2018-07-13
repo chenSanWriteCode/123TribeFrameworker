@@ -196,6 +196,7 @@
         $('#saleFinallyForm').submit()
     }
 </script>
+
 <div style="float:left;width:30%">
     <form class="form-horizontal" id="saleFinallyForm" action="/Sale/sale">
         <input hidden="hidden" name="jsonStr" id="jsonStr" />
@@ -273,7 +274,16 @@
         }
     </div>
 </div>
-
+<div>
+    @if (!string.IsNullOrEmpty(ViewBag.warningInventory))
+    {
+        <marquee loop="20" style="color:darkred">
+            <i class="icon icon-warning-sign">
+                <b>库存不足：@ViewBag.warningInventory  低于库存警戒值，请及时补充库存。</b>
+            </i>
+        </marquee>
+    }
+</div>
 <!--对话框-->
 <div class="modal fade" data-moveable="true" id="myModal">
     <div class="modal-dialog">

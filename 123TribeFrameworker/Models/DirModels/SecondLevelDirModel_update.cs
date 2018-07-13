@@ -11,5 +11,6 @@ namespace _123TribeFrameworker.Models.DirModels
         public int? orderId_upd { get; set; }
         public string content_upd { get; set; }
         public int firstLevelID_upd { get; set; }
+        public string url_upd { get; set; }
     }
 }

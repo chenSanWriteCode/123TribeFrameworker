@@ -13,5 +13,7 @@ namespace _123TribeFrameworker.DAO
         int searchSumCountByCondition(OutRecordQuery t);
 
         List<MaterialInfo> searchHotTen();
+
+        float searchSumProfitByCondition(OutRecordQuery t);
     }
 }

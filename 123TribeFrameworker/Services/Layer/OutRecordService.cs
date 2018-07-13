@@ -22,6 +22,10 @@ namespace _123TribeFrameworker.Services.Layer
             pager.recTotal = dao.searchCountByCondition(t);
             return pager;
         }
+        public float searchSumProfitByCondition(OutRecordQuery t)
+        {
+            return dao.searchSumProfitByCondition(t); ;
+        }
         public List<MaterialInfo> searchHotTen()
         {
             return dao.searchHotTen();
@@ -32,5 +36,7 @@ namespace _123TribeFrameworker.Services.Layer
             pager.recTotal = dao.searchSumCountByCondition(t);
             return pager;
         }
+
+       
     }
 }

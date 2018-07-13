@@ -1,6 +1,9 @@
 ﻿@using _123TribeFrameworker.Entity
 @using _123TribeFrameworker.Models.BussinessModels
 @model Pager<List<InventorySimpleModel>>
+@{
+    ViewBag.title = "库存查询";
+}
 <script type="text/javascript">
 
     $(function () {
@@ -8,7 +11,7 @@
             sortable: true,
             checkable: true,
             selectable: false,
-            height:410
+            height:410,
         });
         $('#dataPager').pager({
             page: @Model.page,
@@ -41,29 +44,39 @@
     }
 
 </script>
-    <form action="/Inventory/search" id="myForm" class="form-horizontal" method="post">
-        <div class="form-group">
-            <div class="col-md-3">
-                <div class="input-control has-label-left-lg">
-                    <input id="materialName" name="materialName" value="@ViewBag.condition.materialName" type="text" class="form-control">
-                    <label for="materialName" class="input-control-label-left"> 产品名称:</label>
-                </div>
+<form action="/Inventory/search" id="myForm" class="form-horizontal" method="post">
+    <div class="form-group">
+        <div class="col-md-3">
+            <div class="input-control has-label-left-lg">
+                <input id="materialName" name="materialName" value="@ViewBag.condition.materialName" type="text" class="form-control">
+                <label for="materialName" class="input-control-label-left"> 产品名称:</label>
             </div>
-            <div class="col-md-3">
-                <div class="input-control has-label-left">
-                    <input id="alias" name="alias" value="@ViewBag.condition.alias" type="text" class="form-control">
-                    <label for="alias" class="input-control-label-left"> 别名:</label>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="input-control has-label-left">
-                    <input id="mat_size" name="mat_size" value="@ViewBag.condition.mat_size" type="text" class="form-control">
-                    <label for="mat_size" class="input-control-label-left"> 规格:</label>
-                </div>
-            </div>
-            <button class="btn btn-primary" type="submit">查询</button>
         </div>
-    </form>
+        <div class="col-md-3">
+            <div class="input-control has-label-left">
+                <input id="alias" name="alias" value="@ViewBag.condition.alias" type="text" class="form-control">
+                <label for="alias" class="input-control-label-left"> 别名:</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-control has-label-left">
+                <input id="mat_size" name="mat_size" value="@ViewBag.condition.mat_size" type="text" class="form-control">
+                <label for="mat_size" class="input-control-label-left"> 规格:</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-control has-label-left-lg">
+                <select name="lackFlag" class="chosen-select form-control">
+                    <option value="-1"></option>
+                    <option value="0">库存不足</option>
+                    <option value="1">库存充足</option>
+                </select>
+                <label for="firstLevelID" class="input-control-label-left">库存情况：</label>
+            </div>
+        </div>
+        <button class="btn btn-primary" type="submit">查询</button>
+    </div>
+</form>
 
 <table id="myDataGrid" class="table">
     <thead>
@@ -88,7 +101,7 @@
                     <td>@item.alarmCount</td>
                     <td>@item.unit</td>
                     <td>@item.alais</td>
-                    </tr>
+                </tr>
             }
         }
     </tbody>

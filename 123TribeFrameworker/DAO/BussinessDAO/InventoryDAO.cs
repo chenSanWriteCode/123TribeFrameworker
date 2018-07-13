@@ -71,8 +71,38 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
                                  alarmCount = x.alarmCount,
                                  count = temp==null?0:temp.count
                              };
+            if (t.lackFlag==0)
+            {
+                returnData = returnData.Where(x => x.alarmCount >= x.count);
+            }
+            else if (t.lackFlag==1)
+            {
+                returnData = returnData.Where(x => x.alarmCount < x.count);
+            }
             returnData = returnData.OrderBy(x => x.count).Skip(start).Take(pager.recPerPage);
             return await Task.Factory.StartNew(() => returnData.ToList());
+        }
+        public List<InventorySimpleModel> searchTenLackInventory()
+        {
+            LayerDbContext context = new LayerDbContext();
+            var inventoryResult = context.inventory.GroupBy(x => x.materialId).Select(x => new { materialId = x.Key, count = x.Sum(item => item.count) });
+
+            var materialResult = context.materialInfos.Where(x => x.id > 0);
+            var returnData = from x in materialResult
+                             join y in inventoryResult on x.id equals y.materialId
+                             into Temp
+                             from temp in Temp.DefaultIfEmpty()
+                             select new InventorySimpleModel
+                             {
+                                 materialId = x.id,
+                                 materialName = x.materialName,
+                                 mat_size = x.mat_size,
+                                 alarmCount = x.alarmCount,
+                                 count = temp == null ? 0 : temp.count
+                             };
+            returnData = returnData.Where(x => x.alarmCount >= x.count);
+            returnData = returnData.OrderBy(x => x.count).Take(11);
+            return returnData.ToList();
         }
         /// <summary>
         /// 总数

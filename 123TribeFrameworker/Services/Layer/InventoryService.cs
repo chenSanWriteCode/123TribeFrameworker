@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using _123TribeFrameworker.DAO;
@@ -33,6 +34,26 @@ namespace _123TribeFrameworker.Services.Layer
             pager.data = await dao.searchByCountOrder(pager);
             pager.recTotal = dao.searchCountByCondition();
             return pager;
+        }
+
+        public async Task<string> searchTenLackInventory()
+        {
+            var lackList = await Task.Factory.StartNew(() => dao.searchTenLackInventory());
+            StringBuilder lackStr = new StringBuilder("");
+            int count = lackList.Count;
+            for (int i = 0; i < count; i++)
+            {
+                lackStr.Append(lackList[i].materialName);
+                if (i<count-1)
+                {
+                    lackStr.Append(",");
+                }
+            }
+            if (count > 10)
+            {
+                lackStr.Append("等");
+            }
+            return lackStr.ToString();
         }
     }
 }
