@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using _123TribeFrameworker.CommonTools;
 using _123TribeFrameworker.Entity;
 using _123TribeFrameworker.Models.BussinessModels;
 using _123TribeFrameworker.Models.QueryModel;
@@ -13,6 +12,8 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
 {
     public class InventoryDAO : IInventoryDAO
     {
+        [Dependency]
+        public IMaterialInfoDAO materialDao { get; set; } 
         /// <summary>
         /// 增加单个物料库存
         /// </summary>
@@ -81,10 +82,6 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             returnData = returnData.OrderBy(x => x.count).Skip(start).Take(pager.recPerPage);
             return await Task.Factory.StartNew(() => returnData.ToList());
         }
-        /// <summary>
-        /// 查询前十库存不足
-        /// </summary>
-        /// <returns></returns>
         public List<InventorySimpleModel> searchTenLackInventory()
         {
             LayerDbContext context = new LayerDbContext();
@@ -167,19 +164,6 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
                              };
             returnData = returnData.OrderBy(x => x.count).Skip(start).Take(pager.recPerPage);
             return await Task.Factory.StartNew(() => returnData.ToList());
-        }
-        /// <summary>
-        /// 获取十个库存不足的物料
-        /// </summary>
-        /// <returns></returns>
-        public InventoryTool searchTenInventoryCount()
-        {
-            InventoryTool result = new InventoryTool();
-            var tempData = searchTenLackInventory().OrderBy(x=>x.alarmCount-x.count);
-            result.materialName = tempData.Select(x => x.materialName).ToArray();
-            result.alarmCount = tempData.Select(x => x.alarmCount).ToArray();
-            result.inventoryCount = tempData.Select(x => x.count.Value).ToArray();
-            return result;
         }
 
         public Task<Inventory> searchById(int id)

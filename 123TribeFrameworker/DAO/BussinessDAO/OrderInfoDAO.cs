@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using _123TribeFrameworker.CommonTools;
 using _123TribeFrameworker.Entity;
-using _123TribeFrameworker.Infrastructrue;
 using _123TribeFrameworker.Models.QueryModel;
 
 namespace _123TribeFrameworker.DAO.BussinessDAO
@@ -123,56 +121,6 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             return result;
         }
 
-        public OrderTool getHalfYearOrderNum()
-        {
-            DateTime startTime = DateTime.Now.AddMonths(-5).AddDays(1-DateTime.Now.Day).Date;
-            List<DateTime> MonthDate = new List<DateTime>();
-            MonthDate = BaseDataHelper.getSixMnthDate(DateTime.Now);
-            LayerDbContext context = new LayerDbContext();
-            //异常订单数
-            var exceptOrderTemp = context.orderInfo.Where(x => x.status == "excepted" && x.receivedDate > startTime).GroupBy(x => x.createdDate.Month).Select(x => new { createdDate = x.Max(item => item.createdDate), count = x.Count() }).ToList();
-            //所有订单
-            var orderTemp = context.orderInfo.Where(x => x.createdDate > startTime).GroupBy(x => x.createdDate.Month).Select(x => new { createdDate = x.Max(item => item.createdDate), count = x.Count() }).ToList();
-            //完成订单
-            var completedOrderTemp = context.orderInfo.Where(x => x.status == "completed" && x.receivedDate > startTime).GroupBy(x => x.createdDate.Month).Select(x => new { createdDate = x.Max(item => item.createdDate), count = x.Count() }).ToList();
-
-            List<LineDataTool> orderData = new List<LineDataTool>();
-            List<LineDataTool> exceptedOrderData = new List<LineDataTool>();
-            List<LineDataTool> completedOrderData = new List<LineDataTool>();
-            LineDataTool model = null;
-            
-            foreach (var item in orderTemp)
-            {
-                model = new LineDataTool();
-                model.intData = item.count;
-                model.date = item.createdDate.AddDays(1 - item.createdDate.Day).Date;
-                orderData.Add(model);
-            }
-            foreach (var item in exceptOrderTemp)
-            {
-                model = new LineDataTool();
-                model.intData = item.count;
-                model.date = item.createdDate.AddDays(1 - item.createdDate.Day).Date;
-                exceptedOrderData.Add(model);
-            }
-            foreach (var item in completedOrderTemp)
-            {
-                model = new LineDataTool();
-                model.intData = item.count;
-                model.date = item.createdDate.AddDays(1 - item.createdDate.Day).Date;
-                completedOrderData.Add(model);
-            }
-
-            var normalData = (from x in MonthDate.OrderBy(x=>x) join y in orderData on x equals y.date into Temp from t in Temp.DefaultIfEmpty() select t == null ? 0 : t.intData).ToArray();
-            var exceptData = (from x in MonthDate.OrderBy(x => x) join y in exceptedOrderData on x equals y.date into Temp from t in Temp.DefaultIfEmpty() select t == null ? 0 : t.intData).ToArray();
-            var copmpletedData = (from x in MonthDate.OrderBy(x => x) join y in completedOrderData on x equals y.date into Temp from t in Temp.DefaultIfEmpty() select t == null ? 0 : t.intData).ToArray();
-            OrderTool result = new OrderTool();
-            result.exceptedOrderNum = exceptData;
-            result.produceOrderNum = normalData;
-            result.completedOrderNum = copmpletedData;
-            return result;
-        }
-
         public Task<Result<int>> add(OrderInfo t)
         {
             throw new NotImplementedException();
@@ -188,6 +136,5 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             throw new NotImplementedException();
         }
 
-        
     }
 }

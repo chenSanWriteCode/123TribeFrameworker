@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Web;
-using _123TribeFrameworker.CommonTools;
 using _123TribeFrameworker.DAO;
 using _123TribeFrameworker.Entity;
 using _123TribeFrameworker.Infrastructrue;
@@ -39,15 +37,6 @@ namespace _123TribeFrameworker.Services.Layer
             return pager;
         }
 
-        public async Task<float[]> searchLastMonthProfit()
-        {
-            var result = await Task.Factory.StartNew(() => dao.searchLastMonthProfit());
-            return result;
-        }
-
-        public async Task<List<PieDataTool>> searchYesterdayNum()
-        {
-            return await Task.Factory.StartNew(() => dao.searchYesterdayNum());
-        }
+       
     }
 }

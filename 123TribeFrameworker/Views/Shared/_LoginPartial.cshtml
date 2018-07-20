@@ -6,7 +6,7 @@
         @Html.AntiForgeryToken()
         <ul class="nav navbar-nav navbar-right">
             <li>
-                @Html.ActionLink("你好，" + User.Identity.Name + "!", "edit", "Account", new { userID=User.Identity.GetUserId()}, htmlAttributes: new { title = "用户修改" })
+                @Html.ActionLink("你好，" + User.Identity.Name + "!", "edit", "Account", new { userID=User.Identity.GetUserId()}, htmlAttributes: new { title = "Manage" })
             </li>
             <li><a href="javascript:document.getElementById('logoutForm').submit()">注销</a></li>
         </ul>
