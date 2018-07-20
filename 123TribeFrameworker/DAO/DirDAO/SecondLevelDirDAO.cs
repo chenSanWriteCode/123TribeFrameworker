@@ -127,7 +127,6 @@ namespace _123TribeFrameworker.DAO.DirDAO
                 SecondLevel entity = new SecondLevel();
                 modelToEntity(model, ref entity);
                 entity.activityFlag = 1;
-                entity.url = "#";
                 var result = context.secondLevels.Add(entity);
             }
             return context.SaveChanges();

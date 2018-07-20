@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using _123TribeFrameworker.CommonTools;
 using _123TribeFrameworker.Entity;
 using _123TribeFrameworker.Models.BussinessModels;
 using _123TribeFrameworker.Models.QueryModel;
@@ -18,5 +19,10 @@ namespace _123TribeFrameworker.Services
         /// </summary>
         /// <returns></returns>
         Task<string> searchTenLackInventory();
+        /// <summary>
+        /// 柱状图
+        /// </summary>
+        /// <returns></returns>
+        Task<InventoryTool> searchTenInventoryCount();
     }
 }
