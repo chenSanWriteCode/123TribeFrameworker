@@ -27,8 +27,8 @@ namespace _123TribeFrameworker
             //          "~/Content/bootstrap.css",
             //          "~/Content/site.css"));
             //"~/Scripts/dist/lib/datatable/zui.datatable.css"
-            bundles.Add(new StyleBundle("~/bundles/zuiCSS").Include("~/Scripts/dist/css/zui.css", "~/Scripts/dist/lib/datagrid/zui.datagrid.css", "~/Scripts/dist/lib/datatable/zui.datatable.css", "~/Scripts/dist/lib/chosen/zui.chosen.css", "~/Scripts/dist/lib/datetimepicker/datetimepicker.min.css", "~/Scripts/dist/lib/board/zui.board.min.css", "~/Scripts/dist/lib/bootbox/bootbox.min.css"));
-            bundles.Add(new ScriptBundle("~/bundles/zuiJS").Include("~/Scripts/dist/lib/jquery/jquery.js", "~/Scripts/dist/lib/jquery/jquery.cookie.js","~/Scripts/dist/js/zui.js", "~/Scripts/dist/lib/datagrid/zui.datagrid.js", "~/Scripts/dist/lib/datatable/zui.datatable.js", "~/Scripts/dist/lib/chosen/zui.chosen.js", "~/Scripts/dist/lib/datetimepicker/datetimepicker.min.js", "~/Scripts/dist/lib/board/zui.board.min.js", "~/Scripts/dist/lib/selectable/zui.selectable.js", "~/Scripts/dist/lib/bootbox/bootbox.min.js"));
+            bundles.Add(new StyleBundle("~/bundles/zuiCSS").Include("~/Scripts/dist/css/zui.css", "~/Scripts/dist/lib/datagrid/zui.datagrid.css", "~/Scripts/dist/lib/datatable/zui.datatable.css", "~/Scripts/dist/lib/chosen/zui.chosen.css", "~/Scripts/dist/lib/datetimepicker/datetimepicker.min.css", "~/Scripts/dist/lib/bootbox/bootbox.min.css", "~/Scripts/dist/lib/dashboard/zui.dashboard.min.css"));
+            bundles.Add(new ScriptBundle("~/bundles/zuiJS").Include("~/Scripts/dist/lib/jquery/jquery.js", "~/Scripts/dist/lib/jquery/jquery.cookie.js","~/Scripts/dist/js/zui.js", "~/Scripts/dist/lib/datagrid/zui.datagrid.js", "~/Scripts/dist/lib/datatable/zui.datatable.js", "~/Scripts/dist/lib/chosen/zui.chosen.js", "~/Scripts/dist/lib/datetimepicker/datetimepicker.min.js","~/Scripts/dist/lib/selectable/zui.selectable.js", "~/Scripts/dist/lib/bootbox/bootbox.min.js", "~/Scripts/dist/lib/dashboard/zui.dashboard.min.js", "~/Scripts/dist/lib/chart/zui.chart.min.js"));
             
         }
     }

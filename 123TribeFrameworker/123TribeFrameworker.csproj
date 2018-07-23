@@ -224,8 +224,10 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
+    <Compile Include="CommonTools\CommonTool.cs" />
     <Compile Include="CommonTools\DirTools.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ChartBoardController.cs" />
     <Compile Include="Controllers\DirectoryController.cs" />
     <Compile Include="Controllers\FirstLevelDirController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -565,6 +567,7 @@
     <Content Include="Views\InStorageRecord\SumIndex.cshtml" />
     <Content Include="Views\Sale\Index.cshtml" />
     <Content Include="Views\OutRecords\SumIndex.cshtml" />
+    <Content Include="Views\ChartBoard\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

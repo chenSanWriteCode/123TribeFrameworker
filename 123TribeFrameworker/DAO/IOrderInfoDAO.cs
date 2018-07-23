@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using _123TribeFrameworker.CommonTools;
 using _123TribeFrameworker.Entity;
 using _123TribeFrameworker.Models.QueryModel;
 
@@ -24,5 +25,9 @@ namespace _123TribeFrameworker.DAO
         /// <param name="orderList">订单详情</param>
         /// <returns></returns>
         Task<Result<List<OrderDetailInfo>>> addOrder(OrderInfo order, List<OrderDetailInfo> orderList);
+
+        OrderTool getHalfYearOrderNum();
+
+
     }
 }

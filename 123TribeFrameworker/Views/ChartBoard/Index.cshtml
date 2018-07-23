@@ -1,0 +1,152 @@
+﻿@{
+    ViewBag.title = "图表看板";
+}
+<script type="text/javascript">
+    $(function () {
+        $('#dashboard').dashboard({
+            draggable: true,
+            resizable: false
+        });
+        var monthData = {
+            // labels 数据包含依次在X轴上显示的文本标签
+            labels: @Html.Raw(ViewBag.MonthLabels),
+            datasets: [{
+                // 数据集名称，会在图例中显示
+                // 颜色主题，可以是'#fff'、'rgb(255,0,0)'、'rgba(255,0,0,0.85)'、'red' 或 ZUI配色表中的颜色名称
+                // 或者指定为 'random' 来使用一个随机的颜色主题
+                color: "red",
+                // 也可以不指定颜色主题，使用下面的值来分别应用颜色设置，这些值会覆盖color生成的主题颜色设置
+                // fillColor: "rgba(220,220,220,0.2)",
+                // strokeColor: "rgba(220,220,220,1)",
+                // pointColor: "rgba(220,220,220,1)",
+                // pointStrokeColor: "#fff",
+                // pointHighlightFill: "#fff",
+                // pointHighlightStroke: "rgba(220,220,220,1)",
+                // 数据集
+
+                data: @ViewBag.MonthData,
+            }]
+        };
+        var YesterdayNumData=$.parseJSON('@Html.Raw(ViewBag.YesterdayData)');
+
+        var orderData ={
+            labels: @Html.Raw(ViewBag.HarfYearMonthLabel),
+            datasets: [{
+                label:"月订单量",
+                color: "blue",
+                data: @ViewBag.NormalOrderData,
+            },{
+                label:"月完成订单量",
+                color: "green",
+                data: @ViewBag.CompletedOrderData,
+            },{
+                label:"月异常订单量",
+                color: "red",
+                data: @ViewBag.ExceptOrderData,
+            }]
+        };
+
+        var inventoryData ={
+            labels: @Html.Raw(ViewBag.InventoryLabels),
+            datasets: [{
+                label:"警戒值",
+                color: "red",
+                data: @ViewBag.InventoryAlarmCount,
+            },{
+                label:"库存值",
+                color: "green",
+                data: @ViewBag.InventoryRealCount,
+            }]
+        };
+        var options = {}; // 图表配置项，可以留空来使用默认的配置
+
+        var myLineChart = $("#monthLineChart").lineChart(monthData, options);
+        // 创建饼图
+        var myPieChart = $("#yesterdayNumPieChart").pieChart(YesterdayNumData, options);
+
+        $("#exceptOrderHalfYearLineChart").lineChart(orderData, options);
+
+
+        var myBarChart = $('#InventoryBarChart').barChart(inventoryData, options);
+
+    })
+    function updateProfitChar() {
+        // 更新第一个数据集的第三个数据值为50
+        myLineChart.datasets[0].points[2].value = 50;
+
+        // 调用update方法根据更新后的数据集重新绘制图表
+        myLineChart.update();
+    }
+</script>
+
+<div id="dashboard" class="dashboard dashboard-draggable" data-height="300">
+    <section class="row" style="margin-right:0px">
+        <div class="col-md-6 col-sm-6">
+            <div class="panel" data-id="1">
+                <div class="panel-heading">
+                    <i class="icon icon-list"></i>
+                    <span class="title">近一月收益线图</span>
+                </div>
+                <div class="panel-body">
+                    <canvas id="monthLineChart" style="width:100%;height:100%"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-6">
+            <div class="panel" data-id="1">
+                <div class="panel-heading">
+                    <i class="icon icon-list"></i>
+                    <span class="title">昨日产品销售数量饼图</span>
+                </div>
+                <div class="panel-body">
+                    @if (ViewBag.YesterdayData.Length > 2)
+                    {
+                        <canvas id="yesterdayNumPieChart" style="width:100%;height:100%"></canvas>
+                    }
+                    else
+                    {
+                        <div>
+                            <p class="header-dividing">昨日之日不可留，将来才是最美好的。</p>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel" data-id="5" data-url="docs/partial/remote-panel.html">
+                <div class="panel-heading">
+                    <i class="icon icon-list"></i>
+                    <span class="title">库存不足情况柱状图</span>
+                    <div class="panel-actions">
+                        <button type="button" class="btn refresh-panel" data-toggle="tooltip" title="重新从远程获取内容"><i class="icon-refresh"></i></button>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    @if (ViewBag.InventoryLabels.Length > 2)
+                    {
+                        <canvas id="InventoryBarChart" style="width:100%;height:100%"></canvas>
+                    }
+                    else
+                    {
+                        <div>
+                            <p class="header-dividing">库存剩余量充盈，安心干吧！</p>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-6">
+            <div class="panel" data-id="1">
+                <div class="panel-heading">
+                    <i class="icon icon-list"></i>
+                    <span class="title">异常订单月度统计线图</span>
+                </div>
+                <div class="panel-body">
+                    <canvas id="exceptOrderHalfYearLineChart" style="width:100%;height:100%"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

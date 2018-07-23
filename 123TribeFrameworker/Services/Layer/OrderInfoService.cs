@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using _123TribeFrameworker.CommonTools;
 using _123TribeFrameworker.DAO;
 using _123TribeFrameworker.Entity;
 using _123TribeFrameworker.Models.QueryModel;
@@ -46,6 +47,11 @@ namespace _123TribeFrameworker.Services.Layer
                 item.createdBy = order.createdBy;
             }
             return await dao.addOrder(order, orderList);
+        }
+
+        public async Task<OrderTool> getHalfYearOrderNum()
+        {
+            return await Task.Factory.StartNew(() => dao.getHalfYearOrderNum());
         }
     }
 }

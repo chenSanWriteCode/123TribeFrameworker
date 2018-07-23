@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using _123TribeFrameworker.CommonTools;
 using _123TribeFrameworker.Entity;
 using _123TribeFrameworker.Models.QueryModel;
 
@@ -22,5 +23,7 @@ namespace _123TribeFrameworker.Services
         /// <param name="sumPrice">订单总价</param>
         /// <returns></returns>
         Task<Result<List<OrderDetailInfo>>> addOrder(List<OrderDetailInfo> orderList, string name, float sumPrice);
+
+        Task<OrderTool> getHalfYearOrderNum();
     }
 }

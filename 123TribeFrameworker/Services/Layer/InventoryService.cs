@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using _123TribeFrameworker.CommonTools;
 using _123TribeFrameworker.DAO;
 using _123TribeFrameworker.Entity;
 using _123TribeFrameworker.Models.BussinessModels;
@@ -34,6 +35,14 @@ namespace _123TribeFrameworker.Services.Layer
             pager.data = await dao.searchByCountOrder(pager);
             pager.recTotal = dao.searchCountByCondition();
             return pager;
+        }
+        /// <summary>
+        /// 柱状图
+        /// </summary>
+        /// <returns></returns>
+        public async Task<InventoryTool> searchTenInventoryCount()
+        {
+            return await Task.Factory.StartNew(() => dao.searchTenInventoryCount());
         }
 
         public async Task<string> searchTenLackInventory()
