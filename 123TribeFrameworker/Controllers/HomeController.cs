@@ -54,12 +54,16 @@ namespace _123TribeFrameworker.Controllers
             return result;
         }
         [ChildActionOnly]
-        [OutputCache(Duration = 120 ,VaryByParam = "none")]
         public ActionResult getMainDirs()
         {
-            string htmlStr = dirLayer.searchMainDir(getCurrentRoleId());
+            string htmlStr = searchMainDir(getCurrentRoleId());
             ViewBag.MainDir = Server.HtmlDecode(htmlStr?.ToString());
             return PartialView("_LoginPartial");
+        }
+        [OutputCache(Duration = 120, VaryByParam = "none")]
+        public string searchMainDir(string userId)
+        {
+            return dirLayer.searchMainDir(userId);
         }
 
         public ActionResult returnBack(string returnUrl)
