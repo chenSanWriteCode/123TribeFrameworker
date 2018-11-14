@@ -21,7 +21,8 @@
     }
     <br />
     <br />
-    @Html.ActionLink("OK", "returnBack", "Home", new { returnUrl = ViewBag.returnUrl }, new { @class = "btn btn-primary  btn-block" })
+    <a class="btn btn-primary btn-block" href="@ViewBag.returnUrl">OK</a>
+    @*@Html.ActionLink("OK", "returnBack", "Home", new { returnUrl = ViewBag.returnUrl }, new { @class = "btn btn-primary  btn-block" })*@
 </div>
 
 

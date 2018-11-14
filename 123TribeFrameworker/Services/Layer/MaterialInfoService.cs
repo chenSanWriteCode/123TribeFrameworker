@@ -23,7 +23,7 @@ namespace _123TribeFrameworker.Services.Layer
         public async Task<Result<MaterialInfo>> addAsync(MaterialInfo model)
         {
             Result<MaterialInfo> result = new Result<MaterialInfo>();
-            MaterialInfoQuery condition = new MaterialInfoQuery() { materialName = model.materialName };
+            MaterialInfoQuery condition = new MaterialInfoQuery() { materialName = model.materialName,mat_size=model.mat_size };
             var isExist = dao.searchCountByCondition(condition);
             if (isExist > 0)
             {
@@ -33,7 +33,7 @@ namespace _123TribeFrameworker.Services.Layer
             {
                 model.findIndx = BeanHelper.getFistCharUpper(model.materialName);
                 var resultDAO = await dao.add(model);
-                if (resultDAO.result)
+                if (!resultDAO.result)
                 {
                     result.addError(resultDAO.message);
                 }

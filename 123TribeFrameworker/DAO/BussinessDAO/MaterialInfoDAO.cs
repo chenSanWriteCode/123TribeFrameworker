@@ -23,7 +23,7 @@ namespace _123TribeFrameworker.DAO.BussinessDAO
             {
                 using (LayerDbContext context = new LayerDbContext())
                 {
-                    context.materialInfos.Add(t);
+                    var aaa = context.materialInfos.Add(t);
                     await context.SaveChangesAsync();
                 }
             }

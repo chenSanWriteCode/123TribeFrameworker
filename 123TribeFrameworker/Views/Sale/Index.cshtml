@@ -210,8 +210,7 @@
             <div class="col-md-6">
                 <button class="btn btn-primary btn-block" type="button" onclick="saleOver()">结账</button>
             </div>
-        </div>
-        <div class="form-group">
+
             <div class="col-md-6">
                 <button type="button" class="btn btn-danger btn-block" onclick="deleteFormOrder()">删除</button>
             </div>
@@ -238,8 +237,15 @@
                     <div class="form-group">
                         @foreach (var item1 in ViewBag.hotMaterial)
                         {
+
                             <div class="col-md-3">
-                                <button type="button" class="btn btn-block" onclick="saleDetail(@item1.id)">@item1.materialName<span style="font-size:large" class="label label-warning label-badge">@item1.mat_size</span><span class="label label-primary label-badge">@item1.referencePriceOut 元</span></button>
+                                <div onclick="saleDetail(@item1.id)">
+                                    <span style="font-size:large" class="label label-warning label-badge">@item1.materialName</span>
+                                    @if (@item1.mat_size != null && @item1.mat_size != "")
+                                    {
+                                        <label> - </label> <span class="label label-primary label-badge">@item1.mat_size</span>
+                                    }
+                                </div>
                             </div>
                         }
                     </div>
@@ -254,7 +260,10 @@
                 <div class="panel panel-default">
                     <div class="panel-heading" id="headingOne">
                         <h4 class="panel-title">
-                            <button type="button" style="color:red;font-weight:700" class="btn btn-default btn-block" data-toggle="collapse" data-target="#@item">@item</button>
+                            <a style="color:red;font-weight:500" data-toggle="collapse" data-target="#@item">
+                                <span class="label label-info"><i class="icon icon-star"></i> @item</span>
+                            </a>
+                            @*<button type="button" style="color:red;font-weight:700" class="btn btn-default btn-block" data-toggle="collapse" data-target="#@item">@item</button>*@
                         </h4>
                     </div>
                     <div id="@item" class="panel-collapse collapse">
@@ -263,7 +272,13 @@
                                 @foreach (var item1 in Model.Where(x => x.findIndx == item))
                                 {
                                     <div class="col-md-3">
-                                        <button type="button" class="btn btn-default btn-block" onclick="saleDetail(@item1.id)">@item1.materialName<span style="font-size:large" class="label label-badge label-warning">@item1.mat_size</span><span class="label label-badge label-primary">@item1.referencePriceOut 元</span></button>
+                                        <div onclick="saleDetail(@item1.id)">
+                                            <span style="font-size:large" class="label label-warning label-badge">@item1.materialName</span>
+                                           @if (@item1.mat_size!=null && @item1.mat_size != "")
+                                           {
+                                               <label> - </label><span class="label label-primary label-badge">@item1.mat_size</span>
+                                           }
+                                        </div>
                                     </div>
                                 }
                             </div>

@@ -296,7 +296,6 @@ namespace _123TribeFrameworker.Entity
         /// </summary>
         [MaxLength(50)]
         [Required]
-        [Index(IsUnique = true)]
         public string materialName { get; set; }
         /// <summary>
         /// A-Z

@@ -14,6 +14,7 @@
         public RoleMenuDbContext()
             : base("practice")
         {
+ 
         }
 
         // public virtual DbSet<MyEntity> MyEntities { get; set; }
