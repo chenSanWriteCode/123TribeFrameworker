@@ -11,7 +11,7 @@ using Unity.Attributes;
 
 namespace _123TribeFrameworker.Services.Layer
 {
-    public class OrderDetailInfoService : IOrderDetailInfoService
+    public class OrderDetailInfoServiceImpl : IOrderDetailInfoService
     {
         [Dependency]
         public IOrderDetailInfoDAO dao { get; set; }
@@ -82,7 +82,7 @@ namespace _123TribeFrameworker.Services.Layer
                 result.data = model;
             }
             var result_dao = await dao.deleteOrderDetailById(id,userName);
-            if (!result_dao.result)
+            if (!result_dao.success)
             {
                 result.addError(result_dao.message);
             }

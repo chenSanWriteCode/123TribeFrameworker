@@ -51,7 +51,7 @@ namespace _123TribeFrameworker.Controllers
         {
             List<SaleModel> list = JsonConvert.DeserializeObject<List<SaleModel>>(jsonStr);
             var result = await service.receive(list, User.Identity.Name);
-            if (result.result)
+            if (result.success)
             {
                 ViewBag.Msg = "收银成功";
                 ViewBag.returnUrl = "/Sale/Index";

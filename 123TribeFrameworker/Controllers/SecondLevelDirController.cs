@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using _123TribeFrameworker.Entity;
 using _123TribeFrameworker.Models.DirModels;
+using _123TribeFrameworker.Models.QueryModel;
 using _123TribeFrameworker.Services;
 using _123TribeFrameworker.Services.Layer;
 using Newtonsoft.Json;
@@ -18,14 +21,9 @@ namespace _123TribeFrameworker.Controllers
     {
         [Dependency]
         public ISecondLevelDirService layer { get; set; }
-        public ActionResult Index(SecondLevelDirModel model)
+        public ActionResult Index(Pager<List<SecondLevel>> pager,SecondMenuQuery model)
         {
-            Pager<List<SecondLevelDirModel>> pager = new Pager<List<SecondLevelDirModel>>();
-            if (!model.firstLevelID.HasValue)
-            {
-                model.firstLevelID = 1;
-            }
-            ViewBag.condition = model;
+            ViewBag.Condition = model;
             return View(pager);
         }
         /// <summary>
@@ -34,94 +32,96 @@ namespace _123TribeFrameworker.Controllers
         /// <param name="model"></param>
         /// <param name="pager"></param>
         /// <returns></returns>
-        public ActionResult searchSecondLevelDir(SecondLevelDirModel model, Pager<SecondLevelDirModel> pager)
+        public async Task<ActionResult> searchSecondLevelDir(Pager<List<SecondLevel>> pager, SecondMenuQuery condition)
         {
-            if (model != null)
+            ViewBag.Condition = condition;
+            var result = await layer.getSecondLevelDir(pager, condition);
+            if (result.success)
             {
-                pager.data = model;
-                
-            }
-            Pager<List<SecondLevelDirModel>> result = layer.getSecondLevelDir(pager);
-            ViewBag.condition = model;
-            return View("Index", result);
-        }
-        /// <summary>
-        /// 修改或者增加
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        public ActionResult changeSecondLevelDir(SecondLevelDirModel condition, SecondLevelDirModel_update model_upd)
-        {
-            SecondLevelDirModel model = new SecondLevelDirModel(model_upd);
-            Result<SecondLevelDirModel> result;
-            StringBuilder sb = new StringBuilder("");
-            if (model.id.HasValue)
-            {
-                model.lastUpdatedBy = User.Identity.Name;
-                model.lastUpdatedDate = DateTime.Now;
-                result = layer.updateSecondLevelDir(model);
-                sb.Append("修改");
+                return View("Index", pager);
             }
             else
             {
-                model.createdBy = User.Identity.Name;
-                model.createdDate = DateTime.Now;
-                result = layer.addSecondLevelDir(model);
-                sb.Append("增加");
+                ViewBag.ReturnUrl = "/SecondLevelDir/Index";
+                ViewBag.Msg = result.message;
+                return View("Error");
             }
-
-            if (result.result)
-            {
-                TempData["Msg"] = new Message(sb.Append("成功").ToString());
-            }
-            else
-            {
-                TempData["Msg"] = new Message(sb.Append("失败").ToString());
-            }
-            return RedirectToAction("searchSecondLevelDir", condition);
         }
-
-        /// <summary>
-        /// 返回2级菜单列表
-        /// </summary>
-        /// <returns></returns>
-        public string getSecondLevelDirList()
+        public async Task<ActionResult> Update(int id)
         {
-            Dictionary<int, string> secondDirDict = layer.getSecondLevelDirDict();
-            return JsonConvert.SerializeObject(secondDirDict);
-        }
-        /// <summary>
-        /// delete
-        /// </summary>
-        /// <param name="condition"></param>
-        /// <param name="model_upd"></param>
-        /// <returns></returns>
-        public ActionResult deleteSecondLevelDir(SecondLevelDirModel condition, SecondLevelDirModel_update model_upd)
-        {
-            if (model_upd.id_upd.HasValue)
+            if (id>0)
             {
-                StringBuilder sb = new StringBuilder("删除");
-                Result<SecondLevelDirModel> result = layer.deleteSecondLevelDir(model_upd.id_upd.Value);
-                if (result.result)
+                var result =await layer.getSingleSecondDir(id);
+                if (result.success)
                 {
-                    TempData["Msg"] = new Message(sb.Append("成功").ToString());
+                    return View(result.data);
                 }
                 else
                 {
-                    TempData["Msg"] = new Message(sb.Append("失败").ToString());
+                    ViewBag.Msg = result.message;
                 }
             }
-            return RedirectToAction("searchSecondLevelDir", condition);
+            else
+            {
+                ViewBag.Msg = "出现不可预期的异常，请重新操作";
+            }
+            ViewBag.ReturnUrl = "/SecondLevelDir/Index";
+            return View("Error");
         }
-        /// <summary>
-        /// 根据id获取一条二级菜单
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public string getSingleSecondDir(int id)
+        [HttpPost]
+        public async Task<ActionResult> Update(SecondLevelDirModel model)
         {
-            SecondLevelDirModel model = layer.getSingleSecondDir(id);
-            return JsonConvert.SerializeObject(model);
+            if (ModelState.IsValid)
+            {
+                var result =await layer.updateSecondLevelDir(model, User.Identity.Name);
+                if (result.success)
+                {
+                    ViewBag.ReturnUrl = "/SecondLevelDir/Update?id=" + model.id;
+                    return View("Success");
+                }
+                else
+                {
+                    ModelState.AddModelError("", result.message);
+                }
+            }
+            return View();
+        }
+        public ActionResult Add()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<ActionResult> Add(SecondLevelDirModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await layer.addSecondLevelDir(model, User.Identity.Name);
+                if (result.success)
+                {
+                    ViewBag.ReturnUrl = "/SecondLevelDir/Add";
+                    return View("Success");
+                }
+                else
+                {
+                    ModelState.AddModelError("", result.message);
+                }
+            }
+            return View();
+        }
+        [HttpPost]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var result = await layer.deleteSecondLevelDir(id);
+            ViewBag.ReturnUrl = "/SecondLevelDir/Index";
+            if (result.success)
+            {
+                return View("Success");
+            }
+            else
+            {
+                ViewBag.Msg = result.message;
+                return View("Error");
+            }
         }
     }
 }

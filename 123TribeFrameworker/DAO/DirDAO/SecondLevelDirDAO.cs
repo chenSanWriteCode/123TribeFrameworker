@@ -1,42 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Transactions;
 using System.Web;
 using _123TribeFrameworker.CommonTools;
 using _123TribeFrameworker.Entity;
 using _123TribeFrameworker.Models;
 using _123TribeFrameworker.Models.DirModels;
+using _123TribeFrameworker.Models.QueryModel;
 
 namespace _123TribeFrameworker.DAO.DirDAO
 {
-    public class SecondLevelDirDAO
+    public class SecondLevelDirDAO:ISecondLevelDirDAO
     {
         /// <summary>
         /// 根据动态条件获取所有2级菜单集合
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public List<SecondLevel> getSecondLevelDir(Pager<SecondLevelDirModel> pager)
+        public Result<List<SecondLevel>> getSecondLevelDir(Pager<List<SecondLevel>> pager, SecondMenuQuery condition)
         {
-            DirDbContext context = new DirDbContext();
-            var result = context.secondLevels.Where(x => x.activityFlag == 1);
-            int start = (pager.page - 1) * pager.recPerPage;
-            if (pager.data.id.HasValue)
+            Result<List<SecondLevel>> result = new Result<List<SecondLevel>>();
+            try
             {
-                result = result.Where(x => x.id == pager.data.id.Value);
+                DirDbContext context = new DirDbContext();
+                var sql = context.secondLevels.Where(x => x.activityFlag == 1);
+                int start = (pager.page - 1) * pager.recPerPage;
+                sql = string.IsNullOrEmpty(condition.title) ? sql : sql.Where(x => x.title == condition.title);
+                sql = condition.firstLevelID == 0 ? sql : sql.Where(x => x.firstLevelId == condition.firstLevelID);
+                sql = sql.OrderBy(x => x.orderId).ThenBy(x => x.title).Skip(start).Take(pager.recPerPage);
+                result.data = sql.ToList();
             }
-            else
+            catch (Exception err)
             {
-                result = !pager.data.orderId.HasValue ? result : result.Where(x => x.orderId == pager.data.orderId);
-                result = string.IsNullOrEmpty(pager.data.title) ? result : result.Where(x => x.title == pager.data.title);
-                result = !pager.data.firstLevelID.HasValue ? result : result.Where(x => x.firstLevelId == pager.data.firstLevelID);
-                result = string.IsNullOrEmpty(pager.data.createdBy) ? result : result.Where(x => x.createdBy == pager.data.createdBy);
-                result = string.IsNullOrEmpty(pager.data.lastUpdatedBy) ? result : result.Where(x => x.lastUpdatedBy == pager.data.lastUpdatedBy);
-                result = !pager.data.createdDate.HasValue ? result : result.Where(x => x.createdDate == pager.data.createdDate);
-                result = !pager.data.lastUpdatedDate.HasValue ? result : result.Where(x => x.lastUpdatedDate == pager.data.lastUpdatedDate);
+                result.addError(err.Message);
             }
-            result = result.OrderBy(x => x.orderId).ThenBy(x => x.id).Skip(start).Take(pager.recPerPage);
-            return result.ToList();
+
+            return result;
         }
         /// <summary>
         /// 获取所有主菜单list
@@ -54,129 +55,140 @@ namespace _123TribeFrameworker.DAO.DirDAO
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public SecondLevel getSingleSecondDir(int id)
+        public Result<SecondLevel> getSingleSecondDir(int id)
         {
-            DirDbContext context = new DirDbContext();
-            return context.secondLevels.FirstOrDefault(x => x.activityFlag == 1 && x.id == id);
+            Result<SecondLevel> result = new Result<SecondLevel>();
+            try
+            {
+                DirDbContext context = new DirDbContext();
+                result.data= context.secondLevels.FirstOrDefault(x => x.activityFlag == 1 && x.id == id);
+            }
+            catch (Exception err)
+            {
+                result.addError(err.Message);
+            }
+            return result;
         }
         /// <summary>
         /// 获取总条数
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="condition"></param>
         /// <returns></returns>
-        public int getSecondLevelDirCount(SecondLevelDirModel model)
+        public int getSecondLevelDirCount(SecondMenuQuery condition)
         {
-            DirDbContext context = new DirDbContext();
-            var result = context.secondLevels.Where(x => x.activityFlag == 1);
-            if (model.id.HasValue)
+            int result = 0;
+            try
             {
-                result = result.Where(x => x.id == model.id.Value);
+                DirDbContext context = new DirDbContext();
+                var sql = context.secondLevels.Where(x => x.activityFlag == 1);
+                sql = string.IsNullOrEmpty(condition.title) ? sql : sql.Where(x => x.title == condition.title);
+                sql = condition.firstLevelID == 0 ? sql : sql.Where(x => x.firstLevelId == condition.firstLevelID);
+                result = sql.Count();
             }
-            else
+            catch (Exception)
             {
-                result = model.orderId.HasValue ? result : result.Where(x => x.orderId == model.orderId);
-                result = string.IsNullOrEmpty(model.title) ? result : result.Where(x => x.title == model.title);
-                result = string.IsNullOrEmpty(model.createdBy) ? result : result.Where(x => x.createdBy == model.createdBy);
-                result = string.IsNullOrEmpty(model.lastUpdatedBy) ? result : result.Where(x => x.lastUpdatedBy == model.lastUpdatedBy);
-                result = model.createdDate.HasValue ? result : result.Where(x => x.createdDate == model.createdDate);
-                result = model.lastUpdatedDate.HasValue ? result : result.Where(x => x.lastUpdatedDate == model.lastUpdatedDate);
             }
-            return result.Count();
+            return result;
         }
         /// <summary>
         /// 删除
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public int deleteSecondlevelDir(int id)
+        public Result<int> deleteSecondlevelDir(int id)
         {
-            //DONE: delete from roleMenu
-            DirDbContext context = new DirDbContext();
-            var result = context.secondLevels.Where(x => x.id == id);
-            SecondLevel entity = result.First();
-            context.secondLevels.Remove(entity);
-            RoleMenuDbContext roleContext = new RoleMenuDbContext();
-            var roleMenu = roleContext.roleMenus.Where(x => x.menuLevel == 2 && x.menuId == id).First();
-            roleContext.roleMenus.Remove(roleMenu);
-            roleContext.SaveChanges();
-            return context.SaveChanges();
+            Result<int> result = new Result<int>();
+            try
+            {
+                using (var ts = new TransactionScope())
+                {
+                    DirDbContext context = new DirDbContext();
+                    RoleMenuDbContext roleContext = new RoleMenuDbContext();
+                    var entity = context.secondLevels.Where(x => x.id == id).FirstOrDefault();
+                    if (entity != null)
+                    {
+                        context.secondLevels.Remove(entity);
+                        context.SaveChanges();
+                    }
+                    var roleMenu = roleContext.roleMenus.Where(x => x.menuLevel == 2 && x.menuId == id).FirstOrDefault();
+                    if (roleMenu != null)
+                    {
+                        roleContext.roleMenus.Remove(roleMenu);
+                        roleContext.SaveChanges();
+                    }
+                    ts.Complete();
+                }
+            }
+            catch (Exception err)
+            {
+                result.addError(err.Message);
+            }
+            return result;
         }
         /// <summary>
         /// 修改
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public int updateSecondLevelDir(SecondLevelDirModel model)
+        public async Task<Result<SecondLevel>> updateSecondLevelDir(SecondLevel model)
         {
-            DirDbContext context = new DirDbContext();
-            var result = context.secondLevels.Where(x => x.activityFlag == 1 &&  x.id == model.id.Value);
-            SecondLevel entity = result.First();
-            modelToEntity(model, ref entity);
-            return context.SaveChanges();
+            Result<SecondLevel> result = new Result<SecondLevel>();
+            try
+            {
+                using (DirDbContext context = new DirDbContext())
+                {
+                    var data = context.secondLevels.Where(x => x.activityFlag == 1 && x.id == model.id).FirstOrDefault();
+                    if (data != null)
+                    {
+                        data.orderId = model.orderId;
+                        data.title = model.title;
+                        data.open = model.open;
+                        data.url = model.url;
+                        data.firstLevelId = model.firstLevelId;
+                        data.lastUpdatedBy = model.lastUpdatedBy;
+                        data.lastUpdatedDate = model.lastUpdatedDate;
+                    }
+                    var count = await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception err)
+            {
+                result.addError(err.Message);
+            }
+
+
+            return result;
         }
         /// <summary>
         /// 增加
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public int addSecondLevelDir(SecondLevelDirModel model)
+        public async Task<Result<SecondLevel>> addSecondLevelDir(SecondLevel model)
         {
-            DirDbContext context = new DirDbContext();
-            if (model != null)
-            {
-                SecondLevel entity = new SecondLevel();
-                modelToEntity(model, ref entity);
-                entity.activityFlag = 1;
-                var result = context.secondLevels.Add(entity);
-            }
-            return context.SaveChanges();
-        }
+            Result<SecondLevel> result = new Result<SecondLevel>();
 
-        #region 工具
-        /// <summary>
-        /// 前端model转后端entity
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        public void modelToEntity(SecondLevelDirModel model, ref SecondLevel entity)
-        {
-            if (model != null)
+            using (DirDbContext context = new DirDbContext())
             {
-                if (model.id.HasValue)
+                try
                 {
-                    entity.id = model.id.Value;
+                    var data = context.secondLevels.FirstOrDefault(x => x.title == model.title);
+                    if (data != null)
+                    {
+                        result.addError($"目录名{model.title}已经存在");
+                    }
+                    else
+                    {
+                        result.data = context.secondLevels.Add(model);
+                        await context.SaveChangesAsync();
+                    }
                 }
-                if (model.orderId.HasValue)
+                catch (Exception err)
                 {
-                    entity.orderId = model.orderId.Value;
+                    result.addError(err.Message);
                 }
-                if (model.createdDate.HasValue)
-                {
-                    entity.createdDate = model.createdDate.Value;
-                }
-                if (model.lastUpdatedDate.HasValue)
-                {
-                    entity.lastUpdatedDate = model.lastUpdatedDate ?? null;
-                }
-                if (!string.IsNullOrEmpty(model.createdBy))
-                {
-                    entity.createdBy = model.createdBy?.ToString();
-                }
-                if (!string.IsNullOrEmpty(model.lastUpdatedBy))
-                {
-                    entity.lastUpdatedBy = model.lastUpdatedBy?.ToString();
-                }
-                if (!string.IsNullOrEmpty(model.title))
-                {
-                    entity.title = model.title?.ToString();
-                }
-                if (!string.IsNullOrEmpty(model.url))
-                {
-                    entity.url = model.url;
-                }
-                entity.firstLevelId = model.firstLevelID.Value;
             }
+            return result;
         }
-        #endregion
     }
 }

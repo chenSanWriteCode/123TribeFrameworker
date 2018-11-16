@@ -33,7 +33,7 @@ namespace _123TribeFrameworker.Controllers
             if (ModelState.IsValid)
             {
                 var result = await service.addAsync(model);
-                if (!result.result)
+                if (!result.success)
                 {
                     ModelState.AddModelError("", result.message);
                 }
@@ -56,7 +56,7 @@ namespace _123TribeFrameworker.Controllers
             if (ModelState.IsValid)
             {
                 var result = await service.update(model);
-                if (!result.result)
+                if (!result.success)
                 {
                     ModelState.AddModelError("", result.message);
                 }
@@ -71,7 +71,7 @@ namespace _123TribeFrameworker.Controllers
         public async Task<ActionResult> delete(int id,MaterialInfo condition)
         {
             var result = await service.deleteByIdAsync(id);
-            if (!result.result)
+            if (!result.success)
             {
                 return View("Error", new string[] { result.message });
             }

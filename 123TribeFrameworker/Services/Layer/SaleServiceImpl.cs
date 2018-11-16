@@ -10,7 +10,7 @@ using Unity.Attributes;
 
 namespace _123TribeFrameworker.Services.Layer
 {
-    public class SaleService:ISaleService
+    public class SaleServiceImpl:ISaleService
     {
         [Dependency]
         public ISaleDAO dao { get; set; }

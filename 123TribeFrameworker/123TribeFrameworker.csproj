@@ -86,11 +86,13 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Activities" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -260,6 +262,7 @@
     <Compile Include="DAO\IOrderInfoDAO.cs" />
     <Compile Include="DAO\IOutRecordDAO.cs" />
     <Compile Include="DAO\ISaleDAO.cs" />
+    <Compile Include="DAO\ISecondLevelDirDAO.cs" />
     <Compile Include="Entity\DataGridResult.cs" />
     <Compile Include="Entity\DirDbContext.cs" />
     <Compile Include="Entity\FirstLevel.cs" />
@@ -291,9 +294,8 @@
     <Compile Include="Models\BussinessModels\SaleModel.cs" />
     <Compile Include="Models\DirModels\FirstLevelDirModel_update.cs" />
     <Compile Include="Models\DirModels\RoleMenuEdit.cs" />
-    <Compile Include="Models\DirModels\SecondDirDisplayModel.cs" />
+    <Compile Include="Models\DirModels\Menu.cs" />
     <Compile Include="Models\DirModels\SecondLevelDirModel.cs" />
-    <Compile Include="Models\DirModels\SecondLevelDirModel_update.cs" />
     <Compile Include="Models\DirModels\ThirdLevelDirModel.cs" />
     <Compile Include="Models\DirModels\ThirdLevelDirModel_update.cs" />
     <Compile Include="Entity\LayerDbContext.cs" />
@@ -304,6 +306,8 @@
     <Compile Include="Models\QueryModel\OrderInfoQuery.cs" />
     <Compile Include="Models\QueryModel\OutRecordQuery.cs" />
     <Compile Include="Models\QueryModel\ProfitRecordQuery.cs" />
+    <Compile Include="Models\QueryModel\Query.cs" />
+    <Compile Include="Models\QueryModel\SecondMenuQuery.cs" />
     <Compile Include="Models\QueryModel\TradingRecordQuery.cs" />
     <Compile Include="Models\RoleMenuDbContext.cs" />
     <Compile Include="Services\IDirLayerService.cs" />
@@ -317,22 +321,22 @@
     <Compile Include="Services\IRoleMenuLayerService.cs" />
     <Compile Include="Services\ISaleService.cs" />
     <Compile Include="Services\ISecondLevelDirService.cs" />
-    <Compile Include="Services\Layer\DirLayer.cs" />
+    <Compile Include="Services\Layer\DirLayerServiceImpl.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\DirModels\FirstLevelDirModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\Layer\FirstLevelDir.cs" />
-    <Compile Include="Services\Layer\InStorageRecordService.cs" />
-    <Compile Include="Services\Layer\InventoryService.cs" />
-    <Compile Include="Services\Layer\MaterialInfoService.cs" />
-    <Compile Include="Services\Layer\OrderDetailInfoService.cs" />
-    <Compile Include="Services\Layer\OrderInfoService.cs" />
-    <Compile Include="Services\Layer\OutRecordService.cs" />
-    <Compile Include="Services\Layer\RoleMenuLayer.cs" />
-    <Compile Include="Services\Layer\SaleService.cs" />
-    <Compile Include="Services\Layer\SecondLevelDir.cs" />
+    <Compile Include="Services\Layer\FirstLevelDirServiceImpl.cs" />
+    <Compile Include="Services\Layer\InStorageRecordServiceImpl.cs" />
+    <Compile Include="Services\Layer\InventoryServiceImpl.cs" />
+    <Compile Include="Services\Layer\MaterialInfoServiceImpl.cs" />
+    <Compile Include="Services\Layer\OrderDetailInfoServiceImpl.cs" />
+    <Compile Include="Services\Layer\OrderInfoServiceImpl.cs" />
+    <Compile Include="Services\Layer\OutRecordServiceImpl.cs" />
+    <Compile Include="Services\Layer\RoleMenuLayerImpl.cs" />
+    <Compile Include="Services\Layer\SaleServiceImpl.cs" />
+    <Compile Include="Services\Layer\SecondLevelDirServiceImpl.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -568,6 +572,8 @@
     <Content Include="Views\Sale\Index.cshtml" />
     <Content Include="Views\OutRecords\SumIndex.cshtml" />
     <Content Include="Views\ChartBoard\Index.cshtml" />
+    <Content Include="Views\SecondLevelDir\Add.cshtml" />
+    <Content Include="Views\SecondLevelDir\Update.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

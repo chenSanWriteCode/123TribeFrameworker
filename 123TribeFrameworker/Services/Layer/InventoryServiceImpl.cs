@@ -13,7 +13,7 @@ using Unity.Attributes;
 
 namespace _123TribeFrameworker.Services.Layer
 {
-    public class InventoryService : IInventoryService
+    public class InventoryServiceImpl : IInventoryService
     {
         [Dependency]
         public IInventoryDAO dao { get; set; }

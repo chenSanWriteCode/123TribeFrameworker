@@ -9,7 +9,7 @@ using _123TribeFrameworker.Entity;
 
 namespace _123TribeFrameworker.Services.Layer
 {
-    public class RoleMenuLayer: IRoleMenuLayerService
+    public class RoleMenuLayerImpl: IRoleMenuLayerService
     {
         public RoleMenuDAO roleMenuDAO { get { return new RoleMenuDAO(); } }
         /// <summary>

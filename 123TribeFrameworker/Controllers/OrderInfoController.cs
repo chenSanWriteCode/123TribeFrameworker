@@ -38,7 +38,7 @@ namespace _123TribeFrameworker.Controllers
         public async Task<ActionResult> delete(string orderNo)
         {
             var result = await service.deleteByOrderNo(orderNo);
-            if (!result.result)
+            if (!result.success)
             {
                 ViewBag.returnUrl = "/OrderInfo/search?orderNo="+orderNo;
                 return View("Error", new string[] { result.message });

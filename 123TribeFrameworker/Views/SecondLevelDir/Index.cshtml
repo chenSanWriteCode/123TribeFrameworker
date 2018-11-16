@@ -1,64 +1,32 @@
 ﻿@using _123TribeFrameworker.Models.DirModels
 @using _123TribeFrameworker.Entity
-@model Pager<List<SecondLevelDirModel>>
+@using _123TribeFrameworker.Infrastructrue
+@model Pager<List<SecondLevel>>
 @{
     ViewBag.Title = "二级菜单";
 }
 @section scripts{
     <script type="text/javascript">
         $(function () {
-            //$('#table1').datatable({
-            //    //checkable: true,
-            //    //checkByClickRow: true,
-            //    sortable: true,
-            //    fixedHeader: true,
-            //    scrollPos: "out",
-            //    fixCellHeight: false
-            //});
-
-            //$('#table2').datagrid({
-            //    states: {
-            //        //pager: { page: 1, recPerPage: 100 },
-            //        fixedLeftUntil: 0,
-            //        // 固定左侧第一列
-            //        //fixedRightFrom: 12,   // 从第12列开始固定到右侧
-            //        fixedTopUntil: 0,     // 固定顶部第一行（标题行）
-            //        fixedBottomFrom: 100, // 从第100行（在此例中是最后一行）开始固定到底部
-            //    }
-            //});
-            $('#myPager').on('onPageChange', function (e, state, oldState) {
-                if (state.page !== oldState.page) {
-                    var href = $('#searchCondition').attr("action");
-                    console.log("onPageChange+"+state.page)
-                    href = href + "?page=" + state.page;
-                    $('#searchCondition').attr("action", href);
-                    $('#searchCondition').submit();
-                }
+            $('#myDataGrid').datagrid({
+                sortable: true,
+                checkable: true,
+                selectable: false
             });
-            $.post('/FirstLevelDir/getFirstLevelDirList', function (data) {
-                data = $.parseJSON(data);
-                if (data != null) {
-                    $.each(data, function (key, value) {
-                        $('<option value="' + key + '">' + value + '</option>').appendTo(".chosen-select");
-                    })
-                    var selectedId = @ViewBag.condition.firstLevelID;
-                    if (selectedId.length!=0) {
-                        $('#firstLevelID').val(selectedId);
+            $('#dataPager').pager({
+                page: @Model.page,
+                recTotal: @Model.recTotal,
+                recPerPage:@Model.recPerPage,
+                onPageChange: function(state, oldState) {
+                    if (typeof(oldState.page)!="undefined" && state.page !== oldState.page) {
+                        var href = $('#searchForm').attr("action");
+                        href = href + "?page=" + state.page;
+                        $('#searchForm').attr("action", href);
+                        $('#searchForm').submit();
                     }
                 }
-            })
+            });
         })
-        function clickRow(id) {
-            if (id != null) {
-                $('#id_upd').val(id);
-                $.post('/SecondLevelDir/getSingleSecondDir', { id: id }, function (data) {
-                    data = $.parseJSON(data);
-                    $('#orderId_upd').val(data.orderId);
-                    $('#content_upd').val(data.title);
-                    $('#firstLevelID_upd').val(data.firstLevelID);
-                });
-            }
-        }
         function updateInfo(id) {
             if (id != null) {
                 $('#changeDir').attr('hidden', false);
@@ -72,156 +40,97 @@
                 });
             }
         }
-        function deleteInfo(id) {
-            $("#id_upd").val(id);
-            $('#updateForm').attr('action', '/SecondLevelDir/deleteSecondLevelDir');
-            $('#updateForm').submit();
+        function deleteModel(id) {
+            $("#dataId").val(id);
+            $('#deleteForm').submit();
         }
-        function changeDirFormShow() {
-            if ($('#changeDir').attr('hidden') != 'hidden') {
-                $('#changeDir').attr('hidden', true);
-            } else {
-                $('#orderId_upd').val("");
-                $('#content_upd').val("");
-                $('#firstLevelID_upd').val();
-                $('#changeDir').attr('hidden', false);
-            }
-        }
-
     </script>
 }
 <div>
-    <div id="searchDir" style="margin-top:10px">
-        @if (TempData["Msg"] != null)
-        {
-            var msgData = TempData["Msg"] as Message;
-            if (msgData.success == "success")
-            {
-                <div class="alert alert-success alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    @msgData.msg
-                </div>
-            }
-            else
-            {
-                <div class="alert alert-warning alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    @msgData.msg
-                </div>
-            }
-
-        }
-        <form id="searchCondition" action="/SecondLevelDir/searchSecondLevelDir" method="post" class="form-horizontal">
-            <div class="form-group">
-                <div class="col-md-3">
-                    <div class="input-control has-label-left-lg">
-                        <input type="text" class="form-control" value="@ViewBag.condition.orderId" id="orderId" name="orderId" />
-                        <label for="orderId" class="input-control-label-left">顺序:</label>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="input-control has-label-left-lg">
-                        <input type="text" class="form-control" value="@ViewBag.condition.title" id="secondLevelContent" name="title" />
-                        <label for="secondLevelContent" class="input-control-label-left">内容：</label>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="input-control has-label-left-lg">
-                        <select id="firstLevelID" name="firstLevelID" class="chosen-select form-control"></select>
-                        <label for="firstLevelID" class="input-control-label-left">上级菜单：</label>
-                    </div>
-                </div>
-                <div class="col-md-1">
-                    <input type="submit" class="btn btn-block btn-primary" value="查询" />
-                </div>
-                <div class="col-md-1">
-                    <input type="button" class="btn btn-block btn-primary" value="增加" onclick="changeDirFormShow()" />
+    <form id="searchForm" action="/SecondLevelDir/searchSecondLevelDir" method="post" class="form-horizontal">
+        <div class="form-group">
+            <div class="col-md-3">
+                <div class="input-control has-label-left-lg">
+                    <input type="text" class="form-control" value="@ViewBag.condition.title" id="secondLevelContent" name="title" />
+                    <label for="secondLevelContent" class="input-control-label-left">菜单：</label>
                 </div>
             </div>
-        </form>
-    </div>
-    <div id="jsAlert" class="alert alert-warning alert-dismissable" hidden="hidden">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        <label id="jsAlertContext"></label>
-    </div>
-    <div id="dispalyDir" style="margin-top:10px">
-        <div style="overflow-x:auto">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>顺序</th>
-                        <th>模块</th>
-                        <th>上级菜单</th>
-                        <th>URL</th>
-                        <th>创建时间</th>
-                        <th>创建人</th>
-                        <th>最后修改时间</th>
-                        <th>最后修改人</th>
-                        <th>修改</th>
-                        <th>删除</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model != null && Model.data.Count > 0)
-                    {
-                        foreach (var item in Model.data)
+            <div class="col-md-3">
+                <div class="input-control has-label-left-lg">
+                    <select id="firstLevelID" name="firstLevelID" class="chosen-select form-control">
+                        @foreach (var item in Html.FirstMenuInfo())
                         {
-                            <tr>
-                                <td>@item.orderId</td>
-                                <td>@item.title</td>
-                                <td>@item.firstLevelName</td>
-                                <td>@item.url</td>
-                                <td>@item.createdDate</td>
-                                <td>@item.createdBy</td>
-                                <td>@item.lastUpdatedDate</td>
-                                <td>@item.lastUpdatedBy</td>
-                                <td><button class="btn btn-primary " onclick="updateInfo(@item.id)" type="button">修改</button></td>
-                                <td><button class="btn btn-danger  " onclick="deleteInfo(@item.id)" type="button">删除</button></td>
-                            </tr>
+                            if (ViewBag.Condition.firstLevelID == item.Key)
+                            {
+                                <option value="@item.Key" selected="selected">@item.Value</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Key">@item.Value</option>
+                            }
                         }
-                    }
-                </tbody>
-            </table>
+                    </select>
+                    <label for="firstLevelID" class="input-control-label-left">上级菜单：</label>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <input type="submit" class="btn btn-block btn-primary" value="查询" />
+            </div>
+            <div class="col-md-1">
+                @Html.ActionLink("增加","Add",null, new { @class= "btn btn-block btn-primary" })
+            </div>
         </div>
-        <ul id="myPager" class="pager" data-ride="pager" data-page="@Model.page" data-rec-total="@Model.recTotal" data-rec-per-page="@Model.recPerPage" style="margin-top:0px"></ul>
+    </form>
+
+    <table class="table" id="myDataGrid">
+        <thead>
+            <tr>
+                <th>顺序</th>
+                <th>模块</th>
+                <th>上级菜单</th>
+                <th>修改</th>
+                <th>删除</th>
+                <th>URL</th>
+                <th>创建时间</th>
+                <th>创建人</th>
+                <th>最后修改时间</th>
+                <th>最后修改人</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.data != null)
+            {
+                foreach (var item in Model.data)
+                {
+                    <tr>
+                        <td>@item.orderId</td>
+                        <td>@item.title</td>
+                        <td>@Html.FirstMenuInfo()[item.firstLevelId]</td>
+                        <td>@item.url</td>
+                        <td>
+                            @Html.ActionLink("修改", "Update", new { id = item.id }, new { @class = "btn btn-primary" })
+                        </td>
+                        <td>
+                            <button class="btn btn-danger  " onclick="deleteModel(@item.id)" type="button">删除</button>
+                        </td>
+                        <td>@item.createdDate</td>
+                        <td>@item.createdBy</td>
+                        <td>@item.lastUpdatedDate</td>
+                        <td>@item.lastUpdatedBy</td>
+
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <div>
+        <ul id="dataPager" class="pager"></ul>
     </div>
 
-    <div id="changeDir" style="margin-bottom:10px" class="panel" hidden="hidden">
 
-        <form action="/SecondLevelDir/changeSecondLevelDir" method="post" class="form-horizontal" id="updateForm">
-            <div hidden="hidden">
-                <input value="@ViewBag.condition.orderId" name="orderId" />
-                <input value="@ViewBag.condition.title" name="title" />
-                <input value="@ViewBag.condition.firstLevelID" name="firstLevelID" />
-                <input name="id_upd" id="id_upd" />
-            </div>
-            <div class="form-group">
-                <label for="orderId_upd" class="col-md-1">顺序</label>
-                <div class="col-md-3">
-                    <input type="text" class="form-control required" id="orderId_upd" name="orderId_upd" placeholder="数字 1，2，3..." />
-                </div>
-                <label for="content_upd" class="col-md-1">内容</label>
-                <div class="col-md-3">
-                    <input type="text" class="form-control required" id="content_upd" name="content_upd" placeholder="模块名称" />
-                </div>
-                <label class="col-md-1">上级菜单</label>
-                <div class="col-md-3">
-                    <select data-placeholder="上级菜单..." id="firstLevelID_upd" name="firstLevelID_upd" class="chosen-select form-control"></select>
-                </div>
-                <label for="url_upd" class="col-md-1">URL</label>
-                <div class="col-md-3">
-                    <input type="text" class="form-control required" id="url_upd" name="url_upd" placeholder="url链接,如/Home/Index" />
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-1">
-                    <input type="submit" class="btn btn-block btn-primary" value="提交" />
-                </div>
-                @*<div class="col-md-1">
-                        <input type="button" class="btn btn-block btn-primary" value="删除" onclick="deleteRow()" />
-                    </div>*@
-            </div>
-        </form>
-    </div>
 
+    <form hidden="hidden" method="post" action="/SecondLevelDir/Delete" id="deleteForm">
+        <input id="dataId" name="id" />
+    </form>
 </div>

@@ -5,7 +5,7 @@ using System.Web;
 
 namespace _123TribeFrameworker.Models.DirModels
 {
-    public class SecondDirDisplayModel
+    public class Menu
     {
         public int Id { get; set; }
         public string title { get; set; }

@@ -43,7 +43,7 @@ namespace _123TribeFrameworker.Infrastructrue
             {
                 foreach (var item in results)
                 {
-                    if (!item.result)
+                    if (!item.success)
                     {
                         result.addError(item.message);
                     }

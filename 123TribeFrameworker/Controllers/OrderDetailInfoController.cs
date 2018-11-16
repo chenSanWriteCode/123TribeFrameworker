@@ -77,7 +77,7 @@ namespace _123TribeFrameworker.Controllers
         {
             var result = await detailService.deleteById(id,User.Identity.Name);
             ViewBag.returnUrl = "/OrderDetailInfo/update?orderNo=" + result.data.orderNo;
-            if (result.result)
+            if (result.success)
             {
                 ViewBag.Msg = "删除成功";
                 return View("Success");
@@ -106,7 +106,7 @@ namespace _123TribeFrameworker.Controllers
             model.lastUpdatedBy = User.Identity.Name;
             model.lastUpdatedDate = DateTime.Now;
             var result = await detailService.updateDetail(model);
-            if (!result.result)
+            if (!result.success)
             {
                 ViewBag.returnUrl = "/OrderDetailInfo/updateDetail?id=" + model.id+"&orderNo="+model.orderNo;
                 return View("Error",new string[] { "操作失败："+result.message});
@@ -136,7 +136,7 @@ namespace _123TribeFrameworker.Controllers
                 return View();
             }
             var result = await detailService.addDetail(model);
-            if (!result.result)
+            if (!result.success)
             {
                 ModelState.AddModelError("",result.message);
                 ViewBag.orderNo = model.orderNo;
@@ -189,7 +189,7 @@ namespace _123TribeFrameworker.Controllers
             }
             
             Result<int> result = await detailService.receiveOrder(list, receivedOrder, User.Identity.Name);
-            if (result.result)
+            if (result.success)
             {
                 ViewBag.returnUrl = "/OrderInfo/search?orderNo="+orderNo;
                 ViewBag.Msg = "订单收货成功！";
@@ -216,7 +216,7 @@ namespace _123TribeFrameworker.Controllers
             var sumPrice = priceList.Sum(x => x.referencePriceIn * x.num);
             
             var orderResult = await Orderservice.addOrder(orderList, User.Identity.Name, sumPrice);
-            if (orderResult.result)
+            if (orderResult.success)
             {
                 ViewBag.returnUrl = "/OrderInfo/search?orderNo="+ orderResult.data.First().orderNo;
                 ViewBag.Msg = "订单生成成功:" + orderResult.data.First().orderNo;
@@ -255,7 +255,7 @@ namespace _123TribeFrameworker.Controllers
                 return View("Error", new string[] { "实收数量必须为正数" });
             }
             Result<int> result = await detailService.dealReceivedOrder(list, User.Identity.Name);
-            if (result.result)
+            if (result.success)
             {
                 ViewBag.returnUrl = "/OrderInfo/Index?orderNo=" + orderNo;
                 ViewBag.Msg = "订单异常处理成功！";

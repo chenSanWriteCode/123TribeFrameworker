@@ -18,7 +18,7 @@ namespace _123TribeFrameworker.Controllers
     public class FirstLevelDirController : Controller
     {
         [Dependency]
-        public FirstLevelDir layer{ get; set; }
+        public FirstLevelDirServiceImpl layer{ get; set; }
         public ActionResult Index(FirstLevelDirModel model)
         {
             Pager<List<FirstLevelDirModel>> pager = new Pager<List<FirstLevelDirModel>>();
@@ -66,7 +66,7 @@ namespace _123TribeFrameworker.Controllers
                 sb.Append("增加");
             }
 
-            if (result.result)
+            if (result.success)
             {
                 TempData["Msg"] = new Message(sb.Append("成功").ToString());
             }
@@ -89,7 +89,7 @@ namespace _123TribeFrameworker.Controllers
             {
                 StringBuilder sb = new StringBuilder("删除");
                 Result<FirstLevelDirModel> result = layer.deleteFirstLevelDir(model_upd.id_upd.Value);
-                if (result.result)
+                if (result.success)
                 {
                     TempData["Msg"] = new Message(sb.Append("成功").ToString());
                 }

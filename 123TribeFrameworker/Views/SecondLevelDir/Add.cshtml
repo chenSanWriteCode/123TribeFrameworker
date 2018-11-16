@@ -1,0 +1,58 @@
+﻿@using _123TribeFrameworker.Infrastructrue
+@{
+    ViewBag.Title = "二级目录增加";
+}
+
+<form method="post" class="form-horizontal">
+    <div class="form-group">
+        <label for="orderId" class="col-md-1">顺序</label>
+        <div class="col-md-3">
+            <input type="text" class="form-control required" id="orderId" name="orderId" placeholder="数字 1，2，3..." />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="title" class="col-md-1">内容</label>
+        <div class="col-md-3">
+            <input type="text" class="form-control required" id="title" name="title" placeholder="模块名称" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="firstLevelID" class="col-md-1">上级菜单</label>
+        <div class="col-md-3">
+            <select data-placeholder="上级菜单..." id="firstLevelID" name="firstLevelID" class="chosen-select form-control">
+                @foreach (var item in Html.FirstMenuInfo())
+                {
+                    if (item.Key > 0)
+                    {
+                        <option value="@item.Key">@item.Value</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="url" class="col-md-1">URL</label>
+        <div class="col-md-3">
+            <input type="text" class="form-control required" id="url" name="url" placeholder="url链接,如/Home/Index" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="open" class="col-md-1">Open</label>
+
+        <div class="col-md-3">
+            <select id="open" name="open" class="chosen-select form-control">
+                <option value="false">false</option>
+                <option value="true">true</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-block btn-primary"  >提交</button>
+        </div>
+        <div class="col-md-2">
+            @Html.ActionLink("返回", "Index", null,new { @class = "btn btn-block btn-primary" })
+        </div>
+    </div>
+</form>

@@ -3,6 +3,7 @@ using System.Data.Entity;
 using _123TribeFrameworker.Controllers;
 using _123TribeFrameworker.DAO;
 using _123TribeFrameworker.DAO.BussinessDAO;
+using _123TribeFrameworker.DAO.DirDAO;
 using _123TribeFrameworker.Models;
 using _123TribeFrameworker.Services;
 using _123TribeFrameworker.Services.Layer;
@@ -52,32 +53,35 @@ namespace _123TribeFrameworker
             // container.RegisterType<IProductRepository, ProductRepository>();
             container.RegisterType<AccountController>(new InjectionConstructor());
             container.RegisterType<ManageController>(new InjectionConstructor());
-            container.RegisterType<IOutRecordService, OutRecordService>();
-            container.RegisterType<IFirstLevelDirService, FirstLevelDir>();
-            container.RegisterType<ISecondLevelDirService, SecondLevelDir>();
-            container.RegisterType<IRoleMenuLayerService, RoleMenuLayer>();
-            container.RegisterType<IDirLayerService, DirLayer>();
+            container.RegisterType<IOutRecordService, OutRecordServiceImpl>();
+            container.RegisterType<IFirstLevelDirService, FirstLevelDirServiceImpl>();
+            
+            container.RegisterType<IRoleMenuLayerService, RoleMenuLayerImpl>();
+            container.RegisterType<IDirLayerService, DirLayerServiceImpl>();
 
             container.RegisterType<IMaterialInfoDAO, MaterialInfoDAO>();
-            container.RegisterType<IMaterialInfoService, MaterialInfoService>();
+            container.RegisterType<IMaterialInfoService, MaterialInfoServiceImpl>();
 
-            container.RegisterType<IOrderInfoService, OrderInfoService>();
+            container.RegisterType<IOrderInfoService, OrderInfoServiceImpl>();
             container.RegisterType<IOrderInfoDAO, OrderInfoDAO>();
 
-            container.RegisterType<IOrderDetailInfoService, OrderDetailInfoService>();
+            container.RegisterType<IOrderDetailInfoService, OrderDetailInfoServiceImpl>();
             container.RegisterType<IOrderDetailInfoDAO, OrderDetailInfoDAO>();
 
-            container.RegisterType<IInventoryService, InventoryService>();
+            container.RegisterType<IInventoryService, InventoryServiceImpl>();
             container.RegisterType<IInventoryDAO, InventoryDAO>();
 
-            container.RegisterType<IInStorageRecordService, InStorageRecordService>();
+            container.RegisterType<IInStorageRecordService, InStorageRecordServiceImpl>();
             container.RegisterType<IInStorageRecordDAO, InStorageRecordDAO>();
 
             container.RegisterType<ISaleDAO, SaleDAO>();
-            container.RegisterType<ISaleService, SaleService>();
+            container.RegisterType<ISaleService, SaleServiceImpl>();
 
             container.RegisterType<IOutRecordDAO, OutRecordDAO>();
-            container.RegisterType<IOutRecordService, OutRecordService>();
+            container.RegisterType<IOutRecordService, OutRecordServiceImpl>();
+
+            container.RegisterType<ISecondLevelDirDAO, SecondLevelDirDAO>();
+            container.RegisterType<ISecondLevelDirService, SecondLevelDirServiceImpl>();
         }
     }
 }

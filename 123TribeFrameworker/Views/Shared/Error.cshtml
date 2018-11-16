@@ -1,28 +1,23 @@
-﻿@model IEnumerable<string>
-
+﻿
 <div class="alert alert-warning" style="text-align:center">
-    @switch (Model.Count())
-    {
-        case 0:
-            @: something went wrong, please try again.
-            break;
-        case 1:
-            @Model.First();
-            break;
-        default:
-            @: the following errors were encountered:
-            <ul>
-                @foreach (var item in Model)
-                {
-                    <li>@item</li>
-                }
-            </ul>
-            break;
-    }
-    <br />
-    <br />
-    <a class="btn btn-primary btn-block" href="@ViewBag.returnUrl">OK</a>
-    @*@Html.ActionLink("OK", "returnBack", "Home", new { returnUrl = ViewBag.returnUrl }, new { @class = "btn btn-primary  btn-block" })*@
-</div>
+    <div class="alert alert-warning with-icon">
+        <i class="icon-warning-sign"></i>
+        <div class="content">
+            @if (ViewBag.Msg == null)
+            {
+                <div class="content">
+                    现了不可预期的错误，请刷新重试
+                </div>
+            }
+            else
+            {
+                <div class="content">
+                    @ViewBag.Msg
+                </div>
+            }
+        </div>
+    </div>
+    <a class="btn btn-primary btn-block" href="@ViewBag.ReturnUrl">OK</a>
+    </div>
 
 

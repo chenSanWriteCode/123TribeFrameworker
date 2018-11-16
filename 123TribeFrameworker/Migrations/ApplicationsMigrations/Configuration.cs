@@ -43,7 +43,7 @@ namespace _123TribeFrameworker.migrations.ApplicationsMigrations
                 userManager.AddToRole(user.Id, roleName);
             }
 
-            RoleMenuLayer layer = new RoleMenuLayer();
+            RoleMenuLayerImpl layer = new RoleMenuLayerImpl();
             AplicationRole role = roleManager.FindByName(roleName);
             var firstDirs = layer.searchRoleMenusNotInRoleId(role.Id, DirLevel.FirstLevel);
             var secondDirs = layer.searchRoleMenusNotInRoleId(role.Id, DirLevel.SecondLevel);

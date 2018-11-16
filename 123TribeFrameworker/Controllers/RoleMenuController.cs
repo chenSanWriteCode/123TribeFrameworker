@@ -70,7 +70,7 @@ namespace _123TribeFrameworker.Controllers
                     resultS = await layer.addRoleMenuRangeAsync(model.roleId, DirLevel.SecondLevel, model.secondDirIds);
                 }
                 var result = combineResults<RoleMenu>(resultF, resultS, resultT);
-                if (result.result)
+                if (result.success)
                 {
                     return RedirectToAction("Index","RoleMenu", model.roleId);
                 }
@@ -92,7 +92,7 @@ namespace _123TribeFrameworker.Controllers
             if (ModelState.IsValid)
             {
                 Result<RoleMenu> result = await layer.deleteMenuAsync(id);
-                if (!result.result)
+                if (!result.success)
                 {
                     return View("Error", new string[] { result.message });
                 }
@@ -128,9 +128,9 @@ namespace _123TribeFrameworker.Controllers
             Result<T> result = new Result<T>();
             foreach (var item in results)
             {
-                if (!item.result)
+                if (!item.success)
                 {
-                    result.result = false;
+                    result.success = false;
                     result.message = result.message + item.message + "; ";
                 }
             }

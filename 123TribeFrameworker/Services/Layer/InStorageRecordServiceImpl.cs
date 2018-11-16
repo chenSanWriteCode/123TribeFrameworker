@@ -12,7 +12,7 @@ using Unity.Attributes;
 
 namespace _123TribeFrameworker.Services.Layer
 {
-    public class InStorageRecordService : IInStorageRecordService
+    public class InStorageRecordServiceImpl : IInStorageRecordService
     {
         [Dependency]
         public IInStorageRecordDAO dao { get; set; }

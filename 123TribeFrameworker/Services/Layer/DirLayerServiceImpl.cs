@@ -9,20 +9,20 @@ using Newtonsoft.Json;
 
 namespace _123TribeFrameworker.Services.Layer
 {
-    public class DirLayer: IDirLayerService
+    public class DirLayerServiceImpl: IDirLayerService
     {
         
-        public List<SecondDirDisplayModel> searchSecondDir(string roleId ,int ID)
+        public List<Menu> searchSecondDir(string roleId ,int ID)
         {
             DirDbContext dirContext = new DirDbContext();
             RoleMenuDbContext roleContext = new RoleMenuDbContext();
             var menuIds = roleContext.roleMenus.Where(x => x.roleId == roleId && x.menuLevel == 2).Select(x => x.menuId).ToArray();
             var secondDirs = dirContext.secondLevels.Where(x => x.firstLevelId == ID && menuIds.Contains(x.id) && x.activityFlag == 1).OrderBy(x => x.orderId).ToList(); 
-            List<SecondDirDisplayModel> result = new List<SecondDirDisplayModel>();
-            SecondDirDisplayModel model = null;
+            List<Menu> result = new List<Menu>();
+            Menu model = null;
             foreach (var item in secondDirs)
             {
-                model = new SecondDirDisplayModel();
+                model = new Menu();
                 model.Id = item.id;
                 model.open = item.open;
                 model.title = item.title;

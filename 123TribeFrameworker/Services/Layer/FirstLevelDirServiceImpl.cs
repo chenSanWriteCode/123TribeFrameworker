@@ -9,7 +9,7 @@ using Unity.Attributes;
 
 namespace _123TribeFrameworker.Services.Layer
 {
-    public class FirstLevelDir : IFirstLevelDirService
+    public class FirstLevelDirServiceImpl : IFirstLevelDirService
     {
         [Dependency]
         public IRoleMenuLayerService dirService { get; set; }
@@ -63,7 +63,7 @@ namespace _123TribeFrameworker.Services.Layer
             Result<FirstLevelDirModel> result = new Result<FirstLevelDirModel>();
             if (dao.addFirstLevelDir(model)!=1)
             {
-                result.result = false;
+                result.success = false;
             }
             return result;
         }
@@ -78,7 +78,7 @@ namespace _123TribeFrameworker.Services.Layer
             Result<FirstLevelDirModel> result = new Result<FirstLevelDirModel>();
             if (dao.updateFirstLevelDir(model)!=1)
             {
-                result.result = false;
+                result.success = false;
             }
             return result;
         }
@@ -93,7 +93,7 @@ namespace _123TribeFrameworker.Services.Layer
             Result<FirstLevelDirModel> result = new Result<FirstLevelDirModel>();
             if (dao.deleteFirstlevelDir(id) != 1)
             {
-                result.result = false;
+                result.success = false;
             }
             else
             {

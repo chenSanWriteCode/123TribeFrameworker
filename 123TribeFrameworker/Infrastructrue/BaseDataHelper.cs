@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using _123TribeFrameworker.CommonTools;
 using _123TribeFrameworker.DAO.BussinessDAO;
 using _123TribeFrameworker.Entity;
 using _123TribeFrameworker.Services;
@@ -67,6 +68,25 @@ namespace _123TribeFrameworker.Infrastructrue
             DateTime model1 = currentDate.AddDays(1 - currentDate.Day).Date;
             result.Add(model1);
             return result;
+        }
+        /// <summary>
+        /// 获取第一层目录字典
+        /// </summary>
+        /// <returns></returns>
+        public static Dictionary<int,string> FirstMenuInfo(this HtmlHelper html)
+        {
+            Dictionary<int, string> dict = new Dictionary<int, string>();
+            dict.Add(0, "");
+            DirDbContext context = new DirDbContext();
+            try
+            {
+                var dataList = context.firstLevels.Where(x => x.activityFlag == 1).ToList();
+                dataList.ForEach(x => dict.Add(x.id, x.midContent));
+            }
+            catch (Exception)
+            {
+            }
+            return dict;
         }
     }
 }

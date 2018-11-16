@@ -10,7 +10,7 @@ namespace _123TribeFrameworker.Services
 {
     public interface IDirLayerService
     {
-        List<SecondDirDisplayModel> searchSecondDir(string roleId, int ID);
+        List<Menu> searchSecondDir(string roleId, int ID);
         string searchMainDir(string roleId);
     }
 }

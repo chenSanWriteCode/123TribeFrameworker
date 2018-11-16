@@ -11,7 +11,7 @@ using Unity.Attributes;
 
 namespace _123TribeFrameworker.Services.Layer
 {
-    public class OrderInfoService : IOrderInfoService
+    public class OrderInfoServiceImpl : IOrderInfoService
     {
         [Dependency]
         public IOrderInfoDAO dao { get; set; }

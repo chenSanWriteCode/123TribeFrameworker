@@ -13,7 +13,7 @@ using Unity.Attributes;
 
 namespace _123TribeFrameworker.Services.Layer
 {
-    public class OutRecordService : IOutRecordService
+    public class OutRecordServiceImpl : IOutRecordService
     {
         [Dependency]
         public IOutRecordDAO dao { get; set; }

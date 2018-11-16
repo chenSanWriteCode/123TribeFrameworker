@@ -27,13 +27,13 @@ namespace _123TribeFrameworker.DAO.DirDAO
                 int count = await context.SaveChangesAsync();
                 if (count == 0)
                 {
-                    result.result = false;
+                    result.success = false;
                     result.message = "This Role Do Not Include This Menu";
                 }
             }
             catch (Exception err)
             {
-                result.result = false;
+                result.success = false;
                 result.message = err.Message;
             }
             return result;
@@ -72,7 +72,7 @@ namespace _123TribeFrameworker.DAO.DirDAO
             }
             catch (Exception err)
             {
-                result.result = false;
+                result.success = false;
                 result.message = err.Message;
             }
             return result;

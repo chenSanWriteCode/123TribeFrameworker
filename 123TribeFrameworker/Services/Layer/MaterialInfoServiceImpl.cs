@@ -11,7 +11,7 @@ using Unity.Attributes;
 
 namespace _123TribeFrameworker.Services.Layer
 {
-    public class MaterialInfoService : IMaterialInfoService
+    public class MaterialInfoServiceImpl : IMaterialInfoService
     {
         [Dependency]
         public IMaterialInfoDAO dao { get; set; }
@@ -33,7 +33,7 @@ namespace _123TribeFrameworker.Services.Layer
             {
                 model.findIndx = BeanHelper.getFistCharUpper(model.materialName);
                 var resultDAO = await dao.add(model);
-                if (!resultDAO.result)
+                if (!resultDAO.success)
                 {
                     result.addError(resultDAO.message);
                 }
